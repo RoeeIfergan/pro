@@ -4,7 +4,7 @@ import RenderCardComponent from './RenderCardComponent'
 
 type TCard = { cardJSON: TcardJSONNode | null }
 
-export const DynamicCard = ({ cardJSON }: TCard) => {
+export const DynamicForm = ({ cardJSON }: TCard) => {
   const methods = useForm()
 
   return (
@@ -14,4 +14,4 @@ export const DynamicCard = ({ cardJSON }: TCard) => {
   )
 }
 
-export default DynamicCard
+export default DynamicForm

@@ -1,5 +1,5 @@
 {
-  "name": "@pro2/DynamicCard",
+  "name": "@pro2/DynamicForm",
   "version": "0.0.1",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

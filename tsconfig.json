@@ -16,7 +16,7 @@
       "path": "./apps/client"
     },
     {
-      "path": "./libs/ui/DynamicCard"
+      "path": "./libs/ui/DynamicForm"
     },
     {
       "path": "./libs/ui/Table"

@@ -34,7 +34,10 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
-      "path": "../../libs/ui/DynamicCard/tsconfig.lib.json"
+      "path": "../../libs/ui/Table/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/ui/DynamicForm/tsconfig.lib.json"
     }
   ]
 }

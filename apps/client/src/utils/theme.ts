@@ -11,13 +11,13 @@ export const theme = createTheme({
     },
     secondary: {
       main: '#117220'
-    },
-    badge: {
-      main: '#d32424',
-      light: '#da0606',
-      dark: '#da0606',
-      contrastText: 'white'
     }
+    // badge: {
+    //   main: '#d32424',
+    //   light: '#da0606',
+    //   dark: '#da0606',
+    //   contrastText: 'white'
+    // }
     // background: {
     //   main: '#3C3C3C',
     //   dark: '#282828',

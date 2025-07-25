@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import DynamicCard, { TcardJSONNode } from '@pro2/DynamicCard'
+import DynamicForm, { TcardJSONNode } from '@pro2/DynamicForm'
 
 const cardJSON: TcardJSONNode = {
   componentType: 'box',
@@ -50,8 +50,8 @@ const cardJSON: TcardJSONNode = {
 const CardView = () => {
   return (
     <Box>
-      <Typography>Cardview</Typography>
-      <DynamicCard cardJSON={cardJSON} />
+      <Typography>Card View</Typography>
+      <DynamicForm cardJSON={cardJSON} />
     </Box>
   )
 }

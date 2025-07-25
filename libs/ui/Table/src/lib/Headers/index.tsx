@@ -1,14 +1,17 @@
 import { Box, styled, TableCell, TableHead } from '@mui/material'
 import useHeaders from './useHeaders'
-import { flexRender } from '@tanstack/react-table'
 import { useTableContext } from '../TableProvider'
+import { flexRender } from '@tanstack/react-table'
 
-const StyledTableHeader = styled(TableHead)(({ depth }) => ({
+const StyledTableHeader = styled(TableHead, {
+  shouldForwardProp: (prop) => prop !== 'depth'
+})(({ depth }) => ({
   display: 'flex',
   position: 'sticky',
-  top: 0,
-  marginLeft: `${20 * depth}px`
+  top: 0
+  // marginLeft: `${20 * depth}px`
 }))
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   display: 'flex',
   backgroundColor: theme.palette.primary.light
