@@ -1,10 +1,33 @@
-import axios from 'axios';
+import request from 'supertest'
+import { Test } from '@nestjs/testing'
+import { AppModule } from '@pro2/my-app/src/app/app.module'
+import { AppService } from '@pro2/my-app/src/app/app.service'
+import { INestApplication } from '@nestjs/common'
 
 describe('GET /api', () => {
-  it('should return a message', async () => {
-    const res = await axios.get(`/api`);
+  let app: INestApplication
+  const appService = { getData: () => ({ message: 'Hello API' }) }
 
-    expect(res.status).toBe(200);
-    expect(res.data).toEqual({ message: 'Hello API' });
-  });
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule]
+    })
+      .overrideProvider(AppService)
+      .useValue(appService)
+      .compile()
+
+    app = moduleRef.createNestApplication()
+    await app.init()
+  })
+
+  it('should return a message', async () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect(appService.getData())
+  })
+
+  afterAll(async () => {
+    await app.close()
+  })
 })

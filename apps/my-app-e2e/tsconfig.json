@@ -6,9 +6,10 @@
     "noUnusedLocals": false,
     "noImplicitAny": false
   },
-  "include": [
-    "jest.config.ts",
-    "src/**/*.ts"
-  ],
-  "references": []
+  "include": ["jest.config.ts", "src/**/*.ts"],
+  "references": [
+    {
+      "path": "../my-app"
+    }
+  ]
 }

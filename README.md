@@ -1,4 +1,41 @@
 # Pro2
+# Creation Guide:
+
+## Versions:
+node 20/22
+nx 20.8.0 -> run "nx --version" and make sure local and global configs are alike
+
+## Vscode Extensions:
+NX-Console
+Pretter - Code formatter
+
+### Optional Vscode Extensions:
+Pretty TypeScript Errors
+indent-rainbow
+
+Install with Jest, nest ,react 18, eslint, prettier.
+
+
+## Create NEST app:
+npx create-nx-workspace@20.8.0 pro2 --workspaces
+
+## Create React app:
+nx add @nx/react
+nx g @nx/react:app  
+
+cd apps/client
+npm i --save-dev @nestjs/testing  
+npm i --save-dev supertest
+
+cd ../../
+npm i react@18.3.1 react-dom@18.3.1    
+npm i -D @types/react@18.3.1 @types/react-dom@18.3.1
+
+# How to use:
+Open monorepo in vscode with "File -> Open Folder"
+# Todo:
+- Convert eslint mjs to js files or to some other eslint standard
+
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 

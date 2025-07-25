@@ -8,6 +8,18 @@
     },
     {
       "path": "./apps/my-app"
+    },
+    {
+      "path": "./apps/client-e2e"
+    },
+    {
+      "path": "./apps/client"
+    },
+    {
+      "path": "./libs/ui/DynamicCard"
+    },
+    {
+      "path": "./libs/ui/Table"
     }
   ]
 }
