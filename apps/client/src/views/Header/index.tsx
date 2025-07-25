@@ -116,7 +116,7 @@ const Header = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ width: '100%', display: 'flex' }}>
       <CssBaseline />
       <AppBar position='fixed' isOpen={isOpen}>
         <Toolbar>
@@ -142,11 +142,7 @@ const Header = () => {
       <Drawer variant='permanent' open={isOpen}>
         <DrawerHeader>
           <IconButton onClick={onClickDrawer}>
-            {theme.direction === 'rtl' ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />

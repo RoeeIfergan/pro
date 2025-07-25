@@ -4,7 +4,11 @@
   "private": true,
   "nx": {
     "implicitDependencies": [
-      "@pro2/client"
+      "client"
+    ],
+    "tags": [
+      "type:e2e",
+      "scope:client"
     ]
   }
 }

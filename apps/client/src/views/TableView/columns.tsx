@@ -1,33 +1,20 @@
-import React, { HTMLProps } from 'react'
+import React from 'react'
 import ExpandLessIcons from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcons from '@mui/icons-material/ExpandMore'
 // import { reverseColumns } from './Table/utils'
-import { Box, Chip, Typography } from '@mui/material'
+import { Box, Checkbox, CheckboxProps, Chip } from '@mui/material'
+import { ColumnDef, Row } from '@tanstack/react-table'
+import { TData } from '@pro2/Table'
 
-function IndeterminateCheckbox({
+const StyledCheckbox = ({
+  checked,
   indeterminate,
-  className = '',
   ...rest
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!)
+}: { checked: boolean; indeterminate: boolean } & CheckboxProps) => (
+  <Checkbox indeterminate={indeterminate} value={checked} {...rest} />
+)
 
-  React.useEffect(() => {
-    if (typeof indeterminate === 'boolean') {
-      ref.current.indeterminate = !rest.checked && indeterminate
-    }
-  }, [ref, indeterminate])
-
-  return (
-    <input
-      type='checkbox'
-      ref={ref}
-      className={className + ' cursor-pointer'}
-      {...rest}
-    />
-  )
-}
-
-const setExpandedSubRows = (rows, value) => {
+const setExpandedSubRows = (rows: Row<TData>[], value: boolean) => {
   if (!rows || rows.length === 0) return
 
   rows.forEach((row) => {
@@ -36,7 +23,7 @@ const setExpandedSubRows = (rows, value) => {
   })
 }
 
-const getToggleExpandedHandler = (row) => (event) => {
+const getToggleExpandedHandler = (row: Row<TData>) => () => {
   const value = !row.getIsExpanded()
 
   row.toggleExpanded(value)
@@ -45,7 +32,7 @@ const getToggleExpandedHandler = (row) => (event) => {
     setExpandedSubRows(row.subRows, value)
   }
 }
-const getSelectColumn = (content) => ({
+const getSelectColumn = (content: JSX.Element | string): ColumnDef<TData> => ({
   id: 'select',
   size: 80,
   header: (props) => {
@@ -53,7 +40,7 @@ const getSelectColumn = (content) => ({
 
     return (
       <Box style={{ display: 'flex', alignItems: 'center', height: '42px' }}>
-        <IndeterminateCheckbox
+        <StyledCheckbox
           {...{
             checked: table.getIsAllRowsSelected(),
             indeterminate: table.getIsSomeRowsSelected(),
@@ -72,7 +59,7 @@ const getSelectColumn = (content) => ({
   cell: ({ row }) => {
     return (
       <Box style={{ display: 'flex', alignItems: 'center' }}>
-        <IndeterminateCheckbox
+        <StyledCheckbox
           {...{
             checked: row.getIsSelected(),
             disabled: !row.getCanSelect(),
@@ -100,35 +87,38 @@ const getSelectColumn = (content) => ({
   }
 })
 
-const getCollapseByType = (content) => ({
-  id: 'type',
-  size: 20,
-  header: <div />,
-  cell: ({ row }) => {
-    return row.getCanExpand() ? (
-      <Typography
-        {...{
-          onClick: row.getToggleExpandedHandler()
-        }}
-        style={{
-          verticalAlign: 'middle',
-          display: 'inline-flex',
-          cursor: 'pointer'
-        }}
-      >
-        <Typography fontSize={10} style={{ alignContent: 'center' }}>
-          {content}
-        </Typography>
-        {row.getIsExpanded() ? <ExpandMoreIcons /> : <ExpandLessIcons />}
-        {/* {row.depth === 0 ? 'ציח' : row.depth === 1 ? 'יעד' : 'דרישה'}{row.getIsExpanded() ? <ExpandMoreIcons /> : <ExpandLessIcons />} */}
-      </Typography>
-    ) : (
-      '🔵'
-    )
-  }
-})
-
-const createDefaultColumn = (accessorKey, header, size = 120) => ({
+// const getCollapseByType = (content) => ({
+//   id: 'type',
+//   size: 20,
+//   header: <div />,
+//   cell: ({ row }) => {
+//     return row.getCanExpand() ? (
+//       <Typography
+//         {...{
+//           onClick: row.getToggleExpandedHandler()
+//         }}
+//         style={{
+//           verticalAlign: 'middle',
+//           display: 'inline-flex',
+//           cursor: 'pointer'
+//         }}
+//       >
+//         <Typography fontSize={10} style={{ alignContent: 'center' }}>
+//           {content}
+//         </Typography>
+//         {row.getIsExpanded() ? <ExpandMoreIcons /> : <ExpandLessIcons />}
+//         {/* {row.depth === 0 ? 'ציח' : row.depth === 1 ? 'יעד' : 'דרישה'}{row.getIsExpanded() ? <ExpandMoreIcons /> : <ExpandLessIcons />} */}
+//       </Typography>
+//     ) : (
+//       '🔵'
+//     )
+//   }
+// })
+const createDefaultColumn = (
+  accessorKey: string,
+  header: string,
+  size = 120
+): ColumnDef<TData> => ({
   accessorKey,
   header,
   size,
@@ -139,7 +129,7 @@ const createDefaultColumn = (accessorKey, header, size = 120) => ({
   }
 })
 // : ColumnDef<TData>[]
-const createColumns = () => [
+const createColumns = (): ColumnDef<TData>[] => [
   getSelectColumn('(ציח)'),
   createDefaultColumn('id', 'מזהה'),
   createDefaultColumn('id_2', '2 מזהה'),
@@ -192,21 +182,23 @@ const createColumns = () => [
   }
 ]
 
-export const getColumns = (viewableEntities) => {
+export const getColumns = (viewableEntities: string[]) => {
   let selectedColumns = createColumns()
 
+  if (!selectedColumns) return []
+
   if (!viewableEntities.includes('pirs')) {
-    selectedColumns = selectedColumns.find(
-      (column) => column.id === 'CollectionTarget'
-    ).columns
+    const column = selectedColumns.find((column) => column.id === 'CollectionTarget')
+
+    if (column && Array.isArray(column.columns)) {
+      selectedColumns = column.columns
+    }
   }
 
   if (!viewableEntities.includes('demands')) {
     selectedColumns = selectedColumns.map((selectedColumn) => {
       if (selectedColumn.id === 'CollectionTarget') {
-        selectedColumn.columns = selectedColumn.columns.filter(
-          (column) => column.id !== 'Demand'
-        )
+        selectedColumn.columns = selectedColumn.columns.filter((column) => column.id !== 'Demand')
       }
 
       return selectedColumn

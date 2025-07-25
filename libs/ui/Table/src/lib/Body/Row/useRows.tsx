@@ -5,9 +5,7 @@ import { useMemo } from 'react'
 
 const defaultRows: ReactTableRow[] = []
 
-const useRows = (
-  virtualizer: Virtualizer<undefined, Element>
-): ReactTableRow[] => {
+const useRows = (virtualizer: Virtualizer<undefined, Element>): ReactTableRow[] => {
   const { table } = useTableContext()
 
   const visibleRows = table?.getRowModel().rows //.filter(r => r.depth === depth)

@@ -42,19 +42,13 @@ const RenderCardComponent = ({ cardJSONNode }: TRenderCardComponent) => {
     case 'collapse':
       return (
         <FieldContainer>
-          <CardCollapse
-            {...cardJSONNode}
-            cardJSONNodeChildren={cardJSONNode.children}
-          />
+          <CardCollapse {...cardJSONNode} cardJSONNodeChildren={cardJSONNode.children} />
         </FieldContainer>
       )
     case 'display':
       return (
         <FieldContainer>
-          <CardDisplay
-            {...cardJSONNode}
-            cardJSONNodeChildren={cardJSONNode.children}
-          />
+          <CardDisplay {...cardJSONNode} cardJSONNodeChildren={cardJSONNode.children} />
         </FieldContainer>
       )
     case 'box':

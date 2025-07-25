@@ -20,10 +20,7 @@ const useHeaders = ({ depth }: useHeaderProps): Headers => {
         const filteredheaders = currHeaderGroup.headers.filter((header) => {
           if (header.column.depth !== depth) return false
 
-          const headerValue = flexRender(
-            header.column.columnDef.header,
-            header.getContext()
-          )
+          const headerValue = flexRender(header.column.columnDef.header, header.getContext())
 
           const columnDefHeader = header.column.columnDef.header
           const headerExists =

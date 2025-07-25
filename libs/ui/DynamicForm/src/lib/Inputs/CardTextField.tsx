@@ -9,14 +9,7 @@ interface ICardTextField extends IField {
 const CardTextField = ({ label, fieldName, type }: ICardTextField) => {
   const { register } = useFormContext()
 
-  return (
-    <TextField
-      label={label}
-      type={type}
-      variant='outlined'
-      {...register(fieldName)}
-    />
-  )
+  return <TextField label={label} type={type} variant='outlined' {...register(fieldName)} />
 }
 
 export default CardTextField

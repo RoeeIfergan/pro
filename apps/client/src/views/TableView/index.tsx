@@ -13,7 +13,7 @@ const TableView = () => {
     <Box>
       <Typography>Table View</Typography>
       <Table
-        width={1200}
+        // width={1200}
         height={800}
         data={data}
         // reverseColumns

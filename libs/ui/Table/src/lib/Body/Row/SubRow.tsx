@@ -1,11 +1,4 @@
-import {
-  Box,
-  Table,
-  TableCell,
-  TableContainer,
-  TableRow,
-  useTheme
-} from '@mui/material'
+import { Box, Table, TableCell, TableContainer, TableRow, useTheme } from '@mui/material'
 
 import Body from '..'
 import Headers from '../../Headers'
@@ -63,12 +56,7 @@ const SubRowTable = ({ depth, subRows }: SubRowTable) => {
                 height: '600px'
               }}
             >
-              <Table
-                component={Box}
-                size='small'
-                stickyHeader
-                style={{ width: '100%' }}
-              >
+              <Table component={Box} size='small' stickyHeader style={{ width: '100%' }}>
                 <Headers depth={depth} />
                 {subRows && <Body virtualizer={virtualizer} depth={depth} />}
               </Table>
@@ -88,8 +76,7 @@ const SubRowTable = ({ depth, subRows }: SubRowTable) => {
             style={{
               width: '4',
               height: '100%',
-              backgroundImage:
-                'linear-gradient(#858585 50%, rgba(255,255,255,0) 0%)',
+              backgroundImage: 'linear-gradient(#858585 50%, rgba(255,255,255,0) 0%)',
               backgroundPosition: 'left',
               backgroundSize: '1.5px 15px',
               backgroundRepeat: 'repeat-y'
@@ -127,11 +114,7 @@ const Footer = ({ depth }) => {
     </TableCell>
   )
 }
-const SubRow = ({
-  row,
-  virtualRow,
-  virtualizer
-}: SubTableProps): JSX.Element | null => {
+const SubRow = ({ row, virtualRow, virtualizer }: SubTableProps): JSX.Element | null => {
   const subRowsDepth = row.depth + 1
 
   return (

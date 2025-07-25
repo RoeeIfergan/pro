@@ -1,11 +1,4 @@
-import {
-  createContext,
-  PropsWithChildren,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState
-} from 'react'
+import { createContext, PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'react'
 import Axios from 'axios'
 import { createMongoAbility, AbilityBuilder, MongoAbility } from '@casl/ability'
 import { unpackRules } from '@casl/ability/extra'
@@ -24,9 +17,7 @@ const defaultAuthorizationContextValue = {}
 
 const AuthorizationContext = createContext<AuthorizationContextValue>({})
 
-const RenderChildrenIfContextHasValue = ({
-  children
-}: PropsWithChildren): ReactNode => {
+const RenderChildrenIfContextHasValue = ({ children }: PropsWithChildren): ReactNode => {
   const { ability } = useAuthorizationContext()
 
   if (!ability) return null
@@ -38,18 +29,13 @@ export const useAuthorizationContext = (): AuthorizationContextValue => {
   const contextValue = useContext(AuthorizationContext)
 
   if (contextValue === undefined) {
-    throw new Error(
-      'useAuthorizationContext can not be called outside of AuthorizationProvider!'
-    )
+    throw new Error('useAuthorizationContext can not be called outside of AuthorizationProvider!')
   }
 
   return contextValue
 }
 
-const AuthorizationProvider = ({
-  user,
-  children
-}: AuthorizationProviderProps): ReactNode => {
+const AuthorizationProvider = ({ user, children }: AuthorizationProviderProps): ReactNode => {
   const [contextValue, setContextValue] = useState<AuthorizationContextValue>(
     defaultAuthorizationContextValue
   )
@@ -82,9 +68,7 @@ const AuthorizationProvider = ({
 
   return (
     <AuthorizationContext.Provider value={contextValue}>
-      <RenderChildrenIfContextHasValue>
-        {children}
-      </RenderChildrenIfContextHasValue>
+      <RenderChildrenIfContextHasValue>{children}</RenderChildrenIfContextHasValue>
     </AuthorizationContext.Provider>
   )
 }

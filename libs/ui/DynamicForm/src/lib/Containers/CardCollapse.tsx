@@ -19,10 +19,7 @@ interface ICardCollapse extends ICollapse {
   cardJSONNodeChildren: TcardJSONNode[]
 }
 
-const CardCollapse = ({
-  defaultOpened,
-  cardJSONNodeChildren
-}: ICardCollapse) => {
+const CardCollapse = ({ defaultOpened, cardJSONNodeChildren }: ICardCollapse) => {
   const [isCollapseOpen, setIsCollapseOpen] = useState(defaultOpened)
 
   const onCollapseClick = () => {

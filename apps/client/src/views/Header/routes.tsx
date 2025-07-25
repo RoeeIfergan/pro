@@ -2,14 +2,14 @@
 
 // import { translate } from 'utils/translate'
 
-import CardView from '@client/views/CardView/CardView'
-import TableView from '@client/views/TableView'
+import CardView from '@pro2/client/src/views/CardView/CardView'
+import TableView from '@pro2/client/src/views/TableView'
+import { initialData as cardLoader } from '@pro2/client/src/views/CardView/loader'
+import { initialData as tableLoader } from '@pro2/client/src/views/TableView/loader'
 
 import DynamicFormIcon from '@mui/icons-material/DynamicForm'
 import TableChartIcon from '@mui/icons-material/TableChart'
 
-import { initialData as cardLoader } from '@client/views/CardView/loader'
-import { initialData as tableLoader } from '@client/views/TableView/loader'
 import { RouteObject } from 'react-router'
 
 type routeInfo = {

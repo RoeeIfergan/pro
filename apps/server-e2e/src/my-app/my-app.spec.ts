@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { Test } from '@nestjs/testing'
-import { AppModule } from '@pro2/my-app/src/app/app.module'
-import { AppService } from '@pro2/my-app/src/app/app.service'
+import { AppModule } from '@pro2/server/src/app/app.module'
+import { AppService } from '@pro2/server/src/app/app.service'
 import { INestApplication } from '@nestjs/common'
 
 describe('GET /api', () => {
@@ -21,10 +21,7 @@ describe('GET /api', () => {
   })
 
   it('should return a message', async () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect(appService.getData())
+    return request(app.getHttpServer()).get('/').expect(200).expect(appService.getData())
   })
 
   afterAll(async () => {

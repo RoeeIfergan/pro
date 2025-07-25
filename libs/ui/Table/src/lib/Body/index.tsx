@@ -73,9 +73,7 @@ const Body = ({ width, height }: bodyProps) => {
   const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0
 
   const paddingBottom =
-    virtualRows.length > 0
-      ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
-      : 0
+    virtualRows.length > 0 ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0) : 0
 
   console.log(computedRows)
   return (
@@ -97,10 +95,7 @@ const Body = ({ width, height }: bodyProps) => {
         ))}
         {paddingBottom > 0 && (
           <TableRow component={Box}>
-            <TableCell
-              component={Box}
-              style={{ height: `${paddingBottom}px` }}
-            />
+            <TableCell component={Box} style={{ height: `${paddingBottom}px` }} />
           </TableRow>
         )}
       </StyledTableBody>

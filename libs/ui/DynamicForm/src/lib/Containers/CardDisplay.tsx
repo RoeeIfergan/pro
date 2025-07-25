@@ -7,11 +7,7 @@ interface ICardDisplay extends IDisplay {
   cardJSONNodeChildren: TcardJSONNode[]
 }
 
-const CardDisplay = ({
-  ifField,
-  equals,
-  cardJSONNodeChildren
-}: ICardDisplay) => {
+const CardDisplay = ({ ifField, equals, cardJSONNodeChildren }: ICardDisplay) => {
   const field = useWatch({
     name: ifField
   })

@@ -41,12 +41,7 @@ const ScrollContainer = styled(Box)(
 `
 )
 
-const Row = ({
-  row,
-  isLastRow,
-  virtualizer,
-  virtualRowIndex
-}: RowProps): JSX.Element | null => {
+const Row = ({ row, isLastRow, virtualizer, virtualRowIndex }: RowProps): JSX.Element | null => {
   const rowCells = useRowCells(row)
 
   const hasSubRow = row.getIsExpanded() && row.subRows.length

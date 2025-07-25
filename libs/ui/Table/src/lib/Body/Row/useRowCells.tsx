@@ -7,8 +7,7 @@ type RowCells = Cell<TData, unknown>[]
 
 const useRowCells = (row: ReactTableRow): RowCells => {
   const headerGroups = useMemo(
-    () =>
-      row.getVisibleCells().filter((cell) => cell.column.depth === row.depth),
+    () => row.getVisibleCells().filter((cell) => cell.column.depth === row.depth),
     []
   )
 

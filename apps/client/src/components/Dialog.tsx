@@ -1,10 +1,4 @@
-import {
-  Dialog as MuiDialog,
-  DialogTitle,
-  Box,
-  Button,
-  DialogContent
-} from '@mui/material'
+import { Dialog as MuiDialog, DialogTitle, Box, Button, DialogContent } from '@mui/material'
 
 import { translate } from 'utils/translate'
 
@@ -19,12 +13,7 @@ const Dialog = ({
   onSave
 }) => {
   return (
-    <MuiDialog
-      onClose={onClose}
-      open={isOpen}
-      maxWidth={maxWidth}
-      fullWidth={fullWidth}
-    >
+    <MuiDialog onClose={onClose} open={isOpen} maxWidth={maxWidth} fullWidth={fullWidth}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{body}</DialogContent>
       <Box sx={{ m: 3 }}>

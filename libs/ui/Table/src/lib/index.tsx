@@ -10,21 +10,22 @@ import {
 
 import { TData } from './types'
 import TableProvider from './TableProvider'
-import { TableContainer, Table, Box, Paper, styled } from '@mui/material'
+import { TableContainer, Table, Box, Paper, styled, TableProps } from '@mui/material'
 import Headers from './Headers'
 import Body from './Body'
 import { computeColumns } from './utils'
 
-type TableProps<TData> = {
+type GTableProps = {
+  width: number
+  height: number
   data: TData[]
   reverseColumns?: boolean
   columns: ColumnDef<TData>[]
   getRowCanExpand?: (row: Row<TData>) => boolean
 }
 
-const StyledTable = styled(Table)(({ width, height }) => ({
+const StyledTable = styled(Table)<TableProps & Pick<GTableProps, 'width'>>(({ width }) => ({
   width,
-  height,
   display: 'flex',
   flexDirection: 'column'
   // overflow: 'auto',
@@ -37,11 +38,8 @@ const ReactTable = ({
   columns,
   reverseColumns,
   getRowCanExpand
-}: TableProps<TData>): JSX.Element => {
-  const getSubRows = useCallback(
-    (originalRow: TData) => originalRow.subRows,
-    []
-  )
+}: GTableProps): JSX.Element => {
+  const getSubRows = useCallback((originalRow: TData) => originalRow.subRows, [])
   const { computedData, computedColumns } = useMemo(
     () => ({
       computedData: [...data],
@@ -63,18 +61,8 @@ const ReactTable = ({
 
   return (
     <TableProvider table={table}>
-      <TableContainer
-        component={Paper}
-        id='tableContainer'
-        style={{ overflow: 'hidden' }}
-      >
-        <StyledTable
-          id='table-ref'
-          size='small'
-          stickyHeader
-          component={Box}
-          width={width}
-        >
+      <TableContainer component={Paper} id='tableContainer' style={{ overflow: 'hidden' }}>
+        <StyledTable id='table-ref' size='small' stickyHeader component={Box} width={width}>
           <Headers />
           <Body width={width} height={height} />
         </StyledTable>

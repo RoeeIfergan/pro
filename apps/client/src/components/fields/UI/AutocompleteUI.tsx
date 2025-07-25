@@ -1,8 +1,4 @@
-import {
-  Autocomplete as MUIAutocomplete,
-  CircularProgress,
-  TextField
-} from '@mui/material'
+import { Autocomplete as MUIAutocomplete, CircularProgress, TextField } from '@mui/material'
 
 const AutocompleteUI = ({
   options,
@@ -17,9 +13,7 @@ const AutocompleteUI = ({
   return (
     <MUIAutocomplete
       options={options}
-      isOptionEqualToValue={(v1, v2) =>
-        getOptionValue(v1) === getOptionValue(v2)
-      }
+      isOptionEqualToValue={(v1, v2) => getOptionValue(v1) === getOptionValue(v2)}
       getOptionLabel={getOptionLabel}
       sx={{ width: 300 }}
       label={label}
@@ -33,9 +27,7 @@ const AutocompleteUI = ({
             ...params.InputProps,
             endAdornment: (
               <>
-                {isLoading ? (
-                  <CircularProgress color='inherit' size={20} />
-                ) : null}
+                {isLoading ? <CircularProgress color='inherit' size={20} /> : null}
                 {params.InputProps.endAdornment}
               </>
             )

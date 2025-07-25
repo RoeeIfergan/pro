@@ -40,9 +40,7 @@ const cardJSON: TcardJSONNode = {
       componentType: 'display',
       ifField: 'type',
       equals: 'air',
-      children: [
-        { componentType: 'textField', fieldName: 'name', label: 'air name' }
-      ]
+      children: [{ componentType: 'textField', fieldName: 'name', label: 'air name' }]
     }
   ]
 }

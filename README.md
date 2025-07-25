@@ -48,19 +48,19 @@ Open monorepo in vscode with "File -> Open Folder"
 To run the dev server for your app, use:
 
 ```sh
-npx nx serve my-app
+npx nx serve server
 ```
 
 To create a production bundle:
 
 ```sh
-npx nx build my-app
+npx nx build server
 ```
 
 To see all available targets to run for a project, run:
 
 ```sh
-npx nx show project my-app
+npx nx show project server
 ```
 
 These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.

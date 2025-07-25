@@ -1,11 +1,11 @@
-import { Box, styled, TableCell, TableHead } from '@mui/material'
+import { Box, styled, TableCell, TableHead, TableHeadProps } from '@mui/material'
 import useHeaders from './useHeaders'
 import { useTableContext } from '../TableProvider'
 import { flexRender } from '@tanstack/react-table'
 
 const StyledTableHeader = styled(TableHead, {
   shouldForwardProp: (prop) => prop !== 'depth'
-})(({ depth }) => ({
+})<TableHeadProps & { depth: number }>(({ depth }) => ({
   display: 'flex',
   position: 'sticky',
   top: 0
@@ -30,11 +30,7 @@ const Headers = ({ depth }: HeadersProps): JSX.Element => {
       {/* <RowIndent depth={depth} /> */}
       <StyledTableHeader component={Box} depth={depth || 0}>
         {headers.map((header) => (
-          <StyledTableCell
-            key={header.id}
-            component={Box}
-            colSpan={header.colSpan}
-          >
+          <StyledTableCell key={header.id} component={Box} colSpan={header.colSpan}>
             <Box style={{ width: header.getSize() }}>
               {flexRender(header.column.columnDef.header, header.getContext())}
             </Box>

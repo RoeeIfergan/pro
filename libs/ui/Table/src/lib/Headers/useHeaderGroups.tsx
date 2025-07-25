@@ -7,16 +7,13 @@ type depth = number
 type useHeaderProps = { depth: depth }
 
 //TODO: default props with depth 0?
-const useHeaderGroups = ({
-  depth = 0
-}: useHeaderProps): HeaderGroup<TData>[] | undefined => {
+const useHeaderGroups = ({ depth = 0 }: useHeaderProps): HeaderGroup<TData>[] | undefined => {
   const { table } = useTableContext()
 
   const tableHeaderGroups = table && table.getHeaderGroups()
 
   const headerGroups = useMemo(
-    () =>
-      tableHeaderGroups.filter((headerGroup) => headerGroup.depth === depth),
+    () => tableHeaderGroups.filter((headerGroup) => headerGroup.depth === depth),
     [tableHeaderGroups, depth]
   )
 

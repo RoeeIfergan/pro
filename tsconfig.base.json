@@ -17,11 +17,11 @@
     "strict": true,
     "target": "es2022",
     "customConditions": ["development"],
-    "baseUrl": ".",
-    "paths": {
-      "@client/components/*": ["apps/client/src/components/*"],
-      "@client/utils/*": ["apps/client/src/utils/*"],
-      "@client/views/*": ["apps/client/src/views/*"]
-    }
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@client/components/*": ["apps/client/src/components/*"],
+    //   "@client/utils/*": ["apps/client/src/utils/*"],
+    //   "@client/views/*": ["apps/client/src/views/*"]
+    // }
   }
 }

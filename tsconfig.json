@@ -4,12 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/my-app-e2e"
-    },
-    {
-      "path": "./apps/my-app"
-    },
-    {
       "path": "./apps/client-e2e"
     },
     {
@@ -20,6 +14,12 @@
     },
     {
       "path": "./libs/ui/Table"
+    },
+    {
+      "path": "./apps/server-e2e"
+    },
+    {
+      "path": "./apps/server"
     }
   ]
 }

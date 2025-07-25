@@ -78,9 +78,7 @@ export const useTableContext = (): TableContextValue => {
   const contextValue = useContext(TableContext)
 
   if (contextValue === undefined) {
-    throw new Error(
-      'useTableContext can not be called outside of TableProvider!'
-    )
+    throw new Error('useTableContext can not be called outside of TableProvider!')
   }
 
   return contextValue || defaultTableContextValue

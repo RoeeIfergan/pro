@@ -1,9 +1,9 @@
 {
-  "name": "@pro2/my-app",
+  "name": "@pro2/server",
   "version": "0.0.1",
   "private": true,
   "nx": {
-    "name": "my-app",
+    "name": "server",
     "targets": {
       "build": {
         "executor": "nx:run-commands",
@@ -28,15 +28,15 @@
           "build"
         ],
         "options": {
-          "buildTarget": "my-app:build",
+          "buildTarget": "server:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
           "development": {
-            "buildTarget": "my-app:build:development"
+            "buildTarget": "server:build:development"
           },
           "production": {
-            "buildTarget": "my-app:build:production"
+            "buildTarget": "server:build:production"
           }
         }
       },
@@ -45,6 +45,10 @@
           "passWithNoTests": true
         }
       }
-    }
+    },
+    "tags": [
+      "type:feature",
+      "scope:server"
+    ]
   }
 }

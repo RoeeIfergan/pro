@@ -1,9 +1,7 @@
-import nx from '@nx/eslint-plugin'
 import baseConfig from '../../eslint.config.mjs'
 
 export default [
-  ...baseConfig,
-  ...nx.configs['flat/react'],
+  ...baseConfig
   // {
   //   files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
   //   rules: {
@@ -11,20 +9,15 @@ export default [
   //       'error',
   //       {
   //         enforceBuildableLibDependency: true,
-  //         allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
+  //         allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$', '@pro2/server/**'],
   //         depConstraints: [
   //           {
   //             sourceTag: '*',
-  //             onlyDependOnLibsWithTags: ['client']
+  //             onlyDependOnLibsWithTags: ['*']
   //           }
   //         ]
   //       }
   //     ]
   //   }
-  // },
-  {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-    // Override or add rules here
-    rules: {}
-  }
+  // }
 ]

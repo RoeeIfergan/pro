@@ -1,12 +1,6 @@
 import { useField } from 'formik'
 import MUITextField from '@mui/material/TextField'
-const TextField = ({
-  name,
-  label = '',
-  defaultValue = '',
-  helperText = '',
-  ...props
-}) => {
+const TextField = ({ name, label = '', defaultValue = '', helperText = '', ...props }) => {
   const [field, meta] = useField(name)
 
   const { error } = meta

@@ -40,10 +40,7 @@ const createDemand = (index: number): Demand => {
 
 const countries = ['israel', 'usa', 'japan', 'denmark', 'mexico']
 const getRandomCountry = (index: number) => countries[index % countries.length]
-const createCollectionTarget = (
-  index: number,
-  demands: Demand[]
-): CollectionTarget => {
+const createCollectionTarget = (index: number, demands: Demand[]): CollectionTarget => {
   randomNum += 1
 
   return {
@@ -55,10 +52,7 @@ const createCollectionTarget = (
   }
 }
 
-const createPIR = (
-  index: number,
-  collectionTargets: CollectionTarget[]
-): PIR => {
+const createPIR = (index: number, collectionTargets: CollectionTarget[]): PIR => {
   randomNum += 1
 
   return {
@@ -78,8 +72,8 @@ const createDemands = (demandsAmount, enableRandom, viewableEntities) => {
     return []
   }
 
-  return createArray(getAmount(demandsAmount, enableRandom)).map(
-    (demand, demandIndex) => createDemand(demandIndex)
+  return createArray(getAmount(demandsAmount, enableRandom)).map((demand, demandIndex) =>
+    createDemand(demandIndex)
   )
 }
 export const makeData = (
@@ -91,18 +85,17 @@ export const makeData = (
 ): TData[] => {
   let data
   if (viewableEntities.includes('pirs')) {
-    data = createArray(getAmount(PIRAmount, enableRandom)).map(
-      (PIR, pirIndex) =>
-        createPIR(
-          pirIndex,
-          createArray(getAmount(CollectionTargetAmount, enableRandom)).map(
-            (collectionTarget, collectionTargetIndex) =>
-              createCollectionTarget(
-                collectionTargetIndex,
-                createDemands(demandsAmount, enableRandom, viewableEntities)
-              )
-          )
+    data = createArray(getAmount(PIRAmount, enableRandom)).map((PIR, pirIndex) =>
+      createPIR(
+        pirIndex,
+        createArray(getAmount(CollectionTargetAmount, enableRandom)).map(
+          (collectionTarget, collectionTargetIndex) =>
+            createCollectionTarget(
+              collectionTargetIndex,
+              createDemands(demandsAmount, enableRandom, viewableEntities)
+            )
         )
+      )
     )
   } else {
     data = createArray(getAmount(CollectionTargetAmount, enableRandom)).map(
