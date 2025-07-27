@@ -46,12 +46,12 @@ const Row = ({ row, isLastRow, virtualizer, virtualRowIndex }: RowProps): JSX.El
 
   const hasSubRow = row.getIsExpanded() && row.subRows.length
 
-  console.log(row, row.original.id)
+  // console.log(row, row.original.id)
   const depth = row.depth
   return (
     <Box
       style={{
-        width: '100%',
+        // width: '100%',
         display: 'flex',
         ...(depth > 0 && { borderRight: '1px solid #4b4b4b' }),
         flexDirection: 'row',
@@ -81,7 +81,7 @@ const Row = ({ row, isLastRow, virtualizer, virtualRowIndex }: RowProps): JSX.El
             </StyledTableCell>
           ))}
         </StyledTableRow>
-        {hasSubRow ? <Headers depth={row.depth + 1} /> : null}
+        {hasSubRow ? <Headers depth={depth + 1} /> : null}
       </Box>
     </Box>
   )

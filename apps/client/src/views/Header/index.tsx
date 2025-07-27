@@ -6,7 +6,6 @@ import MuiDrawer from '@mui/material/Drawer'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
-import CssBaseline from '@mui/material/CssBaseline'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
@@ -116,8 +115,7 @@ const Header = () => {
   }
 
   return (
-    <Box sx={{ width: '100%', display: 'flex' }}>
-      <CssBaseline />
+    <Box id='header-container' sx={{ width: '100%', display: 'flex', overflow: 'hidden' }}>
       <AppBar position='fixed' isOpen={isOpen}>
         <Toolbar>
           <IconButton
@@ -135,7 +133,10 @@ const Header = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant='h6' noWrap component='div'>
-            Mini variant drawer
+            פרו{' '}
+            <span role='img' aria-label='header title'>
+              😁
+            </span>
           </Typography>
         </Toolbar>
       </AppBar>
@@ -203,7 +204,7 @@ const Header = () => {
           ))}
         </List>
       </Drawer>
-      <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+      <Box component='main' id='main' sx={{ width: '100%' }}>
         <DrawerHeader />
         <Outlet />
       </Box>

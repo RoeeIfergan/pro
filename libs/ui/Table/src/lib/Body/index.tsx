@@ -4,23 +4,22 @@ import Row from './Row'
 import useRows from './Row/useRows'
 import { Box, styled, TableBody, TableCell, TableRow } from '@mui/material'
 import { useTableContext } from '../TableProvider'
-import { useVirtualizer } from '@tanstack/react-virtual'
-import { useRef } from 'react'
+import { Virtualizer } from '@tanstack/react-virtual'
 
-const StyledTableBody = styled(TableBody)(() => ({
+const StyledTableBody = styled(TableBody)(({ height }) => ({
   display: 'flex',
   flexDirection: 'column',
-  width: '100%',
-  height: '100%',
-  overflow: 'auto'
+  // width: '100%',
+  height
+  // overflowY: 'auto'
 }))
 
 type bodyProps = {
   width: number
   height: number
+  virtualizer: Virtualizer<undefined, Element>
 }
 
-const OVERSCAN_SIZE = 5
 const HEADER_UPDATE_DEBOUNCE = 100
 const getFirstVisibleItem = (virtualizer) => {
   const scrollOffset = virtualizer.getScrollOffset()
@@ -46,24 +45,10 @@ const useCalcFirstVisibleItem = (virtualizer, rows) => {
 
   debouncedSetVisibleDepthRow()
 }
-const Body = ({ width, height }: bodyProps) => {
+const Body = ({ virtualizer, height }: bodyProps) => {
   const { table } = useTableContext()
-  const tableContainerRef = useRef()
-  const currentRows = table.getExpandedRowModel()?.rows
-  const virtualizeAmount = currentRows.length || 0
-
-  // const expandedRows = currentRows.filter(r => r.getIsExpanded())
-
-  const virtualizer = useVirtualizer({
-    count: virtualizeAmount,
-    horizontal: false,
-    getScrollElement: () => tableContainerRef.current,
-    estimateSize: (index) => 42,
-    // debug: true,
-    overscan: OVERSCAN_SIZE //TODO: Increase
-  })
-
   const computedRows = useRows(virtualizer)
+  const currentRows = table?.getExpandedRowModel()?.rows
 
   useCalcFirstVisibleItem(virtualizer, currentRows)
 
@@ -75,31 +60,28 @@ const Body = ({ width, height }: bodyProps) => {
   const paddingBottom =
     virtualRows.length > 0 ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0) : 0
 
-  console.log(computedRows)
   return (
-    <Box style={{ width, height }}>
-      <StyledTableBody component={Box} ref={tableContainerRef}>
-        {paddingTop > 0 && (
-          <TableRow component={Box}>
-            <TableCell component={Box} style={{ height: `${paddingTop}px` }} />
-          </TableRow>
-        )}
-        {computedRows.map(({ row, virtualRow }, rowIndex) => (
-          <Row
-            row={row}
-            key={row.original.id}
-            virtualizer={virtualizer}
-            virtualRowIndex={virtualRow.index}
-            isLastRow={rowIndex === computedRows.length - 1}
-          />
-        ))}
-        {paddingBottom > 0 && (
-          <TableRow component={Box}>
-            <TableCell component={Box} style={{ height: `${paddingBottom}px` }} />
-          </TableRow>
-        )}
-      </StyledTableBody>
-    </Box>
+    <StyledTableBody component={Box} height={height}>
+      {paddingTop > 0 && (
+        <TableRow component={Box}>
+          <TableCell component={Box} style={{ height: `${paddingTop}px` }} />
+        </TableRow>
+      )}
+      {computedRows.map(({ row, virtualRow }, rowIndex) => (
+        <Row
+          row={row}
+          key={row.original.id}
+          virtualizer={virtualizer}
+          virtualRowIndex={virtualRow.index}
+          isLastRow={rowIndex === computedRows.length - 1}
+        />
+      ))}
+      {paddingBottom > 0 && (
+        <TableRow component={Box}>
+          <TableCell component={Box} style={{ height: `${paddingBottom}px` }} />
+        </TableRow>
+      )}
+    </StyledTableBody>
   )
 }
 

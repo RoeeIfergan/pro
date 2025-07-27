@@ -43,8 +43,8 @@ const SubRowTable = ({ depth, subRows }: SubRowTable) => {
           <TableContainer
             component={Box}
             style={{
-              overflow: 'hidden',
-              width: '100%'
+              overflow: 'hidden'
+              // width: '100%'
             }}
           >
             <div
@@ -52,11 +52,16 @@ const SubRowTable = ({ depth, subRows }: SubRowTable) => {
               ref={tableContainerRef}
               style={{
                 overflow: 'auto',
-                width: '100%',
+                // width: '100%',
                 height: '600px'
               }}
             >
-              <Table component={Box} size='small' stickyHeader style={{ width: '100%' }}>
+              <Table
+                component={Box}
+                size='small'
+                stickyHeader
+                // style={{ width: '100%' }}
+              >
                 <Headers depth={depth} />
                 {subRows && <Body virtualizer={virtualizer} depth={depth} />}
               </Table>
@@ -124,7 +129,7 @@ const SubRow = ({ row, virtualRow, virtualizer }: SubTableProps): JSX.Element | 
         data-index={virtualRow.index}
         component={Box}
         id={row.id}
-        style={{ width: '100%' }}
+        // style={{ width: '100%' }}
       >
         <SubRowTable depth={subRowsDepth} subRows={row.subRows} />
       </TableRow>

@@ -1,4 +1,4 @@
-import { Box, styled, TableCell, TableHead, TableHeadProps } from '@mui/material'
+import { Box, styled, TableCell, TableHead, TableHeadProps, useTheme } from '@mui/material'
 import useHeaders from './useHeaders'
 import { useTableContext } from '../TableProvider'
 import { flexRender } from '@tanstack/react-table'
@@ -8,8 +8,8 @@ const StyledTableHeader = styled(TableHead, {
 })<TableHeadProps & { depth: number }>(({ depth }) => ({
   display: 'flex',
   position: 'sticky',
-  top: 0
-  // marginLeft: `${20 * depth}px`
+  top: -1,
+  zIndex: 5
 }))
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -21,23 +21,22 @@ type depth = number
 type HeadersProps = { depth?: depth }
 
 const Headers = ({ depth }: HeadersProps): JSX.Element => {
+  const theme = useTheme()
   const { visibleDepthRow } = useTableContext()
 
   const headers = useHeaders({ depth: depth || visibleDepthRow })
 
   return (
-    <Box style={{ display: 'flex', flexDirection: 'row' }}>
-      {/* <RowIndent depth={depth} /> */}
-      <StyledTableHeader component={Box} depth={depth || 0}>
-        {headers.map((header) => (
-          <StyledTableCell key={header.id} component={Box} colSpan={header.colSpan}>
-            <Box style={{ width: header.getSize() }}>
-              {flexRender(header.column.columnDef.header, header.getContext())}
-            </Box>
-          </StyledTableCell>
-        ))}
-      </StyledTableHeader>
-    </Box>
+    <StyledTableHeader component={Box} depth={depth || 0}>
+      <Box style={{ width: '20px', backgroundColor: theme.palette.primary.light }} />
+      {headers.map((header) => (
+        <StyledTableCell key={header.id} component={Box} colSpan={header.colSpan}>
+          <Box style={{ width: header.getSize(), overflow: 'hidden' }}>
+            {flexRender(header.column.columnDef.header, header.getContext())}
+          </Box>
+        </StyledTableCell>
+      ))}
+    </StyledTableHeader>
   )
 }
 

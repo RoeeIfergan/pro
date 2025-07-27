@@ -2,9 +2,9 @@
 
 // import { translate } from 'utils/translate'
 
-import CardView from '@pro2/client/src/views/CardView/CardView'
+import DynamicFormView from '@pro2/client/src/views/DynamicFormView'
 import TableView from '@pro2/client/src/views/TableView'
-import { initialData as cardLoader } from '@pro2/client/src/views/CardView/loader'
+import { initialData as cardLoader } from '../DynamicFormView/loader'
 import { initialData as tableLoader } from '@pro2/client/src/views/TableView/loader'
 
 import DynamicFormIcon from '@mui/icons-material/DynamicForm'
@@ -20,10 +20,10 @@ type routeInfo = {
 
 export const routes: (routeInfo & RouteObject)[] = [
   {
-    label: 'card',
-    path: '/card',
+    label: 'DynamicForm',
+    path: '/DynamicForm',
     icon: <DynamicFormIcon />,
-    Component: CardView,
+    Component: DynamicFormView,
     loader: cardLoader,
     showInHeader: false
   },

@@ -4,6 +4,7 @@ import DynamicForm, { TcardJSONNode } from '@pro2/DynamicForm'
 const cardJSON: TcardJSONNode = {
   componentType: 'box',
   children: [
+    { componentType: 'textField', fieldName: 'name', label: '..' },
     {
       componentType: 'select',
       fieldName: 'type',
@@ -45,13 +46,32 @@ const cardJSON: TcardJSONNode = {
   ]
 }
 
-const CardView = () => {
+const DynamicFormView = () => {
   return (
-    <Box>
-      <Typography>Card View</Typography>
-      <DynamicForm cardJSON={cardJSON} />
+    <Box p={3}>
+      <Typography variant='h4' p={2}>
+        Card View
+      </Typography>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <Box
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            width: '500px',
+            backgroundColor: '#353535',
+            borderRadius: '5px'
+          }}
+        >
+          <DynamicForm cardJSON={cardJSON} />
+        </Box>
+      </Box>
     </Box>
   )
 }
 
-export default CardView
+export default DynamicFormView

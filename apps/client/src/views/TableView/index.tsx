@@ -1,19 +1,20 @@
 import { Box, Typography } from '@mui/material'
-import Table from '@pro2/Table'
 import { useMemo } from 'react'
 import { makeData } from './makeData'
 import { getColumns } from './columns'
+import Table from '@pro2/Table'
 
 const viewableEntities = ['demands', 'collectionTargets', 'pirs']
 const TableView = () => {
-  const data = useMemo(() => makeData(3, 3, 3, false, viewableEntities), [])
+  const data = useMemo(() => makeData(25, 25, 25, false, viewableEntities), [])
   const columns = useMemo(() => getColumns(viewableEntities), [])
 
   return (
-    <Box>
-      <Typography>Table View</Typography>
+    <Box p={3}>
+      <Typography variant='h4' p={2}>
+        Table View
+      </Typography>
       <Table
-        // width={1200}
         height={800}
         data={data}
         // reverseColumns
