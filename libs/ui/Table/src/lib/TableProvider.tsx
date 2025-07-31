@@ -1,5 +1,6 @@
 import {
   createContext,
+  Dispatch,
   SetStateAction,
   useContext,
   useLayoutEffect,
@@ -7,33 +8,31 @@ import {
   useRef,
   useState
 } from 'react'
-import { Header, Table } from '@tanstack/table-core'
-import { TData } from './types'
+import { Column, Table } from '@tanstack/table-core'
 import { Box } from '@mui/material'
+import { TData } from '../types'
 
-type table = Table<TData> | null
-
-const TableContext = createContext<TableContextValue | null>(null)
+type table = Table<TData>
 
 type TableContextProps = {
-  table?: table
-  width?: number
+  table: table
 }
 
 type TableContextValue = TableContextProps & {
   width: number
   maxRowWidth: number
   visibleDepthRow: number
-  setVisibleDepthRow: SetStateAction<number>
+  setVisibleDepthRow: Dispatch<SetStateAction<number>>
 }
+const TableContext = createContext<TableContextValue | undefined>(undefined)
 
 type Props = React.PropsWithChildren & TableContextProps
 
 const cellPadding = 16 * 2
-const getColumnWidth = (columns: Header<TData, unknown>[]) =>
+const getColumnWidth = (columns: Column<TData, unknown>[]) =>
   columns.reduce((acc, column) => acc + column.getSize() + cellPadding, 0)
 
-const getMaxRowWidth = (columns: Header<TData, unknown>[]): number => {
+const getMaxRowWidth = (columns: Column<TData, unknown>[]): number => {
   if (!columns) return 0
 
   const currentDepthColumnsWidth = getColumnWidth(columns)
@@ -47,7 +46,7 @@ const getMaxRowWidth = (columns: Header<TData, unknown>[]): number => {
 
   return Math.max(currentDepthColumnsWidth, maxChildColumnSize)
 }
-const useMaxRowWidth = (table) => {
+const useMaxRowWidth = (table: table) => {
   const columns = table?.getAllColumns()
   const maxWidth = useMemo(() => getMaxRowWidth(columns), [columns])
 
@@ -55,14 +54,14 @@ const useMaxRowWidth = (table) => {
 }
 
 const TableProvider = ({ children, table }: Props): JSX.Element => {
-  const tableWidthRef = useRef()
-  const [width, setWidth] = useState(10)
+  const tableWidthRef = useRef<Element>()
+  const [width, setWidth] = useState(0)
   const [visibleDepthRow, setVisibleDepthRow] = useState(0)
 
   const maxRowWidth = useMaxRowWidth(table)
-  // console.log(maxRowWidth)
+  console.log(maxRowWidth)
   useLayoutEffect(() => {
-    const updateWidth = () => setWidth(tableWidthRef?.current?.clientWidth || 0)
+    const updateWidth = () => setWidth(tableWidthRef.current?.clientWidth || 0)
 
     if (tableWidthRef.current) {
       window?.addEventListener('resize', updateWidth, false)
@@ -72,7 +71,7 @@ const TableProvider = ({ children, table }: Props): JSX.Element => {
   }, [])
 
   const contextValue = useMemo(
-    (): TableContextValue => ({
+    () => ({
       table,
       width,
       maxRowWidth,
@@ -85,7 +84,7 @@ const TableProvider = ({ children, table }: Props): JSX.Element => {
   return (
     <TableContext.Provider value={contextValue}>
       <Box
-        ref={(newRef) => {
+        ref={(newRef: Element | undefined) => {
           if (newRef) {
             const newWidth = newRef?.clientWidth
             tableWidthRef.current = newRef

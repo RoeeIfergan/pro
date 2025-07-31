@@ -45,6 +45,7 @@ export default [
         'error',
         {
           enforceBuildableLibDependency: true,
+          allowCircularSelfDependency: true,
           allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
           depConstraints: [
             {
@@ -52,8 +53,8 @@ export default [
               onlyDependOnLibsWithTags: ['*']
             },
             {
-              sourceTag: 'type:Feature',
-              onlyDependOnLibsWithTags: ['type:Feature', 'type:shared']
+              sourceTag: 'type:feature',
+              onlyDependOnLibsWithTags: ['type:feature', 'type:shared']
             },
             {
               sourceTag: 'type:shared',

@@ -1,16 +1,6 @@
-import { useMemo } from 'react'
-import { Cell } from '@tanstack/react-table'
-import { TData } from '../../types'
-import { ReactTableRow } from './types'
+import { TableRowData } from '../../../types'
 
-type RowCells = Cell<TData, unknown>[]
-
-const useRowCells = (row: ReactTableRow): RowCells => {
-  const headerGroups = useMemo(
-    () => row.getVisibleCells().filter((cell) => cell.column.depth === row.depth),
-    []
-  )
-
+const useRowCells = (row: TableRowData) => {
   return row.getVisibleCells().filter((cell) => cell.column.depth === row.depth)
 }
 

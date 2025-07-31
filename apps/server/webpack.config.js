@@ -1,9 +1,10 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 const { join } = require('path')
 
 module.exports = {
   output: {
-    path: join(__dirname, 'dist')
+    path: join(__dirname, '../../dist/server')
   },
   plugins: [
     new NxAppWebpackPlugin({
@@ -15,6 +16,9 @@ module.exports = {
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true
+    }),
+    new CopyPlugin({
+      patterns: [{ from: './views/index.html.ejs', to: join(__dirname, 'views') }]
     })
   ]
 }

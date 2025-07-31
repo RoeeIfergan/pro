@@ -1,9 +1,9 @@
 import { createContext, PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'react'
 import Axios from 'axios'
-import { createMongoAbility, AbilityBuilder, MongoAbility } from '@casl/ability'
-import { unpackRules } from '@casl/ability/extra'
+import { createMongoAbility, MongoAbility, Ability, RawRuleOf } from '@casl/ability'
+import { PackRule, unpackRules } from '@casl/ability/extra'
 
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 type AuthorizationContextValue = {
   ability?: MongoAbility
@@ -35,6 +35,17 @@ export const useAuthorizationContext = (): AuthorizationContextValue => {
   return contextValue
 }
 
+type Actions = 'create' | 'read' | 'update' | 'delete'
+type Subjects = 'Article' | 'Comment' | 'User'
+
+type AppAbility = Ability<[Actions, Subjects]>
+type Rule = RawRuleOf<AppAbility>
+type PackedRule = PackRule<Rule>
+
+interface TokenPayload extends JwtPayload {
+  rules: PackedRule[] // Correct type for unpackRules()
+}
+
 const AuthorizationProvider = ({ user, children }: AuthorizationProviderProps): ReactNode => {
   const [contextValue, setContextValue] = useState<AuthorizationContextValue>(
     defaultAuthorizationContextValue
@@ -48,19 +59,21 @@ const AuthorizationProvider = ({ user, children }: AuthorizationProviderProps): 
         params: { userId: 'Roee' }
       })
 
-      const decodedToken = jwt.decode(data.token)
+      const decodedToken = jwt.decode(data.token) as TokenPayload | null
 
-      const builder = new AbilityBuilder(createMongoAbility)
-      const { rules } = decodedToken
+      if (!decodedToken) return
 
-      const unPackedRules = unpackRules(rules)
-      const ability = builder.build()
+      // const rules = decodedToken.rules
 
-      ability.update(unPackedRules)
-      // authorizer.getPermission()
-      // const permissions = getUserPermmissions(user)
-      // authorizer.setPermission(permissions)
+      // const builder = new AbilityBuilder<AppAbility>(createMongoAbility)
 
+      const rules = unpackRules<Rule>(decodedToken.rules)
+      const ability = createMongoAbility<AppAbility>(rules)
+
+      // const unPackedRules = unpackRules(rules)
+      // const ability = builder.build()
+
+      // ability.update(unPackedRules)
       setContextValue({ ability })
     }
     run()

@@ -2,34 +2,25 @@ import { useDebouncedCallback } from 'use-debounce'
 
 import Row from './Row'
 import useRows from './Row/useRows'
-import { Box, styled, TableBody, TableCell, TableRow } from '@mui/material'
+import { Box, TableBody, TableCell, TableRow } from '@mui/material'
 import { useTableContext } from '../TableProvider'
-import { Virtualizer } from '@tanstack/react-virtual'
-
-const StyledTableBody = styled(TableBody)(({ height }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  // width: '100%',
-  height
-  // overflowY: 'auto'
-}))
+import { TableRowData, Virtualizer } from '../../types'
 
 type bodyProps = {
-  width: number
   height: number
-  virtualizer: Virtualizer<undefined, Element>
+  virtualizer: Virtualizer
 }
 
 const HEADER_UPDATE_DEBOUNCE = 100
-const getFirstVisibleItem = (virtualizer) => {
-  const scrollOffset = virtualizer.getScrollOffset()
+const getFirstVisibleItem = (virtualizer: Virtualizer) => {
+  const scrollOffset = virtualizer.scrollOffset || 0
 
   return virtualizer.getVirtualItems().find((item) => {
     return item.start + item.size > scrollOffset
   })
 }
 
-const useCalcFirstVisibleItem = (virtualizer, rows) => {
+const useCalcFirstVisibleItem = (virtualizer: Virtualizer, rows: TableRowData[]) => {
   const { setVisibleDepthRow } = useTableContext()
 
   const debouncedSetVisibleDepthRow = useDebouncedCallback(() => {
@@ -61,7 +52,14 @@ const Body = ({ virtualizer, height }: bodyProps) => {
     virtualRows.length > 0 ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0) : 0
 
   return (
-    <StyledTableBody component={Box} height={height}>
+    <TableBody
+      sx={{
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+      component={Box}
+      height={height}
+    >
       {paddingTop > 0 && (
         <TableRow component={Box}>
           <TableCell component={Box} style={{ height: `${paddingTop}px` }} />
@@ -70,7 +68,7 @@ const Body = ({ virtualizer, height }: bodyProps) => {
       {computedRows.map(({ row, virtualRow }, rowIndex) => (
         <Row
           row={row}
-          key={row.original.id}
+          key={row.id}
           virtualizer={virtualizer}
           virtualRowIndex={virtualRow.index}
           isLastRow={rowIndex === computedRows.length - 1}
@@ -81,7 +79,7 @@ const Body = ({ virtualizer, height }: bodyProps) => {
           <TableCell component={Box} style={{ height: `${paddingBottom}px` }} />
         </TableRow>
       )}
-    </StyledTableBody>
+    </TableBody>
   )
 }
 

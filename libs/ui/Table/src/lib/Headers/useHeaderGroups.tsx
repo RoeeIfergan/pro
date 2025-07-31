@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTableContext } from '../TableProvider'
 import { HeaderGroup } from '@tanstack/react-table'
-import { TData } from '../types'
+import { TData } from '../../types'
 
 type depth = number
 type useHeaderProps = { depth: depth }

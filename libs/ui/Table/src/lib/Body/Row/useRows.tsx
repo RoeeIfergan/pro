@@ -1,14 +1,18 @@
-import { ReactTableRow } from './types'
 import { useTableContext } from '../../TableProvider'
-import { Virtualizer } from '@tanstack/react-virtual'
 import { useMemo } from 'react'
+import { Row } from '@tanstack/react-table'
+import { VirtualItem } from '@tanstack/react-virtual'
+import { TData, Virtualizer } from '../../../types'
 
-const defaultRows: ReactTableRow[] = []
-
-const useRows = (virtualizer: Virtualizer<undefined, Element>): ReactTableRow[] => {
+const defaultRows: Row<TData>[] = []
+type computedRow = {
+  row: Row<TData>
+  virtualRow: VirtualItem
+}
+const useRows = (virtualizer: Virtualizer): computedRow[] => {
   const { table } = useTableContext()
 
-  const visibleRows = table?.getRowModel().rows //.filter(r => r.depth === depth)
+  const visibleRows = table?.getRowModel().rows
 
   const rows = visibleRows || defaultRows
 
@@ -16,7 +20,7 @@ const useRows = (virtualizer: Virtualizer<undefined, Element>): ReactTableRow[] 
 
   return useMemo(
     () =>
-      virtualItems?.reduce((acc, virtualRow) => {
+      virtualItems.reduce<computedRow[]>((acc, virtualRow) => {
         const row = rows[virtualRow.index]
 
         acc.push({

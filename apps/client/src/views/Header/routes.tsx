@@ -20,12 +20,12 @@ type routeInfo = {
 
 export const routes: (routeInfo & RouteObject)[] = [
   {
+    index: true,
     label: 'DynamicForm',
     path: '/DynamicForm',
     icon: <DynamicFormIcon />,
     Component: DynamicFormView,
-    loader: cardLoader,
-    showInHeader: false
+    loader: cardLoader
   },
   {
     label: 'table',

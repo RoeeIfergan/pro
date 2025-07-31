@@ -1,7 +1,7 @@
 import { flexRender, Header } from '@tanstack/react-table'
-import { TData } from '../types'
 import { useMemo } from 'react'
 import useHeaderGroups from './useHeaderGroups'
+import { TData } from '../../types'
 
 type depth = number
 

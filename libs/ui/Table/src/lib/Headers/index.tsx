@@ -3,9 +3,7 @@ import useHeaders from './useHeaders'
 import { useTableContext } from '../TableProvider'
 import { flexRender } from '@tanstack/react-table'
 
-const StyledTableHeader = styled(TableHead, {
-  shouldForwardProp: (prop) => prop !== 'depth'
-})<TableHeadProps & { depth: number }>(({ depth }) => ({
+const StyledTableHeader = styled(TableHead)<TableHeadProps>(() => ({
   display: 'flex',
   position: 'sticky',
   top: -1,
@@ -27,7 +25,7 @@ const Headers = ({ depth }: HeadersProps): JSX.Element => {
   const headers = useHeaders({ depth: depth || visibleDepthRow })
 
   return (
-    <StyledTableHeader component={Box} depth={depth || 0}>
+    <StyledTableHeader component={Box}>
       <Box style={{ width: '20px', backgroundColor: theme.palette.primary.light }} />
       {headers.map((header) => (
         <StyledTableCell key={header.id} component={Box} colSpan={header.colSpan}>

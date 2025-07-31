@@ -8,16 +8,16 @@ import {
   Row
 } from '@tanstack/react-table'
 
-import { TData } from './types'
+// import { TData } from './types'
 import TableProvider from './TableProvider'
-import { TableContainer, Table, Box, Paper, styled, TableProps } from '@mui/material'
+import { TableContainer, Paper, styled, Table, TableProps, Box } from '@mui/material'
 import Headers from './Headers'
 import Body from './Body'
-import { computeColumns } from './utils'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { TData } from '../types'
+import { computeColumns } from './utils'
 
 type GTableProps = {
-  width: number
   height: number
   data: TData[]
   reverseColumns?: boolean
@@ -25,7 +25,7 @@ type GTableProps = {
   getRowCanExpand?: (row: Row<TData>) => boolean
 }
 
-const StyledTable = styled(Table)<TableProps>(() => ({
+const StyledTable = styled((props: TableProps) => <Table {...props} />)(() => ({
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
@@ -34,13 +34,13 @@ const StyledTable = styled(Table)<TableProps>(() => ({
 
 const OVERSCAN_SIZE = 5
 
-const ReactTable = ({
+function ReactTable({
   data,
   height,
   columns,
   reverseColumns,
   getRowCanExpand
-}: GTableProps): JSX.Element => {
+}: GTableProps): JSX.Element {
   const getSubRows = useCallback((originalRow: TData) => originalRow.subRows, [])
   const { computedData, computedColumns } = useMemo(
     () => ({
@@ -60,12 +60,12 @@ const ReactTable = ({
   })
   const currentRows = table.getExpandedRowModel()?.rows
   const virtualizeAmount = currentRows.length || 0
-  const tableContainerRef = useRef()
+  const tableContainerRef = useRef(null)
   const virtualizer = useVirtualizer({
     count: virtualizeAmount,
     horizontal: false,
     getScrollElement: () => tableContainerRef.current,
-    estimateSize: (index) => 42,
+    estimateSize: () => 42,
     // debug: true,
     overscan: OVERSCAN_SIZE //TODO: Increase
   })
@@ -78,9 +78,9 @@ const ReactTable = ({
         style={{ width: '100%', overflow: 'hidden' }}
       >
         <StyledTable
-          id='table-ref'
           size='small'
           stickyHeader
+          id='table-ref'
           component={Box}
           ref={tableContainerRef}
         >

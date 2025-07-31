@@ -1,13 +1,13 @@
 import { Box, Typography } from '@mui/material'
 import { useMemo } from 'react'
 import { makeData } from './makeData'
-import { getColumns } from './columns'
+import { createComputedColumns } from './columns'
 import Table from '@pro2/Table'
 
 const viewableEntities = ['demands', 'collectionTargets', 'pirs']
 const TableView = () => {
   const data = useMemo(() => makeData(25, 25, 25, false, viewableEntities), [])
-  const columns = useMemo(() => getColumns(viewableEntities), [])
+  const columns = useMemo(() => createComputedColumns(viewableEntities), [])
 
   return (
     <Box p={3}>

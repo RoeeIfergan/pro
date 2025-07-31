@@ -1,18 +1,27 @@
 import { TData } from '@pro2/Table'
+import { Override } from 'notistack'
 
-export type PIR = TData & {
-  id: string
-  name: string
-  subRows?: CollectionTarget[]
-}
+// export type PIR = tdata
 
-export type CollectionTarget = TData & {
-  id: string
-  name: string
-  origin: string
-  country: string
-  subRows?: Demand[]
-}
+export type PIR = Override<
+  TData,
+  {
+    id: string
+    name: string
+    subRows?: CollectionTarget[]
+  }
+>
+
+export type CollectionTarget = Override<
+  TData,
+  {
+    id: string
+    name: string
+    origin: string
+    country: string
+    subRows?: Demand[]
+  }
+>
 
 export type Demand = TData & {
   id: string
@@ -64,10 +73,14 @@ const createPIR = (index: number, collectionTargets: CollectionTarget[]): PIR =>
 
 const createArray = (index: number) => Array(index).fill(null)
 
-const getAmount = (amount, enableRandom) =>
+const getAmount = (amount: number, enableRandom: boolean) =>
   enableRandom ? Math.ceil(amount * Math.random() + 2) : amount
 
-const createDemands = (demandsAmount, enableRandom, viewableEntities) => {
+const createDemands = (
+  demandsAmount: number,
+  enableRandom: boolean,
+  viewableEntities: string[]
+) => {
   if (!viewableEntities.includes('demands')) {
     return []
   }
@@ -76,14 +89,15 @@ const createDemands = (demandsAmount, enableRandom, viewableEntities) => {
     createDemand(demandIndex)
   )
 }
+
 export const makeData = (
   PIRAmount: number,
   CollectionTargetAmount: number,
   demandsAmount: number,
   enableRandom: boolean,
   viewableEntities: string[]
-): TData[] => {
-  let data
+): PIR[] | CollectionTarget[] | Demand[] => {
+  let data: PIR[] | CollectionTarget[] | Demand[]
   if (viewableEntities.includes('pirs')) {
     data = createArray(getAmount(PIRAmount, enableRandom)).map((PIR, pirIndex) =>
       createPIR(
@@ -100,9 +114,6 @@ export const makeData = (
   } else {
     data = createArray(getAmount(CollectionTargetAmount, enableRandom)).map(
       (collectionTarget, collectionTargetIndex) => {
-        if (!viewableEntities.includes('demands')) {
-          return []
-        }
         return createCollectionTarget(
           collectionTargetIndex,
           createDemands(demandsAmount, enableRandom, viewableEntities)

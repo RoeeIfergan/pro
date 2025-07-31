@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 
-const RowIndent = ({ depth }) => {
+const RowIndent = ({ depth }: { depth: number }) => {
   return (
     <Box
       style={{

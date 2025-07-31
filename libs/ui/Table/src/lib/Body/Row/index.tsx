@@ -1,24 +1,26 @@
 import { flexRender } from '@tanstack/react-table'
 
 import useRowCells from './useRowCells'
-import { Box, styled, TableCell, TableRow } from '@mui/material'
-import { ReactTableRow } from './types'
-import { Virtualizer } from '@tanstack/react-virtual'
+import { Box, styled, TableCell, TableRow, TableRowProps } from '@mui/material'
 import Headers from '../../Headers'
 import RowIndent from '../RowIndent'
+import { TableRowData, Virtualizer } from '../../../types'
+
 export type RowProps = {
-  row: ReactTableRow
+  row: TableRowData
   isLastRow: boolean
-  virtualizer: Virtualizer<undefined, Element>
+  virtualizer: Virtualizer
   virtualRowIndex: number
 }
 
-const StyledTableRow = styled(TableRow)(() => ({
+const StyledTableRow = styled(TableRow)<TableRowProps>(() => ({
   display: 'flex',
   flexDirection: 'row'
 }))
 
-const StyledTableCell = styled(TableCell)(({ theme, isLastRow }) => ({
+const StyledTableCell = styled(TableCell, {
+  shouldForwardProp: (prop: string) => prop !== 'isLastRow'
+})<{ isLastRow: boolean }>(({ isLastRow }) => ({
   display: 'flex',
   ...(isLastRow && {
     border: 'none'
@@ -70,11 +72,7 @@ const Row = ({ row, isLastRow, virtualizer, virtualRowIndex }: RowProps): JSX.El
       >
         <StyledTableRow component={Box}>
           {rowCells.map((cell) => (
-            <StyledTableCell
-              key={`${cell.id}${cell.row.original.id}`}
-              component={Box}
-              isLastRow={isLastRow}
-            >
+            <StyledTableCell key={`${cell.id}${cell.row.id}`} component={Box} isLastRow={isLastRow}>
               <ScrollContainer width={cell.column.getSize()}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </ScrollContainer>

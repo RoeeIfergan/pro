@@ -1,2 +1,2 @@
-export * from './lib/types'
+export * from './types'
 export { default } from './lib/index'

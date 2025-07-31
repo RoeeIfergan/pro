@@ -1,11 +1,43 @@
-import React from 'react'
-import ExpandLessIcons from '@mui/icons-material/ExpandLess'
-import ExpandMoreIcons from '@mui/icons-material/ExpandMore'
-// import { reverseColumns } from './Table/utils'
+import {
+  AccessorKeyColumnDef,
+  ColumnDef,
+  createColumnHelper,
+  DisplayColumnDef,
+  GroupColumnDef
+} from '@tanstack/react-table'
+import { CollectionTarget, Demand, PIR } from './makeData'
 import { Box, Checkbox, CheckboxProps, Chip } from '@mui/material'
-import { ColumnDef, Row } from '@tanstack/react-table'
-import { TData } from '@pro2/Table'
+import { TableRowData, TData } from '@pro2/Table'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 
+type entity = PIR | CollectionTarget | Demand
+type entityKeys = keyof (PIR & CollectionTarget & Demand)
+
+const columnHelper = createColumnHelper<TData | entity>()
+
+// const pir: PIR = {
+//   id: 'ads',
+//   name: 'pir',
+//   subRows: [
+//     {
+//       id: 'asd',
+//       name: 'asd',
+//       origin: 'asd',
+//       country: 'asd',
+//       subRows: [
+//         {
+//           id: 'asd',
+//           name: 'asd',
+//           color: 'asd',
+//           country: 'asd',
+//           startDate: 'asd',
+//           endDate: 'asd'
+//         }
+//       ]
+//     }
+//   ]
+// }
 const StyledCheckbox = ({
   checked,
   indeterminate,
@@ -14,7 +46,7 @@ const StyledCheckbox = ({
   <Checkbox indeterminate={indeterminate} value={checked} {...rest} />
 )
 
-const setExpandedSubRows = (rows: Row<TData>[], value: boolean) => {
+const setExpandedSubRows = (rows: TableRowData[], value: boolean) => {
   if (!rows || rows.length === 0) return
 
   rows.forEach((row) => {
@@ -23,7 +55,7 @@ const setExpandedSubRows = (rows: Row<TData>[], value: boolean) => {
   })
 }
 
-const getToggleExpandedHandler = (row: Row<TData>) => () => {
+const getToggleExpandedHandler = (row: TableRowData) => () => {
   const value = !row.getIsExpanded()
 
   row.toggleExpanded(value)
@@ -32,60 +64,61 @@ const getToggleExpandedHandler = (row: Row<TData>) => () => {
     setExpandedSubRows(row.subRows, value)
   }
 }
-const getSelectColumn = (content: JSX.Element | string): ColumnDef<TData> => ({
-  id: 'select',
-  size: 80,
-  header: (props) => {
-    const { table } = props
+const getSelectColumn = (content: JSX.Element | string): DisplayColumnDef<TData, unknown> =>
+  columnHelper.display({
+    id: 'select',
+    size: 80,
+    header: (props) => {
+      const { table } = props
 
-    return (
-      <Box style={{ display: 'flex', alignItems: 'center', height: '42px' }}>
-        <StyledCheckbox
-          {...{
-            checked: table.getIsAllRowsSelected(),
-            indeterminate: table.getIsSomeRowsSelected(),
-            onChange: table.getToggleAllRowsSelectedHandler()
-          }}
-        />
-        <Chip
-          size='small'
-          color='secondary'
-          label={content}
-          style={{ height: '20px', fontSize: '13px' }}
-        />
-      </Box>
-    )
-  },
-  cell: ({ row }) => {
-    return (
-      <Box style={{ display: 'flex', alignItems: 'center' }}>
-        <StyledCheckbox
-          {...{
-            checked: row.getIsSelected(),
-            disabled: !row.getCanSelect(),
-            indeterminate: row.getIsSomeSelected(),
-            onChange: row.getToggleSelectedHandler()
-          }}
-        />
-        {content && row.subRows.length && row.getCanExpand() ? (
-          <Box
-            style={{
-              display: 'flex',
-              alignItems: 'center'
+      return (
+        <Box style={{ display: 'flex', alignItems: 'center', height: '42px' }}>
+          <StyledCheckbox
+            {...{
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler()
             }}
-          >
+          />
+          <Chip
+            size='small'
+            color='secondary'
+            label={content}
+            style={{ height: '20px', fontSize: '13px' }}
+          />
+        </Box>
+      )
+    },
+    cell: ({ row }) => {
+      return (
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <StyledCheckbox
+            {...{
+              checked: row.getIsSelected(),
+              disabled: !row.getCanSelect(),
+              indeterminate: row.getIsSomeSelected(),
+              onChange: row.getToggleSelectedHandler()
+            }}
+          />
+          {content && row.subRows.length && row.getCanExpand() ? (
             <Box
-              style={{ height: '24px', cursor: 'pointer' }}
-              onClick={getToggleExpandedHandler(row)}
+              style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}
             >
-              {row.getIsExpanded() ? <ExpandMoreIcons /> : <ExpandLessIcons />}
+              <Box
+                style={{ height: '24px', cursor: 'pointer' }}
+                onClick={getToggleExpandedHandler(row)}
+              >
+                {row.getIsExpanded() ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+              </Box>
             </Box>
-          </Box>
-        ) : null}
-      </Box>
-    )
-  }
-})
+          ) : null}
+        </Box>
+      )
+    }
+  })
 
 // const getCollapseByType = (content) => ({
 //   id: 'type',
@@ -114,101 +147,79 @@ const getSelectColumn = (content: JSX.Element | string): ColumnDef<TData> => ({
 //     )
 //   }
 // })
-const createDefaultColumn = (
-  accessorKey: string,
-  header: string,
-  size = 120
-): ColumnDef<TData> => ({
-  accessorKey,
-  header,
-  size,
-  cell: ({ row, getValue }) => {
-    const content = getValue() + ''
+const createDefaultColumn = (accessorKey: entityKeys, header: string, size = 120) =>
+  columnHelper.accessor(accessorKey, {
+    header,
+    size,
+    cell: ({ getValue }) => {
+      const content = getValue() + ''
 
-    return <div style={{ height: '42px' }}> {content} </div>
-  }
-})
+      return <div style={{ height: '42px' }}> {content} </div>
+    }
+  })
 // : ColumnDef<TData>[]
-const createColumns = (): ColumnDef<TData>[] => [
+
+const collectionTargetColumns = columnHelper.group({
+  id: 'CollectionTarget',
+  header: () => false,
+  columns: [
+    getSelectColumn('(יעד)'),
+    createDefaultColumn('name', 'שם'),
+    createDefaultColumn('name', 'מקור', 200),
+    createDefaultColumn('name', 'מקור', 200),
+    createDefaultColumn('name', 'מקור', 200),
+    createDefaultColumn('name', 'מקור', 200),
+    createDefaultColumn('name', 'מקור', 200),
+    createDefaultColumn('name', 'מקור', 200),
+    createDefaultColumn('name', 'מקור', 200),
+    createDefaultColumn('name', 'מדינה', 80),
+    createDefaultColumn('name', 'מדינה', 80),
+    createDefaultColumn('name', 'מדינה', 80),
+    createDefaultColumn('name', 'מדינה', 80),
+    createDefaultColumn('name', 'מדינה', 80),
+    columnHelper.group({
+      id: 'Demand',
+      header: () => false,
+      columns: [
+        getSelectColumn('(דרישה)'),
+        createDefaultColumn('name', 'שם'),
+        createDefaultColumn('name', 'מדינה'),
+        createDefaultColumn('name', 'צבע'),
+        createDefaultColumn('name', 'תחילת רלוונטיות'),
+        createDefaultColumn('name', 'סוף רלוונטיות')
+      ]
+    })
+  ]
+})
+
+export type column =
+  | DisplayColumnDef<entity, unknown>
+  | AccessorKeyColumnDef<entity, string>
+  | GroupColumnDef<entity, unknown>
+
+const createColumns: ColumnDef<TData>[] = [
   getSelectColumn('(ציח)'),
-  createDefaultColumn('id', 'מזהה'),
-  createDefaultColumn('name', 'שם'),
-  createDefaultColumn('id_2', '2 מזהה'),
-  createDefaultColumn('id_3', '3 מזהה'),
-  createDefaultColumn('id_4', '4 מזהה'),
-  createDefaultColumn('id_5', '5 מזהה'),
-  createDefaultColumn('id_6', '6 מזהה'),
-  createDefaultColumn('id_7', '7 מזהה'),
-  createDefaultColumn('id_8', '8 מזהה'),
-  createDefaultColumn('id_9', '9 מזהה'),
-  createDefaultColumn('id_10', '10 מזהה'),
-  createDefaultColumn('id_11', '11 מזהה'),
-  createDefaultColumn('id_12', '12 מזהה'),
-  createDefaultColumn('id_13', '13 מזהה'),
-  createDefaultColumn('id_14', '14 מזהה'),
-  createDefaultColumn('id_15', '15 מזהה'),
-  createDefaultColumn('id_16', '16 מזהה'),
-  createDefaultColumn('id_17', '17 מזהה'),
-  createDefaultColumn('id_18', '18 מזהה'),
-  // createDefaultColumn('id', '9 מזהה'),
-  // createDefaultColumn('id', '10 מזהה'),
-  // createDefaultColumn('id', '11 מזהה'),
-  // createDefaultColumn('id', '12 מזהה'),
-  // createDefaultColumn('id', '13 מזהה'),
-  // createDefaultColumn('id', '14 מזהה'),
-  // createDefaultColumn('id', '15 מזהה'),
-  // createDefaultColumn('id', '16 מזהה'),
-  {
-    id: 'CollectionTarget',
-    header: () => false,
-    columns: [
-      getSelectColumn('(יעד)'),
-      createDefaultColumn('name', 'שם'),
-      createDefaultColumn('origin_1', 'מקור', 200),
-      createDefaultColumn('origin_2', 'מקור', 200),
-      createDefaultColumn('origin_3', 'מקור', 200),
-      createDefaultColumn('origin_4', 'מקור', 200),
-      createDefaultColumn('origin_5', 'מקור', 200),
-      createDefaultColumn('origin_6', 'מקור', 200),
-      createDefaultColumn('origin_7', 'מקור', 200),
-      createDefaultColumn('country_8', 'מדינה', 80),
-      createDefaultColumn('country', 'מדינה', 80),
-      createDefaultColumn('country_1', 'מדינה', 80),
-      createDefaultColumn('country_2', 'מדינה', 80),
-      createDefaultColumn('country_3', 'מדינה', 80),
-      {
-        id: 'Demand',
-        header: () => false,
-        columns: [
-          getSelectColumn('(דרישה)'),
-          createDefaultColumn('name', 'שם'),
-          createDefaultColumn('country', 'מדינה'),
-          createDefaultColumn('color', 'צבע'),
-          createDefaultColumn('startDate', 'תחילת רלוונטיות'),
-          createDefaultColumn('endDate', 'סוף רלוונטיות')
-        ]
-      }
-    ]
-  }
+  //createDefaultColumn('id', '16 מזהה'),
+  collectionTargetColumns
 ]
 
-export const getColumns = (viewableEntities: string[]) => {
-  let selectedColumns = createColumns()
-
-  if (!selectedColumns) return []
+// const isGroupColumn = (column): grou
+export const createComputedColumns = (viewableEntities: string[]): ColumnDef<TData>[] => {
+  let selectedColumns = createColumns
 
   if (!viewableEntities.includes('pirs')) {
-    const column = selectedColumns.find((column) => column.id === 'CollectionTarget')
+    const column = selectedColumns.find((column) => 'columns' in column)
 
-    if (column && Array.isArray(column.columns)) {
-      selectedColumns = column.columns
+    if (column && 'columns' in column && column.columns) {
+      const a = column.columns
+      selectedColumns = a
     }
   }
 
   if (!viewableEntities.includes('demands')) {
     selectedColumns = selectedColumns.map((selectedColumn) => {
-      if (selectedColumn.id === 'CollectionTarget') {
-        selectedColumn.columns = selectedColumn.columns.filter((column) => column.id !== 'Demand')
+      if ('columns' in selectedColumn && selectedColumn.columns) {
+        selectedColumn.columns = selectedColumn.columns.filter((column) => 'columns' in column)
       }
 
       return selectedColumn
