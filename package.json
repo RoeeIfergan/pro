@@ -9,6 +9,8 @@
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "axios": "^1.6.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"
   },
@@ -22,6 +24,7 @@
     "@nx/js": "21.3.10",
     "@nx/nest": "21.3.10",
     "@nx/node": "21.3.10",
+    "@nx/react": "^21.3.10",
     "@nx/web": "21.3.10",
     "@nx/webpack": "21.3.10",
     "@nx/workspace": "21.3.10",
