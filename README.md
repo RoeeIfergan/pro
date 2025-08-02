@@ -32,7 +32,6 @@ nx sync
 3. Click "run-many"
 4. Click "dev"
 5. Click Execute
-## Run tasks
 
 ## Project Graph:
 ```sh
