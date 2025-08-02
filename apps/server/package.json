@@ -20,6 +20,19 @@
           }
         }
       },
+      "dev": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "@pro3/server:build",
+          "runBuildTargetDependencies": false
+        },
+        "buildTarget": "@pro3/server:build:development"
+      },
       "serve": {
         "continuous": true,
         "executor": "@nx/js:node",
