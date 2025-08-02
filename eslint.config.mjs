@@ -1,7 +1,7 @@
-import nx from '@nx/eslint-plugin';
-import unusedImports from 'eslint-plugin-unused-imports';
-import prettierRecommended from 'eslint-config-prettier';
-import prettierPlugin from 'eslint-plugin-prettier';
+import nx from '@nx/eslint-plugin'
+import unusedImports from 'eslint-plugin-unused-imports'
+import prettierRecommended from 'eslint-config-prettier'
+import prettierPlugin from 'eslint-plugin-prettier'
 
 export default [
   ...nx.configs['flat/base'],
@@ -12,21 +12,21 @@ export default [
       '**/dist',
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
-      '**/test-output',
-    ],
+      '**/test-output'
+    ]
   },
   {
     plugins: {
-      prettier: prettierPlugin,
+      prettier: prettierPlugin
     },
     rules: {
-      'prettier/prettier': 'error',
-    },
+      'prettier/prettier': 'error'
+    }
   },
   prettierRecommended,
   {
     plugins: {
-      'unused-imports': unusedImports,
+      'unused-imports': unusedImports
     },
     rules: {
       'no-unused-vars': 'off',
@@ -38,10 +38,10 @@ export default [
           vars: 'all',
           varsIgnorePattern: '^_',
           args: 'after-used',
-          argsIgnorePattern: '^_',
-        },
-      ],
-    },
+          argsIgnorePattern: '^_'
+        }
+      ]
+    }
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
@@ -55,20 +55,20 @@ export default [
           depConstraints: [
             {
               sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
+              onlyDependOnLibsWithTags: ['*']
             },
             {
               sourceTag: 'type:feature',
-              onlyDependOnLibsWithTags: ['type:feature', 'type:shared'],
+              onlyDependOnLibsWithTags: ['type:feature', 'type:shared']
             },
             {
               sourceTag: 'type:shared',
-              onlyDependOnLibsWithTags: ['type:shared'],
-            },
-          ],
-        },
-      ],
-    },
+              onlyDependOnLibsWithTags: ['type:shared']
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     files: [
@@ -79,9 +79,9 @@ export default [
       '**/*.js',
       '**/*.jsx',
       '**/*.cjs',
-      '**/*.mjs',
+      '**/*.mjs'
     ],
     // Override or add rules here
-    rules: {},
-  },
-];
+    rules: {}
+  }
+]
