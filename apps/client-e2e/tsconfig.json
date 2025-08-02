@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "allowJs": true,
-    "outDir": "out-tsc/playwright",
+    "outDir": "../../out-tsc/client-e2e",
     "sourceMap": false
   },
   "include": [
