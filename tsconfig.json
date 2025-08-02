@@ -8,6 +8,12 @@
     },
     {
       "path": "./apps/server"
+    },
+    {
+      "path": "./apps/client-e2e"
+    },
+    {
+      "path": "./apps/client"
     }
   ]
 }
