@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../dist/ui/Table",
+    "outDir": "../../../dist/ui/Table",
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
@@ -11,7 +11,7 @@
     "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
+    "tsBuildInfoFile": "../../../dist/ui/Table/tsconfig.lib.tsbuildinfo"
   },
   "exclude": [
     "out-tsc",
