@@ -1,1 +1,1 @@
-nx affected -t lint build test --base=main --parallel=5 --verbose
+nx affected -t lint build test --base=origin/main --parallel=5 --verbose
