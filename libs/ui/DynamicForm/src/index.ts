@@ -1,1 +1,2 @@
-export * from './lib/DynamicForm';
+export * from './lib/types'
+export { default } from './lib/index'

@@ -3,6 +3,12 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/ui/Table"
+    },
+    {
+      "path": "../../libs/ui/DynamicForm"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {
