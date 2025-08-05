@@ -1,15 +1,24 @@
 import { FormProvider, useForm } from 'react-hook-form'
-import { TcardJSONNode } from './types'
-import RenderCardComponent from './RenderCardComponent'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ZodType } from 'zod'
+import { Card } from './components/Card'
+import { ICardSchemaMeta } from './types/types'
 
-type TCard = { cardJSON: TcardJSONNode | null }
-
-export const DynamicForm = ({ cardJSON }: TCard) => {
-  const methods = useForm()
+export const DynamicForm = ({
+  schema,
+  uiSchema
+}: {
+  schema: ZodType<any, any, any>
+  uiSchema: ICardSchemaMeta
+}) => {
+  const methods = useForm({
+    resolver: zodResolver(schema)
+    // defaultValues: schema.parse({})
+  })
 
   return (
     <FormProvider {...methods}>
-      <RenderCardComponent cardJSONNode={cardJSON} />
+      <Card schema={schema} uiSchema={uiSchema} />
     </FormProvider>
   )
 }
