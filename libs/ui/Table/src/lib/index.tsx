@@ -10,7 +10,7 @@ import {
 
 // import { TData } from './types'
 import TableProvider from './TableProvider'
-import { TableContainer, Paper, styled, Table, TableProps, Box } from '@mui/material'
+import { TableContainer, Paper, Table, Box } from '@mui/material'
 import Headers from './Headers'
 import Body from './Body'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -25,12 +25,12 @@ type GTableProps = {
   getRowCanExpand?: (row: Row<TData>) => boolean
 }
 
-const StyledTable = styled((props: TableProps) => <Table {...props} />)(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-  position: 'relative',
-  overflow: 'auto'
-}))
+// const StyledTable = styled((props: TableProps) => <Table {...props} />)(() => ({
+//   display: 'flex',
+//   flexDirection: 'column',
+//   position: 'relative',
+//   overflow: 'auto'
+// }))
 
 const OVERSCAN_SIZE = 5
 
@@ -77,16 +77,10 @@ function ReactTable({
         id='tableContainer'
         style={{ width: '100%', overflow: 'hidden' }}
       >
-        <StyledTable
-          size='small'
-          stickyHeader
-          id='table-ref'
-          component={Box}
-          ref={tableContainerRef}
-        >
+        <Table size='small' stickyHeader id='table-ref' component={Box} ref={tableContainerRef}>
           <Headers />
           <Body virtualizer={virtualizer} height={height} />
-        </StyledTable>
+        </Table>
       </TableContainer>
     </TableProvider>
   )

@@ -59,7 +59,7 @@ const TableProvider = ({ children, table }: Props): JSX.Element => {
   const [visibleDepthRow, setVisibleDepthRow] = useState(0)
 
   const maxRowWidth = useMaxRowWidth(table)
-  console.log(maxRowWidth)
+
   useLayoutEffect(() => {
     const updateWidth = () => setWidth(tableWidthRef.current?.clientWidth || 0)
 

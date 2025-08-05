@@ -6,7 +6,7 @@ export const reverseColumns = <TData>(columns: columns<TData>): columns<TData> =
   if (!columns) return columns
 
   columns.reverse()
-  columns.map((column) => {
+  columns.forEach((column) => {
     if (column && 'columns' in column && column.columns) {
       reverseColumns(column.columns)
     }

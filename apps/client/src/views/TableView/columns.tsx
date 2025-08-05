@@ -147,10 +147,11 @@ const getSelectColumn = (content: JSX.Element | string): DisplayColumnDef<TData,
 //     )
 //   }
 // })
-const createDefaultColumn = (accessorKey: entityKeys, header: string, size = 120) =>
+const createDefaultColumn = (accessorKey: entityKeys, header: string, size?: number) =>
   columnHelper.accessor(accessorKey, {
     header,
     size,
+
     cell: ({ getValue }) => {
       const content = getValue() + ''
 
@@ -165,17 +166,8 @@ const collectionTargetColumns = columnHelper.group({
   columns: [
     getSelectColumn('(יעד)'),
     createDefaultColumn('name', 'שם'),
-    createDefaultColumn('name', 'מקור', 200),
-    createDefaultColumn('name', 'מקור', 200),
-    createDefaultColumn('name', 'מקור', 200),
-    createDefaultColumn('name', 'מקור', 200),
-    createDefaultColumn('name', 'מקור', 200),
-    createDefaultColumn('name', 'מקור', 200),
-    createDefaultColumn('name', 'מקור', 200),
-    createDefaultColumn('name', 'מדינה', 80),
-    createDefaultColumn('name', 'מדינה', 80),
-    createDefaultColumn('name', 'מדינה', 80),
-    createDefaultColumn('name', 'מדינה', 80),
+    createDefaultColumn('name', 'מקור'),
+    createDefaultColumn('name', 'מקור'),
     createDefaultColumn('name', 'מדינה', 80),
     columnHelper.group({
       id: 'Demand',
@@ -199,6 +191,8 @@ export type column =
 
 const createColumns: ColumnDef<TData>[] = [
   getSelectColumn('(ציח)'),
+  createDefaultColumn('name', 'מקור'),
+
   //createDefaultColumn('id', '16 מזהה'),
   collectionTargetColumns
 ]
