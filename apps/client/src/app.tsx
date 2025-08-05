@@ -16,6 +16,7 @@ import rtlPlugin from 'stylis-plugin-rtl'
 
 import { theme } from './utils/theme'
 import Router from '@pro3/client/src/components/Router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 // import Auth from 'components/Auth'
 
@@ -25,20 +26,24 @@ const cacheRtl = createCache({
   stylisPlugins: [prefixer, rtlPlugin]
 })
 
-const App = () => (
-  <CacheProvider value={cacheRtl}>
-    <ThemeProvider theme={theme}>
-      {/* <Auth> */}
-      <CssBaseline />
+const queryClient = new QueryClient()
 
-      <SnackbarProvider anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-        <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale='en-il'>
-          <Router />
-        </LocalizationProvider>
-      </SnackbarProvider>
-      {/* </Auth> */}
-    </ThemeProvider>
-  </CacheProvider>
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <CacheProvider value={cacheRtl}>
+      <ThemeProvider theme={theme}>
+        {/* <Auth> */}
+        <CssBaseline />
+
+        <SnackbarProvider anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+          <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale='en-il'>
+            <Router />
+          </LocalizationProvider>
+        </SnackbarProvider>
+        {/* </Auth> */}
+      </ThemeProvider>
+    </CacheProvider>
+  </QueryClientProvider>
 )
 
 export default App
