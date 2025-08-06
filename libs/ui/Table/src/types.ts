@@ -9,9 +9,9 @@ import {
   OnChangeFn
 } from '@tanstack/react-table'
 
-export interface PTableProps<TData = unknown> {
+export interface PTableProps<TData = unknown, TValue = unknown> {
   data: TData[]
-  columns: ColumnDef<TData, unknown>[]
+  columns: ColumnDef<TData, TValue>[]
   selected?: RowSelectionState
   setSelected?: OnChangeFn<RowSelectionState>
   isLoading?: boolean

@@ -33,7 +33,7 @@ import {
 } from '@mui/icons-material'
 import { PTableProps } from '../types'
 
-export function PTable<TData>({
+export function PTable<TData, TValue = unknown>({
   data,
   columns,
   selected = {},
@@ -58,7 +58,7 @@ export function PTable<TData>({
   enableSorting = true,
   renderSubComponent,
   getRowCanExpand
-}: PTableProps<TData>) {
+}: PTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   // Memoize table columns with selection column if enabled
@@ -74,6 +74,8 @@ export function PTable<TData>({
             indeterminate={table.getIsSomeRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()}
             size='small'
+            disableRipple
+            sx={{ padding: 0 }}
           />
         ),
         cell: ({ row }) => {
@@ -84,13 +86,14 @@ export function PTable<TData>({
               indeterminate={row.getIsSomeSelected()}
               onChange={row.getToggleSelectedHandler()}
               size='small'
+              disableRipple
             />
           )
         },
         enableResizing: false,
         enableSorting: false,
         enableGrouping: false,
-        size: 20
+        size: 50
       })
     }
 
@@ -113,7 +116,7 @@ export function PTable<TData>({
         enableResizing: false,
         enableSorting: false,
         enableGrouping: false,
-        size: 20
+        size: 50
       })
     }
 
@@ -289,6 +292,7 @@ export function PTable<TData>({
                           position: 'absolute',
                           right: 0,
                           top: 0,
+                          width: 4,
                           height: '100%',
                           cursor: 'col-resize',
                           userSelect: 'none',
