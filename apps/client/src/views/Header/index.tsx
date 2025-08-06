@@ -204,7 +204,27 @@ const Header = () => {
           ))}
         </List>
       </Drawer>
-      <Box component='main' id='main' sx={{ width: '100%' }}>
+      <Box
+        component='main'
+        id='main'
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          width: isOpen
+            ? `calc(100% - ${drawerWidth}px)`
+            : {
+                xs: `calc(100% - ${theme.spacing(7)} - 1px)`,
+                sm: `calc(100% - ${theme.spacing(8)} - 1px)`
+              },
+          transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: isOpen
+              ? theme.transitions.duration.enteringScreen
+              : theme.transitions.duration.leavingScreen
+          })
+        }}
+      >
         <DrawerHeader />
         <Outlet />
       </Box>
