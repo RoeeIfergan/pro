@@ -11,6 +11,8 @@ const DynamicFormView = () => {
 
   const [collection, setCollection] = useState<string>('')
 
+  console.log('💪💪 collections???', collections)
+
   useEffect(() => {
     if (collections && collections.length > 0 && !collection) {
       setCollection(collections[0].name)

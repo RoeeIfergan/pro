@@ -74,7 +74,6 @@ export const componentMap: FieldComponentMapper = {
   [FieldComponentType.inputRadio]: LayoutButtonsGroup
 }
 
-// Type for lazy loader functions
 type LazyLoaderFunction = (queryClient: QueryClient) => Promise<IOption[]>
 
 export const loadDepartments = (queryClient: QueryClient) => {
@@ -99,7 +98,21 @@ export const loadDepartments = (queryClient: QueryClient) => {
   })
 }
 
-// Lazy loader mapper for converting LazyLoaderType enum to async functions
+export const loadPirates = (queryClient: QueryClient) => {
+  return queryClient.fetchQuery({
+    queryKey: ['pirates'],
+    queryFn: async () => {
+      return [
+        { value: 'pirate1', label: 'פיראט 1' },
+        { value: 'pirate2', label: 'פיראט 2' },
+        { value: 'pirate3', label: 'פיראט 3' }
+      ]
+    },
+    staleTime: Infinity
+  })
+}
+
 export const lazyLoaderMap: Record<LazyLoaderType, LazyLoaderFunction> = {
-  [LazyLoaderType.LOAD_DEPARTMENTS]: loadDepartments
+  [LazyLoaderType.LOAD_DEPARTMENTS]: loadDepartments,
+  [LazyLoaderType.LOAD_PIRATES]: loadPirates
 }

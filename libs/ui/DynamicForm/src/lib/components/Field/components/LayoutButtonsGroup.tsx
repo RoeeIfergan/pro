@@ -22,9 +22,11 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <FormControl component='fieldset' error={!!error} sx={{ mt: 1, width: '100%' }}>
-          <FormLabel component='legend' sx={{ mb: 1 }}>
-            {label}
-          </FormLabel>
+          {label ? (
+            <FormLabel component='legend' sx={{ mb: 1 }}>
+              {label}
+            </FormLabel>
+          ) : null}
           <Box>
             <ToggleButtonGroup
               {...field}

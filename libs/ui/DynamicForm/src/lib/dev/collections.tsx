@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { lazyLoaderMap } from '../constants'
 import { useCallback } from 'react'
 import { baseCard } from './examples/baseCard'
+import { dimaCard } from './examples/dimaCard'
 
 export type ICollection<T extends Record<string, unknown> = Record<string, unknown>> = {
   name: string
@@ -15,22 +16,35 @@ export type ICollection<T extends Record<string, unknown> = Record<string, unkno
 }
 
 const getCollections = async ({
-  loadDepartments
+  loadDepartments,
+  loadPirates
 }: {
   loadDepartments: () => Promise<IOption[]>
+  loadPirates: () => Promise<IOption[]>
 }): Promise<ICollection[]> => {
-  return Promise.all([baseCard({ loadDepartments }), multiSelectFields(), layoutExamples()])
+  return Promise.all([
+    dimaCard({ loadPirates }),
+    baseCard({ loadDepartments }),
+    multiSelectFields(),
+    layoutExamples()
+  ])
 }
 
 export const useCollectionQuery = () => {
   const queryClient = useQueryClient()
+
   const loadDepartments = useCallback(
     () => lazyLoaderMap[LazyLoaderType.LOAD_DEPARTMENTS](queryClient),
     [queryClient]
   )
 
+  const loadPirates = useCallback(
+    () => lazyLoaderMap[LazyLoaderType.LOAD_PIRATES](queryClient),
+    [queryClient]
+  )
+
   return useQuery({
     queryKey: ['collections'],
-    queryFn: () => getCollections({ loadDepartments })
+    queryFn: () => getCollections({ loadDepartments, loadPirates })
   })
 }

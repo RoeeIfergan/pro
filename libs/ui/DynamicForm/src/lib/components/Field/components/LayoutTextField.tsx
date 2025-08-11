@@ -52,7 +52,9 @@ const LayoutTextField = ({
           sx={{ mt: 1 }}
           placeholder={placeholder}
           slotProps={{
-            // htmlInput: getInputProps(),
+            inputLabel: {
+              shrink: true
+            },
             input: {
               ...getInputProps()
             }

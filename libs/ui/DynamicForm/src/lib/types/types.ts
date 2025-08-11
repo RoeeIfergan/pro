@@ -48,7 +48,7 @@ export type JsonCondition<Schema = DefaultSchema> = ConditionGroup<Schema>
 
 export type ILayoutBaseField<Schema = DefaultSchema> = {
   path: Paths<Schema>
-  label: string
+  label?: string
   hidden?: JsonCondition<Schema> // JSON-only conditions for hiding field
   disabled?: JsonCondition<Schema> // JSON-only conditions for disabling field
   width?: WidthKey // Column width (1-12) - enables field-based columns
@@ -82,6 +82,7 @@ export type ISelectLayoutField<Schema = DefaultSchema> = ILayoutBaseField<Schema
     | FieldComponentType.chipsSelect
   options: ISelectLayoutFieldOptions
   multiple?: boolean
+  placeholder?: string
 }
 
 export type IInputDateRangeLayoutField<Schema = DefaultSchema> = ILayoutBaseField<Schema> & {

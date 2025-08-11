@@ -56,16 +56,18 @@ const LayoutDateRangePicker = ({ field }: { field: ILayoutField }) => {
         control={control}
         render={({ field, fieldState: { error } }) => (
           <Box sx={{ width: '100%' }}>
-            <Typography
-              variant='body2'
-              sx={{
-                mb: 1,
-                color: error ? 'error.main' : 'text.secondary',
-                fontWeight: 500
-              }}
-            >
-              {label}
-            </Typography>
+            {label ? (
+              <Typography
+                variant='body2'
+                sx={{
+                  mb: 1,
+                  color: error ? 'error.main' : 'text.secondary',
+                  fontWeight: 500
+                }}
+              >
+                {label}
+              </Typography>
+            ) : null}
 
             <Box
               sx={{

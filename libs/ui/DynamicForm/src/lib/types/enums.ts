@@ -77,5 +77,6 @@ export enum FieldComponentType {
 }
 
 export enum LazyLoaderType {
-  LOAD_DEPARTMENTS = 'loadDepartments'
+  LOAD_DEPARTMENTS = 'loadDepartments',
+  LOAD_PIRATES = 'loadPirates'
 }

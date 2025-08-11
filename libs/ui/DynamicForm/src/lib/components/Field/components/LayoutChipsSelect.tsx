@@ -81,9 +81,11 @@ const LayoutChipsSelect = ({ field }: { field: ILayoutField }) => {
 
         return (
           <FormControl fullWidth error={!!error} sx={{ mt: 1 }}>
-            <FormLabel component='legend' sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 500 }}>
-              {label}
-            </FormLabel>
+            {label ? (
+              <FormLabel component='legend' sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 500 }}>
+                {label}
+              </FormLabel>
+            ) : null}
 
             {loading ? (
               <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
