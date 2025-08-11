@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky",
-    "dev:client": "nx run @pro3/client:dev"
+    "dev:client": "nx run @pro3/client:dev",
+    "lint:client": "nx run @pro3/client:lint"
   },
   "private": true,
   "dependencies": {
@@ -25,12 +26,14 @@
     "@tanstack/react-virtual": "^3.13.12",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/stylis": "^4.2.7",
+    "@types/lodash": "^4.17.15",
     "axios": "^1.6.0",
     "copy-webpack-plugin": "^13.0.0",
     "dotenv": "^17.2.1",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
     "date-fns": "^4.1.0",
+    "lodash": "^4.17.21",
     "nestjs-graceful-shutdown": "^1.0.3",
     "nestjs-zod": "^4.3.1",
     "notistack": "^3.0.2",

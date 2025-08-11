@@ -1,9 +1,9 @@
 import { Checkbox, FormControlLabel } from '@mui/material'
-import { IRestLayoutFields } from '../../../types/types'
+import { ILayoutField, IRestLayoutFields } from '../../../types'
 import { Controller, useFormContext } from 'react-hook-form'
 
-const LayoutCheckbox = ({ field }: { field: IRestLayoutFields }) => {
-  const { path, label } = field
+const LayoutCheckbox = ({ field }: { field: ILayoutField }) => {
+  const { path, label } = field as IRestLayoutFields
   const { control } = useFormContext()
 
   return (

@@ -1,19 +1,17 @@
-import React from 'react'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { useFormContext, Controller } from 'react-hook-form'
 import { Box, Typography } from '@mui/material'
-import { IInputDateRangeLayoutField } from '../../../types/types'
-import { UsePickerBaseProps } from '@mui/x-date-pickers/internals/hooks/usePicker'
-import { DateOrTimeViewWithMeridiem, PickerValidValue } from '@mui/x-date-pickers/internals'
+import { IInputDateRangeLayoutField, ILayoutField } from '../../../types'
 import _get from 'lodash/get'
+
 export interface DateRangeValue {
   startDate: Date | null
   endDate: Date | null
 }
 
-const LayoutDateRangePicker = ({ field }: { field: IInputDateRangeLayoutField }) => {
+const LayoutDateRangePicker = ({ field }: { field: ILayoutField }) => {
   const {
     path,
     label,
@@ -23,12 +21,15 @@ const LayoutDateRangePicker = ({ field }: { field: IInputDateRangeLayoutField })
     endDatePlaceholder,
     startDatePath,
     endDatePath
-  } = field
+  } = field as IInputDateRangeLayoutField
   const { control, watch } = useFormContext()
 
   const currentValue = watch(path) as DateRangeValue | null
 
-  const handleStartDateChange = (newStartDate: Date | null, onChange: (value: DateRangeValue) => void) => {
+  const handleStartDateChange = (
+    newStartDate: Date | null,
+    onChange: (value: DateRangeValue) => void
+  ) => {
     const currentRange = currentValue || { startDate: null, endDate: null }
     const newRange = { ...currentRange, startDate: newStartDate }
 
@@ -39,7 +40,10 @@ const LayoutDateRangePicker = ({ field }: { field: IInputDateRangeLayoutField })
     onChange(newRange)
   }
 
-  const handleEndDateChange = (newEndDate: Date | null, onChange: (value: DateRangeValue) => void) => {
+  const handleEndDateChange = (
+    newEndDate: Date | null,
+    onChange: (value: DateRangeValue) => void
+  ) => {
     const currentRange = currentValue || { startDate: null, endDate: null }
     const newRange = { ...currentRange, endDate: newEndDate }
     onChange(newRange)
@@ -80,7 +84,7 @@ const LayoutDateRangePicker = ({ field }: { field: IInputDateRangeLayoutField })
                     placeholder: startDatePlaceholder,
                     fullWidth: true,
                     error: !!error,
-                    helperText: (error as any)?.[startDatePath]?.message,
+                    helperText: _get(error, startDatePath)?.message,
                     variant: 'outlined',
                     sx: {
                       flex: 1,

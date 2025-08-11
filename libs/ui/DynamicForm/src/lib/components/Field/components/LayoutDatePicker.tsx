@@ -1,12 +1,11 @@
-import React from 'react'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { useFormContext, Controller } from 'react-hook-form'
-import { IRestLayoutFields } from '../../../types/types'
+import { ILayoutField, IRestLayoutFields } from '../../../types'
 
-const LayoutDatePicker = ({ field }: { field: IRestLayoutFields }) => {
-  const { path, label } = field
+const LayoutDatePicker = ({ field }: { field: ILayoutField }) => {
+  const { path, label } = field as IRestLayoutFields
   const { control } = useFormContext()
 
   return (

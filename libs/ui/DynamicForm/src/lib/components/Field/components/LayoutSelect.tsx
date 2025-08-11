@@ -7,32 +7,41 @@ import {
   FormHelperText,
   CircularProgress,
   Chip,
-  Box
+  Box,
+  Typography
 } from '@mui/material'
 import { useFormContext, Controller } from 'react-hook-form'
-import { ISelectLayoutField, IOption } from '../../../types/types'
+import { ISelectLayoutField, IOption, ILayoutField } from '../../../types'
+import { lazyLoaderMap } from '../../../constants/mappers'
+import { useQueryClient } from '@tanstack/react-query'
 
-const LayoutSelect = ({ field }: { field: ISelectLayoutField }) => {
-  const { path, label, options, multiple, required } = field
+const LayoutSelect = ({ field }: { field: ILayoutField }) => {
+  const { path, label, options, multiple, required } = field as ISelectLayoutField
   const { control } = useFormContext()
   const [loadedOptions, setLoadedOptions] = useState<IOption[]>(options?.values || [])
   const [loading, setLoading] = useState(false)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
-    if (options?.asyncValues && !options.values) {
+    if (options?.lazyValues && !options.values) {
       setLoading(true)
-      options
-        .asyncValues()
-        .then((data) => {
-          setLoadedOptions(data)
-        })
-        .catch((error) => {
-          console.error('Error loading options:', error)
-          setLoadedOptions([])
-        })
-        .finally(() => {
-          setLoading(false)
-        })
+      const loaderFunction = lazyLoaderMap[options.lazyValues]
+      if (loaderFunction) {
+        loaderFunction(queryClient)
+          .then((data) => {
+            setLoadedOptions(data)
+          })
+          .catch((error) => {
+            console.error('Error loading options:', error)
+            setLoadedOptions([])
+          })
+          .finally(() => {
+            setLoading(false)
+          })
+      } else {
+        console.error(`Lazy loader not found for key: ${options.lazyValues}`)
+        setLoading(false)
+      }
     }
   }, [options])
 
@@ -46,13 +55,13 @@ const LayoutSelect = ({ field }: { field: ISelectLayoutField }) => {
         required: required ? `${label} הוא שדה חובה` : false
       }}
       render={({ field, fieldState: { error } }) => {
-        const handleChipDelete = (valueToRemove: any) => {
+        const handleChipDelete = (valueToRemove: string) => {
           const currentValue = field.value || []
-          const newValue = currentValue.filter((item: any) => item !== valueToRemove)
+          const newValue = currentValue.filter((item: string) => item !== valueToRemove)
           field.onChange(newValue)
         }
 
-        const renderValueWithField = (selected: any) => {
+        const renderValueWithField = (selected: string | string[]) => {
           if (!multiple) return selected
 
           if (!Array.isArray(selected) || selected.length === 0) {
@@ -61,7 +70,7 @@ const LayoutSelect = ({ field }: { field: ISelectLayoutField }) => {
 
           return (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => {
+              {selected.map((value: string) => {
                 const option = currentOptions.find((opt) => opt.value === value)
                 return (
                   <Chip
@@ -90,13 +99,12 @@ const LayoutSelect = ({ field }: { field: ISelectLayoutField }) => {
               label={label}
               multiple={multiple}
               value={field.value || (multiple ? [] : '')}
-              disabled={loading}
               renderValue={multiple ? renderValueWithField : undefined}
             >
               {loading ? (
-                <MenuItem disabled>
+                <MenuItem disabled sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <CircularProgress size={20} sx={{ mr: 1 }} />
-                  Loading...
+                  <Typography variant='body2'>טוען...</Typography>
                 </MenuItem>
               ) : (
                 currentOptions.map((option) => (

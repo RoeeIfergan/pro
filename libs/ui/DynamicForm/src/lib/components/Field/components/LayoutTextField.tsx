@@ -1,22 +1,22 @@
 import { TextField } from '@mui/material'
 import { useFormContext, Controller } from 'react-hook-form'
-import { FieldComponentType, IInputLayoutField } from '../../../types/types'
+import { FieldComponentType, IInputLayoutField, ILayoutField } from '../../../types'
 import { getInputType } from '../../../utils/utils'
 
 const LayoutTextField = ({
   field,
   disabled: externalDisabled = false
 }: {
-  field: IInputLayoutField
+  field: ILayoutField
   disabled?: boolean
 }) => {
-  const { path, label, component, placeholder, min, max, required } = field
+  const { path, label, component, placeholder, min, max, required } = field as IInputLayoutField
   const type = getInputType(component)
   const { control } = useFormContext()
 
   // Calculate inputProps based on field type
-  const getInputProps = () => {
-    const props: any = {}
+  const getInputProps = (): Record<string, string | number> => {
+    const props: Record<string, string | number> = {}
 
     if (type === 'number') {
       // For number inputs, use min/max directly

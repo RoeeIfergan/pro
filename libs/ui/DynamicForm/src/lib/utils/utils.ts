@@ -6,31 +6,12 @@ import {
   ConditionGroup,
   ConditionOperator,
   LogicalOperator,
-  IconType
-} from '../types/types'
-import {
-  Home,
-  Settings,
-  Person,
-  Email,
-  Phone,
-  LocationOn,
-  CalendarToday,
-  Search,
-  Add,
-  Edit,
-  Delete,
-  Save,
-  Cancel,
-  Check,
-  Close,
-  Info,
-  Warning,
-  Error,
-  CheckCircle
-} from '@mui/icons-material'
+  IconType,
+  DefaultSchema
+} from '../types'
+
 import React from 'react'
-import { z } from 'zod'
+import { iconMap } from '../constants'
 
 export const getInputType = (component: IInputLayoutField['component']): string => {
   switch (component) {
@@ -50,18 +31,21 @@ export const getInputType = (component: IInputLayoutField['component']): string 
 }
 
 // Helper function to get nested value from object using dot notation
-const getNestedValue = <Schema = Record<string, unknown>>(obj: Schema, path: string) => {
-  return path.split('.').reduce((current, key) => {
-    return (
-      current && current[key as keyof Schema] !== undefined
-        ? current[key as keyof Schema]
-        : undefined
-    ) as Schema | undefined
-  }, obj as unknown as Schema | undefined)
+const getNestedValue = <Schema = DefaultSchema>(obj: Schema, path: string) => {
+  return path.split('.').reduce(
+    (current, key) => {
+      return (
+        current && current[key as keyof Schema] !== undefined
+          ? current[key as keyof Schema]
+          : undefined
+      ) as Schema | undefined
+    },
+    obj as unknown as Schema | undefined
+  )
 }
 
 // Evaluate a single condition
-const evaluateSingleCondition = <Schema = Record<string, unknown>>(
+const evaluateSingleCondition = <Schema = DefaultSchema>(
   condition: SingleCondition<Schema>,
   values: Schema
 ): boolean => {
@@ -113,14 +97,14 @@ const evaluateSingleCondition = <Schema = Record<string, unknown>>(
 }
 
 // Type guard to check if condition is a single condition
-const isSingleCondition = <Schema = Record<string, unknown>>(
+const isSingleCondition = <Schema = DefaultSchema>(
   condition: SingleCondition<Schema> | ConditionGroup<Schema>
 ): condition is SingleCondition<Schema> => {
   return 'field' in condition && 'operator' in condition
 }
 
 // Helper function to evaluate a single condition or group recursively
-const evaluateConditionOrGroup = <Schema = Record<string, unknown>>(
+const evaluateConditionOrGroup = <Schema = DefaultSchema>(
   condition: SingleCondition<Schema> | ConditionGroup<Schema>,
   values: Schema
 ): boolean => {
@@ -144,7 +128,7 @@ const evaluateConditionOrGroup = <Schema = Record<string, unknown>>(
 }
 
 // Evaluate JSON conditions (now always a group)
-export const evaluateJsonCondition = <Schema = Record<string, any>>(
+export const evaluateJsonCondition = <Schema = DefaultSchema>(
   condition: JsonCondition<Schema>,
   values: Schema
 ): boolean => {
@@ -153,7 +137,7 @@ export const evaluateJsonCondition = <Schema = Record<string, any>>(
 }
 
 // Universal condition evaluator that handles JSON conditions only
-export const evaluateCondition = <Schema = Record<string, any>>(
+export const evaluateCondition = <Schema = DefaultSchema>(
   condition: JsonCondition<Schema>,
   values: Schema
 ): boolean => {
@@ -161,7 +145,7 @@ export const evaluateCondition = <Schema = Record<string, any>>(
 }
 
 // Helper to evaluate hidden condition - returns true if should be hidden
-export const evaluateHidden = <Schema = Record<string, any>>(
+export const evaluateHidden = <Schema = DefaultSchema>(
   hidden: JsonCondition<Schema> | undefined,
   values: Schema
 ): boolean => {
@@ -170,7 +154,7 @@ export const evaluateHidden = <Schema = Record<string, any>>(
 }
 
 // Helper to evaluate disabled condition - returns true if should be disabled
-export const evaluateDisabled = <Schema = Record<string, any>>(
+export const evaluateDisabled = <Schema = DefaultSchema>(
   disabled: JsonCondition<Schema> | undefined,
   values: Schema
 ): boolean => {
@@ -178,30 +162,11 @@ export const evaluateDisabled = <Schema = Record<string, any>>(
   return evaluateCondition(disabled, values)
 }
 
-// Icon mapper for converting IconType enum to React components
-const iconMap: Record<IconType, React.ComponentType> = {
-  [IconType.HOME]: Home,
-  [IconType.SETTINGS]: Settings,
-  [IconType.PERSON]: Person,
-  [IconType.EMAIL]: Email,
-  [IconType.PHONE]: Phone,
-  [IconType.LOCATION]: LocationOn,
-  [IconType.CALENDAR]: CalendarToday,
-  [IconType.SEARCH]: Search,
-  [IconType.ADD]: Add,
-  [IconType.EDIT]: Edit,
-  [IconType.DELETE]: Delete,
-  [IconType.SAVE]: Save,
-  [IconType.CANCEL]: Cancel,
-  [IconType.CHECK]: Check,
-  [IconType.CLOSE]: Close,
-  [IconType.INFO]: Info,
-  [IconType.WARNING]: Warning,
-  [IconType.ERROR]: Error,
-  [IconType.SUCCESS]: CheckCircle
-}
-
 // Get React component from IconType enum
 export const getIconComponent = (iconType: IconType): React.ComponentType => {
   return iconMap[iconType]
 }
+
+// export const getTypedField = <Schema = DefaultSchema>(field: ILayoutField<Schema>) => {
+//   field
+// }

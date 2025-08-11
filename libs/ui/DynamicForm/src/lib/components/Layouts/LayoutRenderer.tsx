@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Typography, IconButton, Collapse } from '@mui/material'
 import { ExpandMore, ExpandLess } from '@mui/icons-material'
-import { IFieldRow } from '../../types/types'
+import { IFieldRow } from '../../types'
 import { FieldsLayout } from './FieldsLayout'
 import { useFormContext } from 'react-hook-form'
 import { evaluateHidden, evaluateDisabled } from '../../utils/utils'
@@ -40,7 +40,7 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap, p: 2 }}>
       {rows.map((row, rowIndex) => {
         const isHidden = evaluateHidden(row.hidden, formValues)
         const isDisabled = sectionDisabled || evaluateDisabled(row.disabled, formValues)

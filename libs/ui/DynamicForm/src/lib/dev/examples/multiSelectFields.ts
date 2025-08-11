@@ -4,7 +4,7 @@ import {
   ICardSchemaMeta,
   ConditionOperator,
   LogicalOperator
-} from '../../types/types'
+} from '../../types'
 import { ICollection } from '../collections'
 
 const schema = z.object({
@@ -180,9 +180,9 @@ const uiSchema: ICardSchemaMeta<z.infer<typeof schema>> = {
   ]
 }
 
-export const multiSelectFields: ICollection<z.infer<typeof schema>> = {
+export const multiSelectFields = (): ICollection<z.infer<typeof schema>> => ({
   name: 'Multi-Select Fields',
   schema,
   defaultValues: schema.parse({}),
   uiSchema
-}
+})

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   FormControl,
   FormLabel,
@@ -9,29 +9,37 @@ import {
   Typography
 } from '@mui/material'
 import { useFormContext, Controller } from 'react-hook-form'
-import { ISelectLayoutField, IOption } from '../../../types/types'
+import { ILayoutField, ISelectLayoutField, IOption } from '../../../types'
+import { lazyLoaderMap } from '../../../constants/mappers'
+import { useQueryClient } from '@tanstack/react-query'
 
-const LayoutChipsSelect = ({ field }: { field: ISelectLayoutField }) => {
-  const { path, label, options, multiple = true } = field // Default to multiple for chips
+const LayoutChipsSelect = ({ field }: { field: ILayoutField }) => {
+  const { path, label, options, multiple = true } = field as ISelectLayoutField
   const { control } = useFormContext()
   const [loadedOptions, setLoadedOptions] = useState<IOption[]>(options?.values || [])
   const [loading, setLoading] = useState(false)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
-    if (options?.asyncValues && !options.values) {
+    if (options?.lazyValues && !options.values) {
       setLoading(true)
-      options
-        .asyncValues()
-        .then((data) => {
-          setLoadedOptions(data)
-        })
-        .catch((error) => {
-          console.error('Error loading options:', error)
-          setLoadedOptions([])
-        })
-        .finally(() => {
-          setLoading(false)
-        })
+      const loaderFunction = lazyLoaderMap[options.lazyValues]
+      if (loaderFunction) {
+        loaderFunction(queryClient)
+          .then((data) => {
+            setLoadedOptions(data)
+          })
+          .catch((error) => {
+            console.error('Error loading options:', error)
+            setLoadedOptions([])
+          })
+          .finally(() => {
+            setLoading(false)
+          })
+      } else {
+        console.error(`Lazy loader not found for key: ${options.lazyValues}`)
+        setLoading(false)
+      }
     }
   }, [options])
 
@@ -80,7 +88,7 @@ const LayoutChipsSelect = ({ field }: { field: ISelectLayoutField }) => {
             {loading ? (
               <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
                 <CircularProgress size={20} sx={{ mr: 1 }} />
-                <Typography variant='body2'>Loading...</Typography>
+                <Typography variant='body2'>טוען...</Typography>
               </Box>
             ) : (
               <Box

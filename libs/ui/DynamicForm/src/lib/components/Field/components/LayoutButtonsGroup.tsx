@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   FormControl,
   FormLabel,
@@ -6,14 +5,15 @@ import {
   ToggleButton,
   FormHelperText,
   Box,
-  Tooltip
+  Tooltip,
+  Chip
 } from '@mui/material'
 import { useFormContext, Controller } from 'react-hook-form'
-import { ISelectLayoutField } from '../../../types/types'
+import { ILayoutField, ISelectLayoutField } from '../../../types'
 import { getIconComponent } from '../../../utils/utils'
 
-const ButtonsGroup = ({ field }: { field: ISelectLayoutField }) => {
-  const { path, label, options } = field
+const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
+  const { path, label, options } = field as ISelectLayoutField
   const { control } = useFormContext()
 
   return (
@@ -85,13 +85,41 @@ const ButtonsGroup = ({ field }: { field: ISelectLayoutField }) => {
                   buttonContent = option.label
                 }
 
-                return showTooltip ? (
-                  <Tooltip key={option.value} title={option.label} placement='top'>
-                    <ToggleButton value={option.value}>{buttonContent}</ToggleButton>
-                  </Tooltip>
-                ) : (
-                  <ToggleButton key={option.value} value={option.value}>
-                    {buttonContent}
+                return (
+                  <ToggleButton
+                    key={option.value}
+                    value={option.value}
+                    sx={{ position: 'relative', flex: 1 }}
+                  >
+                    {showTooltip ? (
+                      <Tooltip title={option.label} placement='top'>
+                        <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+                          {buttonContent}
+                        </Box>
+                      </Tooltip>
+                    ) : (
+                      <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+                        {buttonContent}
+                      </Box>
+                    )}
+                    {option.badge ? (
+                      <Chip
+                        label={option.badge.text}
+                        color={option.badge.color ?? 'default'}
+                        size='small'
+                        sx={{
+                          position: 'absolute',
+                          top: -5,
+                          right: -5,
+                          height: 20,
+                          borderRadius: 0,
+                          pointerEvents: 'none',
+                          transform: 'rotate(-15deg)',
+                          transformOrigin: 'top right',
+                          '& .MuiChip-label': { px: 0.75, lineHeight: '20px' }
+                        }}
+                      />
+                    ) : null}
                   </ToggleButton>
                 )
               })}

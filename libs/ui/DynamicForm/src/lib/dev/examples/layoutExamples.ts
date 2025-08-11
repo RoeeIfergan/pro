@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { FieldComponentType, WidthKey } from '../../types/types'
+import { FieldComponentType, WidthKey } from '../../types'
 import { ICollection } from '../collections'
 
 const schema = z.object({
@@ -17,7 +17,7 @@ const schema = z.object({
   country: z.enum(['us', 'uk', 'ca', 'de', 'fr', 'jp', 'au']).nullable().default(null)
 })
 
-export const layoutExamples: ICollection<z.infer<typeof schema>> = {
+export const layoutExamples = (): ICollection<z.infer<typeof schema>> => ({
   name: 'Layout Examples',
   defaultValues: schema.parse({}),
   schema,
@@ -48,26 +48,6 @@ export const layoutExamples: ICollection<z.infer<typeof schema>> = {
         collapsible: true,
         fields: [
           {
-            // Field group for left column (width 8) with two stacked fields
-            width: WidthKey.W8,
-            fields: [
-              {
-                path: 'address.street',
-                label: 'כתובת רחוב - עמודה רחבה שדה עליון',
-                component: FieldComponentType.inputText,
-                placeholder: 'הכנס את כתובת הרחוב שלך'
-              },
-              {
-                path: 'address.city',
-                label: 'עיר - עמודה רחבה שדה תחתון',
-                component: FieldComponentType.inputText,
-                placeholder: 'הכנס את שם העיר שלך'
-              }
-            ],
-            gap: 2
-          },
-          {
-            // Single field for right column (width 4) taking full height
             path: 'country',
             label: 'מדינה - עמודה צרה (גובה מלא)',
             component: FieldComponentType.select,
@@ -83,6 +63,43 @@ export const layoutExamples: ICollection<z.infer<typeof schema>> = {
                 { value: 'au', label: 'אוסטרליה' }
               ]
             }
+          },
+          {
+            path: 'address.street',
+            label: 'כתובת רחוב - קבוצה שמאל (groupOrder: 20)',
+            component: FieldComponentType.inputText,
+            placeholder: 'אני בקבוצה שמאל',
+            width: WidthKey.W6,
+            groupKey: 'leftColumn',
+            groupOrder: 20 // This group will appear on the LEFT
+          },
+          {
+            path: 'address.city',
+            label: 'עיר - קבוצה שמאל (groupOrder: 20)',
+            component: FieldComponentType.inputText,
+            placeholder: 'אני גם בקבוצה שמאל',
+            required: true,
+            width: WidthKey.W6,
+            groupKey: 'leftColumn',
+            groupOrder: 20 // Same group order
+          },
+          {
+            path: 'email',
+            label: 'אימייל - קבוצה ימין (groupOrder: 30)',
+            component: FieldComponentType.inputEmail,
+            placeholder: 'אני בקבוצה ימין',
+            width: WidthKey.W6,
+            groupKey: 'rightColumn',
+            groupOrder: 30 // This group will appear on the RIGHT
+          },
+          {
+            path: 'lastName',
+            label: 'שם משפחה - קבוצה ימין (groupOrder: 30)',
+            component: FieldComponentType.inputText,
+            placeholder: 'אני גם בקבוצה ימין',
+            width: WidthKey.W6,
+            groupKey: 'rightColumn',
+            groupOrder: 30 // Same group order
           }
         ]
       },
@@ -142,4 +159,4 @@ export const layoutExamples: ICollection<z.infer<typeof schema>> = {
       }
     ]
   }
-}
+})

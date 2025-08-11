@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { Field } from '../Field/Field'
-import { ILayoutField, IFieldGroup } from '../../types/types'
+import { ILayoutField } from '../../types'
 import { useFormContext } from 'react-hook-form'
 import { evaluateHidden, evaluateDisabled } from '../../utils/utils'
 
@@ -12,9 +12,23 @@ interface FieldsLayoutProps {
   disabled?: boolean // Row-level disabled state
 }
 
-// Type guard to check if a field is a field group
-const isFieldGroup = (field: ILayoutField): field is IFieldGroup => {
-  return 'fields' in field && Array.isArray((field as IFieldGroup).fields)
+// Group fields by groupKey, maintaining original order for ungrouped fields
+const groupFieldsByKey = (fields: ILayoutField[]) => {
+  const groups: { [key: string]: ILayoutField[] } = {}
+  const ungroupedFields: ILayoutField[] = []
+
+  fields.forEach((field) => {
+    if (field.groupKey) {
+      if (!groups[field.groupKey]) {
+        groups[field.groupKey] = []
+      }
+      groups[field.groupKey].push(field)
+    } else {
+      ungroupedFields.push(field)
+    }
+  })
+
+  return { groups, ungroupedFields }
 }
 
 export const FieldsLayout = ({
@@ -25,12 +39,57 @@ export const FieldsLayout = ({
 }: FieldsLayoutProps): React.JSX.Element => {
   const { watch } = useFormContext()
   const formValues = watch()
-  // Check if any fields have width properties (including field groups)
-  const hasFieldWidths = fields.some((field) => field.width !== undefined)
 
-  // Calculate grid template columns
+  const { groups, ungroupedFields } = groupFieldsByKey(fields)
+
+  // Create items with their groupOrder for proper sorting
+  const allItems: Array<{
+    type: 'field' | 'group'
+    data: ILayoutField | ILayoutField[]
+    key: string
+    groupOrder: number
+  }> = []
+
+  // Add ungrouped fields with their groupOrder
+  ungroupedFields.forEach((field, index) => {
+    allItems.push({
+      type: 'field',
+      data: field,
+      key: `field-${field.path}-${index}`,
+      groupOrder: field.groupOrder ?? 999
+    })
+  })
+
+  // Add grouped fields with the minimum groupOrder from the group
+  Object.entries(groups).forEach(([groupKey, groupFields]) => {
+    const minGroupOrder = Math.min(...groupFields.map((f) => f.groupOrder ?? 999))
+    allItems.push({
+      type: 'group',
+      data: groupFields,
+      key: `group-${groupKey}`,
+      groupOrder: minGroupOrder
+    })
+  })
+
+  // Sort all items by groupOrder
+  const orderedItems = allItems.sort((a, b) => a.groupOrder - b.groupOrder)
+
+  // Calculate grid template columns based on field widths or fieldsPerRow
+  const hasFieldWidths = fields.some((field) => field.width !== undefined)
   const gridTemplateColumns = hasFieldWidths
-    ? fields.map((field) => `${field.width || 12}fr`).join(' ')
+    ? orderedItems
+        .map((item) => {
+          if (item.type === 'field') {
+            const field = item.data as ILayoutField
+            return `${field.width || 12}fr`
+          } else {
+            // For groups, use the width of the first field in the group, or default to 12
+            const groupFields = item.data as ILayoutField[]
+            const firstFieldWidth = groupFields[0]?.width || 12
+            return `${firstFieldWidth}fr`
+          }
+        })
+        .join(' ')
     : `repeat(${fieldsPerRow}, 1fr)`
 
   return (
@@ -39,7 +98,7 @@ export const FieldsLayout = ({
         display: 'grid',
         gridTemplateColumns,
         gap,
-        alignItems: 'stretch', // Always stretch (equalHeight = true)
+        alignItems: 'stretch',
         '& > *': {
           display: 'flex',
           flexDirection: 'column',
@@ -47,69 +106,71 @@ export const FieldsLayout = ({
         }
       }}
     >
-      {fields.map((field, fieldIndex) => {
-        // Check field-level hidden and disabled states
-        const isFieldHidden = evaluateHidden(field.hidden, formValues)
-        const isFieldDisabled = disabled || evaluateDisabled(field.disabled, formValues)
+      {orderedItems.map((item) => {
+        if (item.type === 'field') {
+          const field = item.data as ILayoutField
+          const isFieldHidden = evaluateHidden(field.hidden, formValues)
+          const isFieldDisabled = disabled || evaluateDisabled(field.disabled, formValues)
 
-        if (isFieldHidden) {
-          return null
-        }
-
-        // Handle field groups (nested fields in a column)
-        if (isFieldGroup(field)) {
-          const isGroupHidden = evaluateHidden(field.hidden, formValues)
-          const isGroupDisabled = disabled || evaluateDisabled(field.disabled, formValues)
-
-          if (isGroupHidden) {
+          if (isFieldHidden) {
             return null
           }
 
           return (
             <Box
-              key={`field-group-${fieldIndex}`}
+              key={item.key}
+              sx={{
+                minWidth: 0,
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              <Box sx={{ marginBottom: 2, '&:last-child': { marginBottom: 0 } }}>
+                <Field field={field} disabled={isFieldDisabled} />
+              </Box>
+            </Box>
+          )
+        } else {
+          // Handle grouped fields
+          const groupFields = item.data as ILayoutField[]
+
+          // Check if any field in the group is visible
+          const visibleGroupFields = groupFields.filter(
+            (field) => !evaluateHidden(field.hidden, formValues)
+          )
+
+          if (visibleGroupFields.length === 0) {
+            return null
+          }
+
+          return (
+            <Box
+              key={item.key}
               sx={{
                 minWidth: 0,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: field.gap ?? gap,
+                gap: gap,
                 height: '100%'
               }}
             >
-              {field.fields.map((nestedField, nestedIndex) => {
-                const isNestedHidden = evaluateHidden(nestedField.hidden, formValues)
-                const isNestedDisabled =
-                  isGroupDisabled || evaluateDisabled(nestedField.disabled, formValues)
+              {groupFields.map((field, fieldIndex) => {
+                const isFieldHidden = evaluateHidden(field.hidden, formValues)
+                const isFieldDisabled = disabled || evaluateDisabled(field.disabled, formValues)
 
-                if (isNestedHidden) {
+                if (isFieldHidden) {
                   return null
                 }
 
                 return (
-                  <Box key={`nested-${fieldIndex}-${nestedIndex}`}>
-                    <Field field={nestedField} disabled={isNestedDisabled} />
+                  <Box key={`${field.path}-${fieldIndex}`}>
+                    <Field field={field} disabled={isFieldDisabled} />
                   </Box>
                 )
               })}
             </Box>
           )
         }
-
-        // Handle regular fields
-        return (
-          <Box
-            key={`${field.path}-${fieldIndex}`}
-            sx={{
-              minWidth: 0, // Prevent grid items from overflowing
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-          >
-            <Box sx={{ marginBottom: 2, '&:last-child': { marginBottom: 0 } }}>
-              <Field field={field} disabled={isFieldDisabled} />
-            </Box>
-          </Box>
-        )
       })}
     </Box>
   )

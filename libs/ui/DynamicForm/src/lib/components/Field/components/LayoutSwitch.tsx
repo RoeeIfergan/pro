@@ -1,9 +1,9 @@
 import { Switch, FormControlLabel } from '@mui/material'
-import { IRestLayoutFields } from '../../../types/types'
+import { ILayoutField, IRestLayoutFields } from '../../../types'
 import { Controller, useFormContext } from 'react-hook-form'
 
-const LayoutSwitch = ({ field }: { field: IRestLayoutFields }) => {
-  const { path, label } = field
+const LayoutSwitch = ({ field }: { field: ILayoutField }) => {
+  const { path, label } = field as IRestLayoutFields
   const { control } = useFormContext()
 
   return (
