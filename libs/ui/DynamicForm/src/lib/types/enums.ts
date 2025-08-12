@@ -37,6 +37,9 @@ export enum WidthKey {
 
 // Icon enum for JSON serialization
 export enum IconType {
+  CAR = 'car',
+  BICYCLE = 'bicycle',
+  LEGS = 'legs',
   HOME = 'home',
   SETTINGS = 'settings',
   PERSON = 'person',

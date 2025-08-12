@@ -19,7 +19,10 @@ import {
   Person,
   Settings,
   Cancel,
-  Error
+  Error,
+  CarCrash,
+  DirectionsBike,
+  DirectionsRun
 } from '@mui/icons-material'
 import React from 'react'
 
@@ -54,7 +57,10 @@ export const iconMap: Record<IconType, React.ComponentType> = {
   [IconType.INFO]: Info,
   [IconType.WARNING]: Warning,
   [IconType.ERROR]: Error,
-  [IconType.SUCCESS]: CheckCircle
+  [IconType.SUCCESS]: CheckCircle,
+  [IconType.CAR]: CarCrash,
+  [IconType.BICYCLE]: DirectionsBike,
+  [IconType.LEGS]: DirectionsRun
 }
 
 export const componentMap: FieldComponentMapper = {

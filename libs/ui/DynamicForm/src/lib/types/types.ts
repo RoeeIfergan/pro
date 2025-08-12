@@ -66,6 +66,7 @@ export type IInputLayoutField<Schema = DefaultSchema> = ILayoutBaseField<Schema>
     | FieldComponentType.inputUrl
     | FieldComponentType.textarea
   placeholder: string
+  textAlign?: 'left' | 'center' | 'right'
   min?: number | string // Minimum value (for numbers) or minimum length (for text)
   max?: number | string // Maximum value (for numbers) or maximum length (for text)
 }

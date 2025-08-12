@@ -1,10 +1,13 @@
 import z from 'zod'
-import { FieldComponentType, ICardSchemaMeta, IOption, LazyLoaderType, WidthKey } from '../../types'
+import {
+  FieldComponentType,
+  ICardSchemaMeta,
+  IconType,
+  IOption,
+  LazyLoaderType,
+  WidthKey
+} from '../../types'
 import { ICollection } from '../collections'
-
-const schema = z.object({
-  name: z.string().min(1, 'יש להזין שם')
-})
 
 enum Disney {
   DISNEY = 'disney',
@@ -45,13 +48,15 @@ export const dimaCardSchema = ({ loadPirates }: { loadPirates: () => Promise<IOp
         const pirateEnum = z.enum(pirates.map((d) => d.value) as [string, ...string[]])
         console.log('💪💪 pirateEnum???', pirateEnum)
         if (!pirateEnum.safeParse(data?.spiritId).success) {
-        //   ctx.addIssue({
-        //     code: 'custom',
-        //     message: 'יש להזין פיראט מהרשימה',
-        //     path: ['pirate', 'spiritId']
-        //   })
+          //   ctx.addIssue({
+          //     code: 'custom',
+          //     message: 'יש להזין פיראט מהרשימה',
+          //     path: ['pirate', 'spiritId']
+          //   })
         }
-      })
+      }),
+
+    transportation: z.enum(['car', 'bicycle', 'legs']).default('car')
   })
 }
 
@@ -96,10 +101,11 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
         {
           path: 'priority.customer',
           label: 'תעדוף',
+          required: true,
           component: FieldComponentType.inputNumber,
-          placeholder: 'יש לבחור עדיפות לקוח',
+          placeholder: '',
           min: 1,
-          max: 10,
+          max: 100,
           width: WidthKey.W3
         }
       ]
@@ -115,6 +121,18 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
             lazyValues: LazyLoaderType.LOAD_PIRATES
           },
           width: WidthKey.W12
+        },
+        {
+          path: 'transportation',
+          component: FieldComponentType.buttonsGroup,
+          options: {
+            values: [
+              { value: 'car', label: 'מכונית', icon: IconType.CAR, isIconOnly: true },
+              { value: 'bicycle', label: 'אופניים', icon: IconType.BICYCLE, isIconOnly: true },
+              { value: 'legs', label: 'רגלים', icon: IconType.LEGS, isIconOnly: true }
+            ]
+          },
+          width: WidthKey.W12,
         }
       ]
     }
