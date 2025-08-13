@@ -11,8 +11,7 @@ const LayoutTextField = ({
   field: ILayoutField
   disabled?: boolean
 }) => {
-  const { path, label, component, placeholder, min, max, required, textAlign } =
-    field as IInputLayoutField
+  const { path, label, component, placeholder, min, max, required } = field as IInputLayoutField
   const type = getInputType(component)
   const { control } = useFormContext()
 
@@ -98,9 +97,6 @@ const LayoutTextField = ({
               '& input[type=number]': {
                 MozAppearance: 'textfield'
               }
-              // '& input': {
-              //   textAlign
-              // }
             }}
           >
             <TextField

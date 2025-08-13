@@ -5,7 +5,9 @@ import {
   IconType,
   IOption,
   LazyLoaderType,
-  WidthKey
+  WidthKey,
+  ConditionOperator,
+  LogicalOperator
 } from '../../types'
 import { ICollection } from '../collections'
 
@@ -22,6 +24,9 @@ export const dimaCardSchema = ({ loadPirates }: { loadPirates: () => Promise<IOp
     name: z.string().min(1, 'יש להזין שם').default(''),
 
     disney: z.enum(Object.values(Disney)).default(Disney.DISNEY),
+
+    // Black or White boolean field
+    blackOrWhite: z.boolean().default(false),
 
     priority: z
       .object({
@@ -43,20 +48,47 @@ export const dimaCardSchema = ({ loadPirates }: { loadPirates: () => Promise<IOp
         spiritId: ''
       })
       .superRefine(async (data, ctx) => {
-        console.log('💪💪 data???', data)
         const pirates = await loadPirates()
         const pirateEnum = z.enum(pirates.map((d) => d.value) as [string, ...string[]])
-        console.log('💪💪 pirateEnum???', pirateEnum)
-        if (!pirateEnum.safeParse(data?.spiritId).success) {
-          //   ctx.addIssue({
-          //     code: 'custom',
-          //     message: 'יש להזין פיראט מהרשימה',
-          //     path: ['pirate', 'spiritId']
-          //   })
+
+        if (data?.spiritId && !pirateEnum.safeParse(data?.spiritId).success) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'יש להזין פיראט מהרשימה',
+            path: ['pirate', 'spiritId']
+          })
         }
       }),
 
-    transportation: z.enum(['car', 'bicycle', 'legs']).default('car')
+    transportation: z.enum(['car', 'bicycle', 'legs']).default('legs'),
+    // Car-only fields
+    time: z.number().default(60),
+    speed: z.number().default(80),
+    through: z.string().default('highway'),
+
+    // Date range field
+    dateRange: z
+      .object({
+        startDate: z.date().nullable().default(null),
+        endDate: z.date().nullable().default(null)
+      })
+      .default({ startDate: null, endDate: null })
+      .superRefine((val, ctx) => {
+        if (val.startDate && val.endDate && val.endDate < val.startDate) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'תאריך הסיום חייב להיות אחרי תאריך ההתחלה',
+            path: ['endDate']
+          })
+        }
+      }),
+
+    // Advanced settings
+    subscribed: z.boolean().default(false),
+    newsletterTopics: z
+      .array(z.enum(['tech', 'design', 'business', 'science', 'education']))
+      .default([]),
+    darkModeEnabled: z.boolean().default(false)
   })
 }
 
@@ -68,7 +100,6 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
       fields: [
         {
           path: 'disney',
-          label: 'דיסני',
           component: FieldComponentType.buttonsGroup,
           options: {
             values: [
@@ -87,6 +118,7 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
         }
       ]
     },
+
     {
       fields: [
         {
@@ -127,12 +159,115 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
           component: FieldComponentType.buttonsGroup,
           options: {
             values: [
-              { value: 'car', label: 'מכונית', icon: IconType.CAR, isIconOnly: true },
+              { value: 'legs', label: 'רגלים', icon: IconType.LEGS, isIconOnly: true },
               { value: 'bicycle', label: 'אופניים', icon: IconType.BICYCLE, isIconOnly: true },
-              { value: 'legs', label: 'רגלים', icon: IconType.LEGS, isIconOnly: true }
+              { value: 'car', label: 'מכונית', icon: IconType.CAR, isIconOnly: true }
             ]
           },
-          width: WidthKey.W12,
+          width: WidthKey.W12
+        }
+      ]
+    },
+    {
+      hidden: {
+        operator: LogicalOperator.AND,
+        conditions: [
+          { field: 'transportation', operator: ConditionOperator.NOT_EQUALS, value: 'car' }
+        ]
+      },
+      fields: [
+        {
+          path: 'time',
+          label: 'זמן',
+          component: FieldComponentType.inputNumber,
+          placeholder: '',
+          width: WidthKey.W4
+        },
+        {
+          path: 'speed',
+          label: 'מהירות',
+          component: FieldComponentType.inputNumber,
+          placeholder: '',
+          width: WidthKey.W4
+        },
+        {
+          path: 'through',
+          label: 'דרך',
+          component: FieldComponentType.inputText,
+          placeholder: '',
+          width: WidthKey.W4
+        }
+      ]
+    },
+    {
+      fields: [
+        {
+          path: 'dateRange',
+          component: FieldComponentType.inputDateRange,
+          startDateLabel: 'תאריך התחלה',
+          endDateLabel: 'תאריך סיום',
+          startDatePlaceholder: 'בחר תאריך התחלה',
+          endDatePlaceholder: 'בחר תאריך סיום',
+          startDatePath: 'dateRange.startDate',
+          endDatePath: 'dateRange.endDate',
+          width: WidthKey.W12
+        }
+      ]
+    },
+    {
+      fields: [
+        {
+          path: 'blackOrWhite',
+          component: FieldComponentType.buttonsGroup,
+          options: {
+            values: [
+              { value: false, label: 'שחור' },
+              { value: true, label: 'לבן' }
+            ]
+          },
+          width: WidthKey.W12
+        }
+      ]
+    },
+    {
+      title: 'הגדרות מתקדמות',
+      collapsible: true,
+      defaultExpanded: false,
+      fields: [
+        {
+          path: 'subscribed',
+          label: 'מנוי לניוזלטר',
+          component: FieldComponentType.inputCheckbox
+        },
+        {
+          path: 'newsletterTopics',
+          label: 'נושאי ניוזלטר (בחירה מרובה)',
+          component: FieldComponentType.chipsSelect,
+          multiple: true,
+          options: {
+            values: [
+              { value: 'tech', label: 'טכנולוגיה' },
+              { value: 'design', label: 'עיצוב' },
+              { value: 'business', label: 'עסקים' },
+              { value: 'science', label: 'מדע' },
+              { value: 'education', label: 'חינוך' }
+            ]
+          },
+          hidden: {
+            operator: LogicalOperator.AND,
+            conditions: [
+              {
+                field: 'subscribed',
+                operator: ConditionOperator.IS_FALSE
+              }
+            ]
+          }
+        },
+
+        {
+          path: 'darkModeEnabled',
+          label: 'מצב לילה',
+          component: FieldComponentType.inputSwitch
         }
       ]
     }
@@ -151,3 +286,5 @@ export const dimaCard = async ({
     uiSchema
   }
 }
+
+console.log('💪💪 uiSchema!!', JSON.stringify(uiSchema, null, 4))

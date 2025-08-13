@@ -103,7 +103,8 @@ export const FieldsLayout = ({
           display: 'flex',
           flexDirection: 'column',
           height: '100%'
-        }
+        },
+        minHeight: 0
       }}
     >
       {orderedItems.map((item) => {
@@ -122,10 +123,22 @@ export const FieldsLayout = ({
               sx={{
                 minWidth: 0,
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                height: '100%',
+                minHeight: 0
               }}
             >
-              <Box sx={{ marginBottom: 2, '&:last-child': { marginBottom: 0 } }}>
+              <Box
+                sx={{
+                  marginBottom: 2,
+                  '&:last-child': { marginBottom: 0 },
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                  minHeight: 0
+                }}
+              >
                 <Field field={field} disabled={isFieldDisabled} />
               </Box>
             </Box>
@@ -163,7 +176,16 @@ export const FieldsLayout = ({
                 }
 
                 return (
-                  <Box key={`${field.path}-${fieldIndex}`}>
+                  <Box
+                    key={`${field.path}-${fieldIndex}`}
+                    sx={{
+                      flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%',
+                      minHeight: 0
+                    }}
+                  >
                     <Field field={field} disabled={isFieldDisabled} />
                   </Box>
                 )

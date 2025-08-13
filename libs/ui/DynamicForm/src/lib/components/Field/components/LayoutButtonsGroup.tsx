@@ -21,17 +21,29 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
       name={path}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <FormControl component='fieldset' error={!!error} sx={{ mt: 1, width: '100%' }}>
+        <FormControl
+          component='fieldset'
+          error={!!error}
+          sx={{
+            mt: 1,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+            minHeight: 0
+          }}
+        >
           {label ? (
             <FormLabel component='legend' sx={{ mb: 1 }}>
               {label}
             </FormLabel>
           ) : null}
-          <Box>
+          <Box sx={{ flex: 1, display: 'flex', height: '100%', minHeight: 0 }}>
             <ToggleButtonGroup
               {...field}
               exclusive
-              value={field.value || ''}
+              value={field.value ?? ''}
               onChange={(_, newValue) => {
                 if (newValue !== null) {
                   field.onChange(newValue)
@@ -39,15 +51,30 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
               }}
               aria-label={label}
               sx={{
-                width: '100%', // Take full width
-                display: 'flex', // Use flexbox
+                width: '100%',
+                display: 'flex',
+                height: '100%',
+                flex: 1,
+                minHeight: 0,
+                alignItems: 'stretch',
                 '& .MuiToggleButton-root': {
                   flex: 1, // Distribute buttons evenly
+                  height: '100%',
+                  minHeight: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   textTransform: 'none',
                   px: 2,
                   py: 1,
                   border: '1px solid',
                   borderColor: 'divider',
+                  color: 'text.primary',
+                  '&:not(.Mui-selected):hover': {
+                    backgroundColor: 'action.hover',
+                    borderColor: 'divider',
+                    color: 'text.primary'
+                  },
                   '&:not(:first-of-type)': {
                     borderLeft: '1px solid',
                     borderLeftColor: 'divider'
@@ -55,9 +82,15 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
                   '&.Mui-selected': {
                     backgroundColor: 'primary.main',
                     color: 'primary.contrastText',
-                    '&:hover': {
-                      backgroundColor: 'primary.dark'
-                    }
+                    borderColor: 'primary.main'
+                  },
+                  '&.Mui-selected:hover': {
+                    backgroundColor: 'primary.main',
+                    borderColor: 'primary.main'
+                  },
+                  '&.Mui-selected.Mui-focusVisible': {
+                    backgroundColor: 'primary.dark',
+                    borderColor: 'primary.dark'
                   }
                 }
               }}
@@ -89,7 +122,7 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
 
                 return (
                   <ToggleButton
-                    key={option.value}
+                    key={String(option.value)}
                     value={option.value}
                     sx={{ position: 'relative', flex: 1 }}
                   >

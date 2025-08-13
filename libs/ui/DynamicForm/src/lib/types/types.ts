@@ -13,7 +13,7 @@ export type IOptionBadge = {
 }
 
 export type IOption = {
-  value: string
+  value: string | number | boolean
   label: string
   icon?: IconType // Icon enum key for JSON serialization
   isIconOnly?: boolean // Display only icon with label as tooltip (requires icon)
@@ -66,7 +66,6 @@ export type IInputLayoutField<Schema = DefaultSchema> = ILayoutBaseField<Schema>
     | FieldComponentType.inputUrl
     | FieldComponentType.textarea
   placeholder: string
-  textAlign?: 'left' | 'center' | 'right'
   min?: number | string // Minimum value (for numbers) or minimum length (for text)
   max?: number | string // Maximum value (for numbers) or maximum length (for text)
 }
@@ -74,6 +73,9 @@ export type IInputLayoutField<Schema = DefaultSchema> = ILayoutBaseField<Schema>
 export type ISelectLayoutFieldOptions = {
   values?: Array<IOption>
   lazyValues?: LazyLoaderType
+  // Optional mapping to support boolean-backed fields rendered via select/buttons
+  // true maps to the option value provided in `true`, false maps to `false`
+  mapBoolean?: { true: string; false: string }
 }
 
 export type ISelectLayoutField<Schema = DefaultSchema> = ILayoutBaseField<Schema> & {

@@ -881,32 +881,27 @@ export const uiSchema: ICardSchemaMeta<IBaseCardSchema> = {
                 value: 'home',
                 label: 'בית',
                 icon: IconType.HOME,
-                isIconOnly: true,
-                badge: { text: '3', color: 'primary' }
+                isIconOnly: true
               },
               {
                 value: 'settings',
                 label: 'הגדרות',
-                icon: IconType.SETTINGS,
-                badge: { text: '!', color: 'warning' }
+                icon: IconType.SETTINGS
               },
               {
                 value: 'profile',
-                label: 'פרופיל אישי',
-                badge: { text: '1', color: 'info' }
+                label: 'פרופיל אישי'
               },
               {
                 value: 'save',
                 label: 'שמור',
                 icon: IconType.SAVE,
-                isIconOnly: true,
-                badge: { text: 'new', color: 'success' }
+                isIconOnly: true
               },
               {
                 value: 'delete',
                 label: 'מחק',
-                icon: IconType.DELETE,
-                badge: { text: '!', color: 'error' }
+                icon: IconType.DELETE
               }
             ]
           }

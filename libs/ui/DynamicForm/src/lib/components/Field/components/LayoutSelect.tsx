@@ -1,15 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  FormHelperText,
-  CircularProgress,
-  Chip,
-  Box,
-  Typography
-} from '@mui/material'
+import { FormControl, FormHelperText, TextField, MenuItem, MenuList } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
 import { useFormContext, Controller } from 'react-hook-form'
 import { ISelectLayoutField, IOption, ILayoutField } from '../../../types'
 import { lazyLoaderMap } from '../../../constants/mappers'
@@ -44,87 +35,97 @@ const LayoutSelect = ({ field }: { field: ILayoutField }) => {
         setLoading(false)
       }
     }
-  }, [options])
+  }, [options, queryClient])
 
   const currentOptions = loadedOptions
-  const optionsMap = useMemo(() => keyBy(currentOptions, 'value'), [currentOptions])
+  const optionsMap = useMemo(() => keyBy(currentOptions, (o) => String(o.value)), [currentOptions])
+
+  const getSelectedOptions = (value: unknown): IOption[] | IOption | null => {
+    if (multiple) {
+      const arr = (value || []) as Array<IOption['value']>
+      const selected = arr.map((v) => optionsMap[String(v)]).filter(Boolean) as IOption[]
+      return selected
+    }
+    const single = value as IOption['value'] | undefined
+    if (single === undefined || single === null || single === '' || currentOptions.length === 0) {
+      return null
+    }
+    return optionsMap[String(single)] ?? null
+  }
 
   return (
     <Controller
       name={path}
       control={control}
       render={({ field, fieldState: { error } }) => {
-        const handleChipDelete = (valueToRemove: string) => {
-          const currentValue = field.value || []
-          const newValue = currentValue.filter((item: string) => item !== valueToRemove)
-          field.onChange(newValue)
-        }
-
-        const renderValueWithField = (selected: string | string[]) => {
-          if (!multiple) return selected
-
-          if (!Array.isArray(selected) || selected.length === 0) {
-            return ''
-          }
-
-          return (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value: string) => {
-                const option = currentOptions.find((opt) => opt.value === value)
-                return (
-                  <Chip
-                    key={value}
-                    label={option?.label || value}
-                    size='small'
-                    onDelete={(event) => {
-                      event.stopPropagation()
-                      handleChipDelete(value)
-                    }}
-                    onMouseDown={(event) => {
-                      event.stopPropagation()
-                    }}
-                  />
-                )
-              })}
-            </Box>
-          )
-        }
-
         return (
           <FormControl fullWidth error={!!error} sx={{ mt: 1 }} required={required}>
-            {label ? <InputLabel shrink>{label}</InputLabel> : null}
-            <Select
-              {...field}
-              label={label}
-              multiple={multiple}
-              value={field.value || (multiple ? [] : '')}
-              displayEmpty={Boolean(placeholder) && !multiple}
-              renderValue={
-                multiple
-                  ? renderValueWithField
-                  : (selected) => {
-                      const single = selected as string
-                      if (!single || single === '') {
-                        return placeholder ?? ''
-                      }
-                      const option = optionsMap[single]
-                      return option?.label || single
+            <Autocomplete
+              options={currentOptions}
+              multiple={Boolean(multiple)}
+              disableCloseOnSelect={Boolean(multiple)}
+              loading={loading}
+              slots={{ listbox: MenuList }}
+              getOptionLabel={(option) => option.label}
+              isOptionEqualToValue={(opt, val) => String(opt.value) === String(val.value)}
+              value={getSelectedOptions(field.value) as IOption[] | IOption | null}
+              slotProps={{
+                paper: {
+                  sx: (theme) => ({
+                    bgcolor: 'background.default',
+                    border: `1px solid ${theme.palette.divider}`,
+                    boxShadow: theme.shadows[1]
+                  })
+                },
+                listbox: {
+                  sx: () => ({
+                    p: 0,
+                    bgcolor: '#121212',
+                    '& .MuiAutocomplete-option': {
+                      color: 'text.primary',
+                      '&:hover': { bgcolor: 'action.hover' },
+                      '&.Mui-focused': { bgcolor: 'action.hover' },
+                      '&[aria-selected="true"]': { bgcolor: 'action.selected' },
+                      '&[aria-selected="true"].Mui-focused': { bgcolor: 'action.selected' }
                     }
-              }
-            >
-              {loading ? (
-                <MenuItem disabled sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <CircularProgress size={20} sx={{ mr: 1 }} />
-                  <Typography variant='body2'>טוען...</Typography>
+                  })
+                }
+              }}
+              renderOption={(props, option, state) => (
+                <MenuItem
+                  {...props}
+                  component='li'
+                  selected={state.selected}
+                  // Keep height and spacing like MenuItem in Select
+                  sx={{
+                    minHeight: 40,
+                    '&.Mui-selected': { bgcolor: 'action.selected' },
+                    '&.Mui-selected.Mui-focusVisible': { bgcolor: 'action.selected' }
+                  }}
+                >
+                  {option.label}
                 </MenuItem>
-              ) : (
-                currentOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))
               )}
-            </Select>
+              onChange={(_, newValue) => {
+                if (multiple) {
+                  const values = (newValue as IOption[]).map((o) => o.value)
+                  field.onChange(values)
+                } else {
+                  const val = (newValue as IOption | null)?.value ?? ''
+                  field.onChange(val)
+                }
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={label}
+                  placeholder={!multiple ? placeholder : undefined}
+                  error={!!error}
+                />
+              )}
+              noOptionsText='לא נמצאו תוצאות'
+              loadingText='טוען...'
+            />
             {error && <FormHelperText>{error.message}</FormHelperText>}
           </FormControl>
         )

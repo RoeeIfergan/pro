@@ -21,7 +21,7 @@ export const DynamicForm = ({ collection }: { collection?: ICollection }) => {
         alignItems: 'center'
       }}
     >
-      <DynamicFormContent collection={collection!} />
+      <DynamicFormContent collection={collection} />
     </Box>
   )
 }

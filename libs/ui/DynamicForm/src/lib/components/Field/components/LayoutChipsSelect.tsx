@@ -41,7 +41,7 @@ const LayoutChipsSelect = ({ field }: { field: ILayoutField }) => {
         setLoading(false)
       }
     }
-  }, [options])
+  }, [options, queryClient])
 
   const currentOptions = loadedOptions
 
@@ -50,14 +50,14 @@ const LayoutChipsSelect = ({ field }: { field: ILayoutField }) => {
       name={path}
       control={control}
       render={({ field, fieldState: { error } }) => {
-        const handleChipToggle = (optionValue: string) => {
+        const handleChipToggle = (optionValue: IOption['value']) => {
           if (multiple) {
-            const currentValue = field.value || []
+            const currentValue = (field.value || []) as Array<IOption['value']>
             const isSelected = currentValue.includes(optionValue)
 
             if (isSelected) {
               // Remove from array
-              const newValue = currentValue.filter((item: string) => item !== optionValue)
+              const newValue = currentValue.filter((item) => item !== optionValue)
               field.onChange(newValue)
             } else {
               // Add to array
@@ -70,9 +70,9 @@ const LayoutChipsSelect = ({ field }: { field: ILayoutField }) => {
           }
         }
 
-        const isChipSelected = (optionValue: string) => {
+        const isChipSelected = (optionValue: IOption['value']) => {
           if (multiple) {
-            const currentValue = field.value || []
+            const currentValue = (field.value || []) as Array<IOption['value']>
             return currentValue.includes(optionValue)
           } else {
             return field.value === optionValue
@@ -106,7 +106,7 @@ const LayoutChipsSelect = ({ field }: { field: ILayoutField }) => {
                   const isSelected = isChipSelected(option.value)
                   return (
                     <Chip
-                      key={option.value}
+                      key={String(option.value)}
                       label={option.label}
                       clickable
                       onClick={() => handleChipToggle(option.value)}
@@ -114,10 +114,21 @@ const LayoutChipsSelect = ({ field }: { field: ILayoutField }) => {
                       variant={isSelected ? 'filled' : 'outlined'}
                       sx={{
                         transition: 'all 0.2s ease',
-                        '&:hover': {
-                          transform: 'translateY(-1px)',
-                          boxShadow: (theme) => theme.shadows[2]
-                        }
+                        ...(isSelected
+                          ? {
+                              '&:hover': {
+                                transform: 'none',
+                                boxShadow: 'none',
+                                backgroundColor: 'primary.main',
+                                color: 'primary.contrastText'
+                              }
+                            }
+                          : {
+                              '&:hover': {
+                                transform: 'translateY(-1px)',
+                                boxShadow: (theme) => theme.shadows[2]
+                              }
+                            })
                       }}
                     />
                   )
