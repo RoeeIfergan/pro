@@ -6,7 +6,6 @@ import {
   getExpandedRowModel,
   getSortedRowModel,
   flexRender,
-  ColumnResizeMode,
   Row
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -137,7 +136,7 @@ export function PTable<TData, TValue = unknown>({
     enableGrouping,
     enableSorting,
     enableColumnPinning,
-    columnResizeMode: 'onChange' as ColumnResizeMode,
+    columnResizeMode: 'onChange',
     getRowId: (row: TData) => (row as TData & { id?: string | number })?.id?.toString() ?? '',
     state: {
       rowSelection: selected,
@@ -151,7 +150,8 @@ export function PTable<TData, TValue = unknown>({
     onColumnPinningChange: setColumnPinning,
     onGroupingChange: setColumnGrouping,
     onColumnVisibilityChange: setColumnVisibility,
-    enableRowSelection: () => true, // Allow all rows to be selectable
+    enableRowSelection:
+      typeof enableRowSelection === 'function' ? enableRowSelection : !!enableRowSelection,
     debugTable: process.env.NODE_ENV === 'development'
   })
 

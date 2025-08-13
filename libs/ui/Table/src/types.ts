@@ -27,7 +27,7 @@ export interface PTableProps<TData = unknown, TValue = unknown> {
   setColumnGrouping?: OnChangeFn<GroupingState>
   columnVisibility?: VisibilityState
   setColumnVisibility?: OnChangeFn<VisibilityState>
-  enableRowSelection?: boolean
+  enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
   enableColumnResizing?: boolean
   enableSubRows?: boolean
   enableGrouping?: boolean
