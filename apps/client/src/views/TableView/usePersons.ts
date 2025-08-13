@@ -78,7 +78,7 @@ export const usePersons = () => {
     setIsLoading(true)
     // Simulate API call
     setTimeout(() => {
-      const newData = generateData(50)
+      const newData = generateData(1000)
       const startId = data.length + 1
       const updatedData = newData.map((item, index) => ({
         ...item,
