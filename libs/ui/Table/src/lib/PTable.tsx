@@ -324,7 +324,7 @@ export function PTable<TData, TValue = unknown>({
         )}
 
         {/* Droppable divider sits just left of the resizer to avoid interaction conflicts */}
-        <DroppableDivider id={`divider:${columnId}`} rightOffset={6} />
+        <DroppableDivider id={`divider:${columnId}`} />
       </TableCell>
     )
   }
@@ -410,14 +410,14 @@ export function PTable<TData, TValue = unknown>({
 
         {/* Droppable divider sits just left of the resizer to avoid interaction conflicts */}
         {isHeaderReorderable(header as any) && (
-          <DroppableDivider id={`divider:${header.column.id}`} rightOffset={6} />
+          <DroppableDivider id={`divider:${header.column.id}`} />
         )}
       </TableCell>
     )
   }
 
   // Right-edge droppable divider that shows the drop line
-  const DroppableDivider = ({ id, rightOffset = 0 }: { id: string; rightOffset?: number }) => {
+  const DroppableDivider = ({ id }: { id: string }) => {
     const { isOver, setNodeRef } = useDroppable({ id })
     return (
       <Box
