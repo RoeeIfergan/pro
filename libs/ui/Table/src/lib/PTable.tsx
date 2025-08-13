@@ -409,7 +409,9 @@ export function PTable<TData, TValue = unknown>({
         )}
 
         {/* Droppable divider sits just left of the resizer to avoid interaction conflicts */}
-        <DroppableDivider id={`divider:${header.column.id}`} rightOffset={6} />
+        {isHeaderReorderable(header as any) && (
+          <DroppableDivider id={`divider:${header.column.id}`} rightOffset={6} />
+        )}
       </TableCell>
     )
   }
@@ -422,13 +424,13 @@ export function PTable<TData, TValue = unknown>({
         ref={setNodeRef}
         sx={{
           position: 'absolute',
-          right: rightOffset,
+          right: 0,
           top: 0,
           width: 10,
           height: '100%',
           userSelect: 'none',
           touchAction: 'none',
-          backgroundColor: isOver ? 'yellow' : 'red'
+          backgroundColor: isOver ? 'action.hover' : 'transparent'
         }}
       />
     )
@@ -441,25 +443,35 @@ export function PTable<TData, TValue = unknown>({
 
   const handleColumnDragEnd = useCallback(
     (event: DragEndEvent) => {
+      console.log('handleColumnDragEnd', event)
       const { active, over } = event
       if (!over || !setColumnOrder) return
-      const domOrder = table.getAllLeafColumns().map((c) => c.id)
-      const visual = isRtl ? [...domOrder].reverse() : domOrder
+      const allIds = table.getAllLeafColumns().map((c) => c.id)
+
+      // Current reorderable order, controlled or fallback
+      const current = columnOrder && columnOrder.length > 0 ? columnOrder : allIds
+
       const activeId = String(active.id).replace(/^col:/, '')
       const overDividerId = String(over.id).replace(/^divider:/, '')
-      const from = visual.indexOf(activeId)
-      const overIdx = visual.indexOf(overDividerId)
-      if (from === -1 || overIdx === -1) return
-      let to = overIdx + 1
-      if (from < to) to -= 1
-      const nextVisual = visual.slice()
+
+      const from = current.indexOf(activeId)
+      const to = current.indexOf(overDividerId)
+      if (from === -1 || to === -1) return
+
+      // If dropped on same index or to the right, do nothing per spec
+      if (to === from || to === from - 1) {
+        setActiveDragId(null)
+        return
+      }
+
+      const nextVisual = current.slice()
       const [item] = nextVisual.splice(from, 1)
-      nextVisual.splice(to, 0, item)
-      const next = isRtl ? [...nextVisual].reverse() : nextVisual
-      setColumnOrder(next)
+      nextVisual.splice(to > from ? to : to + 1, 0, item)
+
+      setColumnOrder(nextVisual)
       setActiveDragId(null)
     },
-    [setColumnOrder, table, isRtl]
+    [setColumnOrder, table, isRtl, columnOrder]
   )
 
   return (
