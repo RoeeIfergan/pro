@@ -1,75 +1,40 @@
 import { Box, Typography } from '@mui/material'
-import DynamicForm, { TcardJSONNode } from '@pro3/DynamicForm'
-
-const cardJSON: TcardJSONNode = {
-  componentType: 'box',
-  children: [
-    { componentType: 'textField', fieldName: 'name', label: '..' },
-    {
-      componentType: 'select',
-      fieldName: 'type',
-      label: 'type',
-      options: [
-        { value: 'fire', label: 'fire' },
-        { value: 'air', label: 'air' },
-        { value: 'water', label: 'water' },
-        { value: 'earth', label: 'earth' }
-      ]
-    },
-    {
-      componentType: 'display',
-      ifField: 'type',
-      equals: 'fire',
-      children: [
-        { componentType: 'textField', fieldName: 'name', label: 'fire name' },
-        {
-          componentType: 'collapse',
-          defaultOpened: false,
-          children: [
-            {
-              componentType: 'textField',
-              fieldName: 'country',
-              label: 'country'
-            },
-            { componentType: 'numberInput', fieldName: 'age', label: 'age' }
-          ]
-        },
-        { componentType: 'textField', fieldName: 'name', label: 'name' }
-      ]
-    },
-    {
-      componentType: 'display',
-      ifField: 'type',
-      equals: 'air',
-      children: [{ componentType: 'textField', fieldName: 'name', label: 'air name' }]
-    }
-  ]
-}
+import DynamicForm, { useCollectionQuery } from '@pro3/DynamicForm'
+import { useState, useEffect, useMemo } from 'react'
+import _keyBy from 'lodash/keyBy'
+import SelectCollection from './SelectCollection'
 
 const DynamicFormView = () => {
+  const { data: collections, isLoading } = useCollectionQuery()
+
+  const collectionsByNames = useMemo(() => _keyBy(collections ?? [], 'name'), [collections])
+
+  const [collection, setCollection] = useState<string>('')
+
+  console.log('💪💪 collections???', collections)
+
+  useEffect(() => {
+    if (collections && collections.length > 0 && !collection) {
+      setCollection(collections[0].name)
+    }
+  }, [collections, collection])
+
   return (
-    <Box p={3}>
-      <Typography variant='h4' p={2}>
-        Card View
-      </Typography>
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <Box
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            width: '500px',
-            backgroundColor: '#353535',
-            borderRadius: '5px'
-          }}
-        >
-          <DynamicForm cardJSON={cardJSON} />
-        </Box>
+    <Box p={3} sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Typography variant='h4' p={2}>
+          Dynamic Form
+        </Typography>
+
+        <SelectCollection
+          collections={collections ?? []}
+          isLoading={isLoading}
+          collection={collection}
+          setCollection={setCollection}
+        />
       </Box>
+
+      <DynamicForm key={collection ?? ''} collection={collectionsByNames[collection ?? '']} />
     </Box>
   )
 }

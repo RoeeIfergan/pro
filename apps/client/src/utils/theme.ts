@@ -1,11 +1,20 @@
 import { createTheme } from '@mui/material/styles'
 
 export const theme = createTheme({
+  components: {
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: {
+          color: '#d32f2f'
+        }
+      }
+    }
+  },
   direction: 'rtl',
   palette: {
     mode: 'dark',
     primary: {
-      main: '#3C3C3C',
+      main: '#00A064',
       dark: '#282828',
       light: '#4B4B4B'
     },
