@@ -141,6 +141,7 @@ export function PTable<TData, TValue = unknown>({
     enableSorting,
     enableColumnPinning,
     columnResizeMode: 'onChange',
+    columnResizeDirection: isRtl ? 'rtl' : 'ltr',
     getRowId: (row: TData) => (row as TData & { id?: string | number })?.id?.toString() ?? '',
     state: {
       rowSelection: selected,
@@ -165,7 +166,9 @@ export function PTable<TData, TValue = unknown>({
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
-    estimateSize: () => 52, // Estimated row height
+    estimateSize: () => 52,
+    measureElement: (el) => (el instanceof HTMLElement ? el.getBoundingClientRect().height : 52),
+    getItemKey: (index) => rows[index]?.id ?? index,
     overscan: 10
   })
 
@@ -335,6 +338,8 @@ export function PTable<TData, TValue = unknown>({
                       row={row}
                       virtualRowSize={virtualRow.size}
                       colSpan={table.getAllLeafColumns().length}
+                      virtualRowIndex={virtualRow.index}
+                      measureElement={rowVirtualizer.measureElement}
                     />
                   </Fragment>
                 )
@@ -344,6 +349,8 @@ export function PTable<TData, TValue = unknown>({
               return (
                 <Fragment key={row.id}>
                   <TableRow
+                    data-index={virtualRow.index}
+                    ref={rowVirtualizer.measureElement}
                     hover
                     onClick={(e) => handleRowClick(row, e)}
                     sx={{

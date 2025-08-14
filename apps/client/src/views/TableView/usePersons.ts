@@ -3,7 +3,7 @@ import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 // Person interface
 export interface Person {
-  id: number
+  id: string
   firstName: string
   lastName: string
   age: number
@@ -37,9 +37,18 @@ export const generateData = (count: number): Person[] => {
   const companies = ['TechCorp', 'DataSys', 'InnovateLab', 'GlobalTech', 'NextGen']
   const skills = ['JavaScript', 'Python', 'React', 'Node.js', 'SQL', 'AWS', 'Docker', 'TypeScript']
 
+  const makeId = () =>
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? (crypto as any).randomUUID()
+      : `${Date.now()}-${Math.random().toString(16).slice(2)}`
+
   for (let i = 0; i < count; i++) {
+    // Vary notes length: occasionally very long
+    const baseNote = `Notes for employee ${i + 1}. `
+    const repeats = i % 12 === 0 ? 3 : i % 7 === 0 ? 2 : i % 5 === 0 ? 1.5 : 1
+    const notesValue = baseNote.repeat(repeats).trim()
     const person: Person = {
-      id: i + 1,
+      id: makeId(),
       firstName: `First${i + 1}`,
       lastName: `Last${i + 1}`,
       age: 20 + (i % 50),
@@ -58,7 +67,7 @@ export const generateData = (count: number): Person[] => {
       experience: 1 + (i % 20),
       status: statuses[i % statuses.length],
       skills: skills.slice(0, (i % 4) + 1).join(', '),
-      notes: `Notes for employee ${i + 1}`
+      notes: notesValue
     }
     data.push(person)
   }
@@ -78,14 +87,8 @@ export const usePersons = () => {
     setIsLoading(true)
     // Simulate API call
     setTimeout(() => {
-      const newData = generateData(1000)
-      const startId = data.length + 1
-      const updatedData = newData.map((item, index) => ({
-        ...item,
-        id: startId + index
-      }))
-
-      setData((prev) => [...prev, ...updatedData])
+      const newData = generateData(100)
+      setData((prev) => [...prev, ...newData])
       setIsLoading(false)
 
       // Stop loading more after 500 items

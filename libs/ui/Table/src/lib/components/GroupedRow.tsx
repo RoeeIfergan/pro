@@ -6,9 +6,17 @@ export interface GroupedRowProps<TData> {
   row: Row<TData>
   virtualRowSize: number
   colSpan: number
+  virtualRowIndex?: number
+  measureElement?: (el: Element | null) => void
 }
 
-export function GroupedRow<TData>({ row, virtualRowSize, colSpan }: GroupedRowProps<TData>) {
+export function GroupedRow<TData>({
+  row,
+  virtualRowSize,
+  colSpan,
+  virtualRowIndex,
+  measureElement
+}: GroupedRowProps<TData>) {
   const groupedCell = row.getVisibleCells().find((cell) => cell.getIsGrouped())
   const groupValue = groupedCell
     ? flexRender(groupedCell.column.columnDef.cell, groupedCell.getContext())
@@ -17,6 +25,8 @@ export function GroupedRow<TData>({ row, virtualRowSize, colSpan }: GroupedRowPr
 
   return (
     <TableRow
+      data-index={virtualRowIndex}
+      ref={measureElement as any}
       hover
       sx={{
         backgroundColor: 'primary.light',
