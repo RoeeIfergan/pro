@@ -4,13 +4,7 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/server-e2e"
-    },
-    {
       "path": "./apps/server"
-    },
-    {
-      "path": "./apps/client-e2e"
     },
     {
       "path": "./apps/client"
@@ -20,6 +14,12 @@
     },
     {
       "path": "./libs/ui/DynamicForm"
+    },
+    {
+      "path": "./e2e/client-e2e"
+    },
+    {
+      "path": "./e2e/server-e2e"
     }
   ]
 }
