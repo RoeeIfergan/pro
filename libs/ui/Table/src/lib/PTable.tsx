@@ -17,7 +17,8 @@ import {
   TableCell,
   TableContainer,
   Checkbox,
-  IconButton
+  IconButton,
+  Stack
 } from '@mui/material'
 import { ExpandMore, ExpandLess } from '@mui/icons-material'
 import { useTheme } from '@mui/material/styles'
@@ -77,48 +78,39 @@ export function PTable<TData, TValue = unknown>({
             onChange={table.getToggleAllRowsSelectedHandler()}
             size='small'
             disableRipple
-            sx={{ padding: 0 }}
+            sx={{ px: 0 }}
           />
         ),
-        cell: ({ row }) => {
-          return (
-            <Checkbox
-              checked={row.getIsSelected()}
-              disabled={!row.getCanSelect()}
-              indeterminate={row.getIsSomeSelected()}
-              onChange={row.getToggleSelectedHandler()}
-              size='small'
-              disableRipple
-            />
-          )
-        },
-        enableResizing: false,
-        enableSorting: false,
-        enableGrouping: false,
-        size: 50
-      })
-    }
-
-    if (renderSubComponent) {
-      cols.unshift({
-        id: 'expander',
         cell: ({ row }) => {
           const isGrouped = row.getIsGrouped()
           const canExpand = !isGrouped && (getRowCanExpand ? getRowCanExpand(row) : true)
           return (
-            <IconButton
-              onClick={canExpand ? row.getToggleExpandedHandler() : undefined}
-              size='small'
-              disabled={!canExpand}
-            >
-              {row.getIsExpanded() ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
+            <Stack direction='row' spacing={1} sx={{ justifyContent: 'flex-start' }}>
+              {renderSubComponent && (
+                <IconButton
+                  onClick={canExpand ? row.getToggleExpandedHandler() : undefined}
+                  size='small'
+                  disabled={!canExpand}
+                >
+                  {row.getIsExpanded() ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
+              )}
+              <Checkbox
+                checked={row.getIsSelected()}
+                disabled={!row.getCanSelect()}
+                indeterminate={row.getIsSomeSelected()}
+                onChange={row.getToggleSelectedHandler()}
+                size='small'
+                disableRipple
+                sx={{ px: 0 }}
+              />
+            </Stack>
           )
         },
         enableResizing: false,
         enableSorting: false,
         enableGrouping: false,
-        size: 50
+        maxSize: 80
       })
     }
 
@@ -200,12 +192,12 @@ export function PTable<TData, TValue = unknown>({
 
   // Helper function to determine if a column should have a right border
   const shouldShowRightBorder = (columnId: string, allColumns: string[]) => {
-    const isSpecialColumn = columnId === 'select' || columnId === 'expander'
+    const isSpecialColumn = columnId === 'select'
     if (!isSpecialColumn) return true
 
     const currentIndex = allColumns.indexOf(columnId)
     const nextColumn = allColumns[currentIndex + 1]
-    const nextIsSpecial = nextColumn === 'select' || nextColumn === 'expander'
+    const nextIsSpecial = nextColumn === 'select'
 
     return !nextIsSpecial
   }
@@ -215,16 +207,12 @@ export function PTable<TData, TValue = unknown>({
     const meta = (header.column.columnDef as any)?.meta
     const explicitlyReorderable = meta?.reorderable
     const isGrouped = header.column.getIsGrouped?.() === true
-    const isSpecial = id === 'select' || id === 'expander'
+    const isSpecial = id === 'select'
     if (isSpecial) return false
     if (isGrouped) return false
     if (explicitlyReorderable === false) return false
     return true
   }
-
-  // moved DraggableHeaderCell and StaticHeaderCell into components
-
-  // DroppableDivider component is imported from ./components/DroppableDivider
 
   const handleColumnDragStart = useCallback((event: DragStartEvent) => {
     const id = String(event.active.id)

@@ -26,7 +26,6 @@ export function SortableBodyCell<TData>({
       sx={{
         width: cell.column.getSize(),
         minWidth: cell.column.getSize(),
-        maxWidth: cell.column.getSize(),
         position: isPinned ? 'sticky' : 'static',
         left: isPinned === 'left' ? `${cell.column.getStart('left')}px` : undefined,
         right: isPinned === 'right' ? `${cell.column.getStart('right')}px` : undefined,
@@ -45,7 +44,7 @@ export function SortableBodyCell<TData>({
             : isPinned === 'right'
               ? '-2px 0 4px rgba(0,0,0,0.1)'
               : 'none',
-        padding: cell.column.id === 'select' || cell.column.id === 'expander' ? '4px' : '12px',
+        padding: cell.column.id === 'select' ? '4px' : '12px',
         paddingLeft:
           row.depth > 0 && cell.column.id !== 'select' ? `${16 + row.depth * 20}px` : undefined,
         transition: 'width transform 0.2s ease-in-out',

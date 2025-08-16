@@ -61,6 +61,7 @@ export function HeaderCell<TData>({
         sx={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: header.id === 'select' ? 'flex-end' : 'flex-start',
           gap: 1,
           cursor: header.column.getCanSort() ? 'pointer' : 'default',
           '& .group-handle, & .sort-handle:not(.sorted), & .drag-handle': {
@@ -77,7 +78,6 @@ export function HeaderCell<TData>({
           <>
             {header.column.getCanGroup() && header.column.getIsGrouped() && (
               <IconButton
-                className='group-handle'
                 size='small'
                 onClick={(e) => {
                   e.stopPropagation()
