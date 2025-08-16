@@ -2,7 +2,6 @@ import { Box, Typography } from '@mui/material'
 import { useState, useCallback } from 'react'
 import { PTable } from '@pro3/Table'
 import { usePersons, usePersonsColumns, Person } from './usePersons'
-import CarsTable from './CarsTable'
 
 const TableView = () => {
   const { data, isLoading, hasNext, loadMore } = usePersons()
@@ -23,14 +22,7 @@ const TableView = () => {
   }, [])
 
   const renderSubComponent = useCallback(({ row }: { row: { original: Person } }) => {
-    return (
-      <Box sx={{ pl: 2 }}>
-        <Typography variant='h6' gutterBottom>
-          Cars for {row.original.firstName} {row.original.lastName}
-        </Typography>
-        <CarsTable />
-      </Box>
-    )
+    return <Box sx={{ pl: 2 }}>more info</Box>
   }, [])
 
   const getRowCanExpand = useCallback((_row: { original: Person }) => {

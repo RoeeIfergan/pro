@@ -170,6 +170,7 @@ export const usePersonsColumns = (): ColumnDef<Person, unknown>[] => {
         columnHelper.accessor('country', {
           header: 'Country',
           size: 100,
+          minSize: 100,
           enableGrouping: true
         }),
         columnHelper.accessor('zipCode', {

@@ -25,8 +25,7 @@ import { DndContext, DragStartEvent, DragEndEvent, DragOverlay } from '@dnd-kit/
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
 import { PTableProps } from '../types'
 import { SortableBodyCell } from './components/SortableBodyCell'
-import { DraggableHeaderCell } from './components/DraggableHeaderCell'
-import { StaticHeaderCell } from './components/StaticHeaderCell'
+import { HeaderCell } from './components/HeaderCell'
 import { GroupedRow } from './components/GroupedRow'
 import { DragOverlayLabel } from './components/DragOverlayLabel'
 import { LoadingContent } from './components/LoadingContent'
@@ -291,26 +290,17 @@ export function PTable<TData, TValue = unknown>({
             {table.getHeaderGroups().map((headerGroup) => {
               return (
                 <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) =>
-                    isHeaderReorderable(header) ? (
-                      <DraggableHeaderCell
-                        key={header.id}
-                        header={header}
-                        enableColumnResizing={!!enableColumnResizing}
-                        shouldShowRightBorder={shouldShowRightBorder}
-                        headerGroupColumnIds={headerGroup.headers.map((h) => h.column.id)}
-                      />
-                    ) : (
-                      <StaticHeaderCell
-                        key={header.id}
-                        header={header}
-                        enableColumnResizing={!!enableColumnResizing}
-                        shouldShowRightBorder={shouldShowRightBorder}
-                        showDivider={isHeaderReorderable(header)}
-                        headerGroupColumnIds={headerGroup.headers.map((h) => h.column.id)}
-                      />
-                    )
-                  )}
+                  {headerGroup.headers.map((header) => (
+                    <HeaderCell
+                      key={header.id}
+                      header={header}
+                      enableColumnResizing={!!enableColumnResizing}
+                      shouldShowRightBorder={shouldShowRightBorder}
+                      headerGroupColumnIds={headerGroup.headers.map((h) => h.column.id)}
+                      isDraggable={isHeaderReorderable(header)}
+                      showDivider={isHeaderReorderable(header)}
+                    />
+                  ))}
                 </TableRow>
               )
             })}
