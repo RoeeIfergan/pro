@@ -10,6 +10,7 @@ export default [
   {
     ignores: [
       '**/coverage',
+      '**/migrationFiles/**',
       '**/out-tsc',
       '**/dist',
       '**/vite.config.*.timestamp*',

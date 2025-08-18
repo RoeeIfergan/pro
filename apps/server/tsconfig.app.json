@@ -14,7 +14,8 @@
     "target": "es2021"
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/dbOld"
   ],
   "exclude": [
     "out-tsc",
@@ -25,5 +26,10 @@
     "eslint.config.js",
     "eslint.config.cjs",
     "eslint.config.mjs"
+  ],
+  "references": [
+    {
+      "path": "../../libs/server/database/tsconfig.lib.json"
+    }
   ]
 }

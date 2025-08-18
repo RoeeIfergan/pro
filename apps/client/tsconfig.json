@@ -6,6 +6,9 @@
       "path": "../../libs/ui/Table"
     },
     {
+      "path": "../../libs/server/database"
+    },
+    {
       "path": "../../libs/ui/DynamicForm"
     },
     {

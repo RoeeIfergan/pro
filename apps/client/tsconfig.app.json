@@ -37,6 +37,9 @@
       "path": "../../libs/ui/Table/tsconfig.lib.json"
     },
     {
+      "path": "../../libs/server/database/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/ui/DynamicForm/tsconfig.lib.json"
     }
   ]
