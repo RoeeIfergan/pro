@@ -78,7 +78,7 @@ export default [
             },
             {
               sourceTag: 'scope:schemas',
-              onlyDependOnLibsWithTags: ['scope:schemas']
+              onlyDependOnLibsWithTags: ['scope:types']
             }
           ]
         }
