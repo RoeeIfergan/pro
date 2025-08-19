@@ -6,6 +6,8 @@
       "jest",
       "node"
     ],
+    "sourceMap": true,
+    "inlineSources": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
