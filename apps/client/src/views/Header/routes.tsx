@@ -9,8 +9,11 @@ import { initialData as tableLoader } from '@pro3/client/src/views/TableView/loa
 
 import DynamicFormIcon from '@mui/icons-material/DynamicForm'
 import TableChartIcon from '@mui/icons-material/TableChart'
+import WorkflowIcon from '@mui/icons-material/Abc'
 
 import { RouteObject } from 'react-router'
+import WorkflowsView from '../WorkflowsView'
+import { workflowsLoader } from '../WorkflowsView/loader'
 
 type routeInfo = {
   label: string
@@ -33,5 +36,12 @@ export const routes: (routeInfo & RouteObject)[] = [
     icon: <TableChartIcon />,
     Component: TableView,
     loader: tableLoader
+  },
+  {
+    label: 'Workflows',
+    path: '/workflows',
+    icon: <WorkflowIcon />,
+    Component: WorkflowsView,
+    loader: workflowsLoader
   }
 ]
