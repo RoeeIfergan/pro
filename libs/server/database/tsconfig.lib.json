@@ -12,14 +12,14 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2021",
-    "types": [
-      "node"
-    ],
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts"
+  "include": ["src/**/*.ts"],
+  "references": [
+    {
+      "path": "../../types/tsconfig.lib.json"
+    }
   ],
-  "references": [],
   "exclude": [
     "test.jest.config.ts",
     "src/**/*.spec.ts",

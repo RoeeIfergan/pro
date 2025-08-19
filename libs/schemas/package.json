@@ -1,6 +1,8 @@
 {
-  "name": "@pro3/Table",
+  "name": "@pro3/schemas",
   "version": "0.0.1",
+  "private": true,
+  "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
@@ -11,10 +13,11 @@
     },
     "./package.json": "./package.json"
   },
+  "dependencies": {},
   "nx": {
     "tags": [
-      "type:shared",
-      "scope:ui/Table"
+      "type:atom",
+      "scope:schemas"
     ]
   }
 }

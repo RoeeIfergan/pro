@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { DatabaseConfig } from '../../database/config/database.config.ts'
-import { PG_CONNECTION } from '../../database/drizzle/pg-connection.ts'
+import { DatabaseConfig } from '../database/config/database.config.ts'
+import { PG_CONNECTION } from '../database/drizzle/pg-connection.ts'
 
-import * as ordersSchema from '../schemas/order.schema.ts'
-import { orders, OrderEntity, OrderEntityInsert } from '../schemas/order.schema.ts'
+import * as ordersSchema from './schemas/order.schema.ts'
+import { orders, OrderEntity, OrderEntityInsert } from './schemas/order.schema.ts'
 import { eq } from 'drizzle-orm'
 
 @Injectable()

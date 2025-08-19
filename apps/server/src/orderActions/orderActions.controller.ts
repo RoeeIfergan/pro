@@ -5,7 +5,7 @@ import {
   CreateOrderActionSchemaDTO,
   GetOrderActionByIdDTO,
   GetOrderActionSchemaDTO
-} from '@pro3/database'
+} from '@pro3/schemas'
 
 @Controller('orderActions')
 export class OrderActionsController {

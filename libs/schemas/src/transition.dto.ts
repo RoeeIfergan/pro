@@ -1,8 +1,6 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { TransitionEntity } from '../schemas/transition.schema.ts'
-
-export const transitionTypes = ['standard', 'express', 'overnight'] as const
+import { Transition } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
@@ -14,7 +12,7 @@ const createTransitionSchema = z.object({
   screenId: screenIdSchema,
   fromStepId: stepIdSchema,
   toStepId: stepIdSchema
-}) satisfies z.ZodType<Partial<TransitionEntity>>
+}) satisfies z.ZodType<Partial<Transition>>
 
 const getTransitionsSchema = z.object({
   id: idSchema,
@@ -24,13 +22,13 @@ const getTransitionsSchema = z.object({
   toStepId: stepIdSchema,
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<TransitionEntity>
+}) satisfies z.ZodType<Transition>
 
 // type Equal<A, B> =
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false
 // type Expect<T extends true> = T
 
-// type _SchemaMatchesTest = Expect<Equal<z.infer<typeof getTransitionsSchema>, TransitionEntity>>
+// type _SchemaMatchesTest = Expect<Equal<z.infer<typeof getTransitionsSchema>, Transition>>
 
 export class GetTransitionSchemaDTO extends createZodDto(getTransitionsSchema) {}
 export class CreateTransitionSchemaDTO extends createZodDto(createTransitionSchema) {}

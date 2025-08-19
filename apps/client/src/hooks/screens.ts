@@ -1,4 +1,5 @@
-import { CreateScreenDTO, ScreenDTO, UpdateScreenDTO } from '@pro3/database'
+import { Screen } from '@pro3/types'
+import { CreateScreenDTO, ScreenDTO, UpdateScreenDTO } from '@pro3/schemas'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 

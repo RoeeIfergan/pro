@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { CreateOrderActionSchemaDTO, OrderActionDao, OrderActionEntity } from '@pro3/database'
+import { OrderActionDao, OrderActionEntity } from '@pro3/database'
+import { CreateOrderActionSchemaDTO } from '@pro3/schemas'
 
 @Injectable()
 export class OrderActionsService {

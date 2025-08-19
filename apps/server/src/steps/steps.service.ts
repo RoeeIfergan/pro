@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { CreateStepSchemaDTO, StepDao, StepEntity } from '@pro3/database'
+import { StepDao, StepEntity } from '@pro3/database'
+import { CreateStepSchemaDTO } from '@pro3/schemas'
 
 @Injectable()
 export class StepsService {

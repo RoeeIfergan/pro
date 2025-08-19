@@ -6,10 +6,13 @@
       "path": "../../libs/ui/Table"
     },
     {
-      "path": "../../libs/server/database"
+      "path": "../../libs/ui/DynamicForm"
     },
     {
-      "path": "../../libs/ui/DynamicForm"
+      "path": "../../libs/schemas"
+    },
+    {
+      "path": "../../libs/types"
     },
     {
       "path": "./tsconfig.app.json"

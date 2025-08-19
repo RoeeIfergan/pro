@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { OrdersService } from './orders.service'
-import { GetOrderByIdDTO, CreateOrderSchemaDTO, GetOrderSchemaDTO } from '@pro3/database'
+import { GetOrderByIdDTO, CreateOrderSchemaDTO, GetOrderSchemaDTO } from '@pro3/schemas'
 import { UseZodGuard } from 'nestjs-zod'
 
 @Controller('orders')

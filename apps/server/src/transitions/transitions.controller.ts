@@ -5,7 +5,7 @@ import {
   CreateTransitionSchemaDTO,
   GetTransitionByIdDTO,
   GetTransitionSchemaDTO
-} from '@pro3/database'
+} from '@pro3/schemas'
 
 @Controller('transitions')
 export class TransitionsController {

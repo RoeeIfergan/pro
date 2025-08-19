@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { UseZodGuard } from 'nestjs-zod'
 import { StepsService } from './steps.service'
-import { CreateStepSchemaDTO, GetStepByIdDTO, GetStepSchemaDTO } from '@pro3/database'
+import { CreateStepSchemaDTO, GetStepByIdDTO, GetStepSchemaDTO } from '@pro3/schemas'
 
 @Controller('steps')
 export class StepsController {

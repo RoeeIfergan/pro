@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { CreateTransitionSchemaDTO, TransitionDao, TransitionEntity } from '@pro3/database'
+import { TransitionDao, TransitionEntity } from '@pro3/database'
+import { CreateTransitionSchemaDTO } from '@pro3/schemas'
 
 @Injectable()
 export class TransitionsService {

@@ -17,6 +17,10 @@
     "drizzle-seed": "^0.3.1"
   },
   "nx": {
+    "tags": [
+      "type:shared",
+      "scope:server/database"
+    ],
     "targets": {
       "genMigration": {
         "executor": "nx:run-commands",

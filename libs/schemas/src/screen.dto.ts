@@ -1,22 +1,20 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { ScreenEntity } from '../schemas/screen.schema.ts'
-
-export const screenTypes = ['standard', 'express', 'overnight'] as const
+import { Screen } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
 
 const createScreenSchema = z.object({
   name: nameSchema
-}) satisfies z.ZodType<Partial<ScreenEntity>>
+}) satisfies z.ZodType<Partial<Screen>>
 
 export const ScreensSchema = z.object({
   id: idSchema,
   name: nameSchema,
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<ScreenEntity>
+}) satisfies z.ZodType<Screen>
 
 // type Equal<A, B> =
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false

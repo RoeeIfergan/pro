@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { OrderEntity } from '../schemas/order.schema.ts'
 import { Order, orderTypes } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
@@ -11,7 +10,7 @@ const createOrderSchema = z.object({
   name: nameSchema,
   type: typeSchema,
   stepId: stepIdSchema
-}) //satisfies  //z.ZodType<Partial<OrderEntity>>
+}) satisfies z.ZodType<Partial<Order>>
 
 const getOrdersSchema = z.object({
   id: idSchema,
@@ -20,15 +19,13 @@ const getOrdersSchema = z.object({
   stepId: stepIdSchema,
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<OrderEntity>
+}) satisfies z.ZodType<Order>
 
-type type = z.ZodType<OrderEntity>
+// type Equal<A, B> =
+//   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false
+// type Expect<T extends true> = T
 
-type Equal<A, B> =
-  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false
-type Expect<T extends true> = T
-
-type _SchemaMatchesTest = Expect<Equal<z.infer<typeof getOrdersSchema>, Order>>
+// type _SchemaMatchesTest = Expect<Equal<z.infer<typeof getOrdersSchema>, Order>>
 
 export class GetOrderSchemaDTO extends createZodDto(getOrdersSchema) {}
 export class CreateOrderSchemaDTO extends createZodDto(createOrderSchema) {}

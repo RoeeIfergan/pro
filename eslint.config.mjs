@@ -61,12 +61,24 @@ export default [
               onlyDependOnLibsWithTags: ['*']
             },
             {
-              sourceTag: 'type:feature',
-              onlyDependOnLibsWithTags: ['type:feature', 'type:shared']
+              sourceTag: 'type:app',
+              onlyDependOnLibsWithTags: ['type:shared', 'type:atom']
             },
             {
               sourceTag: 'type:shared',
-              onlyDependOnLibsWithTags: ['type:shared']
+              onlyDependOnLibsWithTags: ['type:atom']
+            },
+            {
+              sourceTag: 'type:atom',
+              onlyDependOnLibsWithTags: ['type:atom']
+            },
+            {
+              sourceTag: 'scope:types',
+              onlyDependOnLibsWithTags: ['scope:types']
+            },
+            {
+              sourceTag: 'scope:schemas',
+              onlyDependOnLibsWithTags: ['scope:schemas']
             }
           ]
         }

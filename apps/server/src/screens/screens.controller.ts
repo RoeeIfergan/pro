@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { UseZodGuard } from 'nestjs-zod'
 import { ScreensService } from './screens.service'
-import { CreateScreenDTO, GetScreenByIdDTO, ScreenDTO } from '@pro3/database'
+import { CreateScreenDTO, GetScreenByIdDTO, ScreenDTO } from '@pro3/schemas'
 
 @Controller('screens')
 export class ScreensController {
