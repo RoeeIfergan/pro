@@ -133,3 +133,5 @@ export type FieldComponentValue = React.ComponentType<{ field: ILayoutField; dis
 export type FieldComponentMapper = {
   [key in FieldComponentType]: FieldComponentValue
 }
+
+export type UnknownRecord = Record<string, unknown>

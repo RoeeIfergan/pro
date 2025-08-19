@@ -99,6 +99,7 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
     {
       fields: [
         {
+          label: 'דיסני',
           path: 'disney',
           component: FieldComponentType.buttonsGroup,
           options: {
