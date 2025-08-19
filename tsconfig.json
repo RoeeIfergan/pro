@@ -20,6 +20,15 @@
     },
     {
       "path": "./e2e/server-e2e"
+    },
+    {
+      "path": "./libs/server/database"
+    },
+    {
+      "path": "./libs/types"
+    },
+    {
+      "path": "./libs/schemas"
     }
   ]
 }

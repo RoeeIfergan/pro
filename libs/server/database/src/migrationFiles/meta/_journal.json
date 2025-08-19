@@ -1,0 +1,83 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1755358642799,
+      "tag": "0000_tan_prowler",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1755358692720,
+      "tag": "0001_next_rhodey",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755358734857,
+      "tag": "0002_odd_aqueduct",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1755358764728,
+      "tag": "0003_fantastic_electro",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1755358781001,
+      "tag": "0004_damp_lenny_balinger",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1755358797829,
+      "tag": "0005_classy_sunfire",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1755358843339,
+      "tag": "0006_strange_eternals",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1755358881565,
+      "tag": "0007_real_turbo",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1755413616129,
+      "tag": "0008_calm_sue_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1755413658584,
+      "tag": "0009_happy_red_wolf",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1755462576977,
+      "tag": "0010_fine_otto_octavius",
+      "breakpoints": true
+    }
+  ]
+}

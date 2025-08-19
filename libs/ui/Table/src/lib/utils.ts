@@ -10,6 +10,7 @@ export const reverseColumns = <TData>(columns: columns<TData>): columns<TData> =
     if (column && 'columns' in column && column.columns) {
       reverseColumns(column.columns)
     }
+    return column
   })
 
   return columns

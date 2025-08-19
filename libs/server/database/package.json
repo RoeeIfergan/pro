@@ -1,0 +1,86 @@
+{
+  "name": "@pro3/database",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "drizzle-seed": "^0.3.1"
+  },
+  "nx": {
+    "tags": [
+      "type:shared",
+      "scope:server/database"
+    ],
+    "targets": {
+      "genMigration": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "drizzle-kit generate"
+        }
+      },
+      "migrate": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "drizzle-kit migrate"
+        }
+      },
+      "pull": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "drizzle-kit pull"
+        }
+      },
+      "push": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "drizzle-kit push"
+        }
+      },
+      "drop": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "drizzle-kit drop"
+        }
+      },
+      "studio": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "drizzle-kit studio"
+        }
+      },
+      "fast-migration": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "genMigration"
+        ],
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "drizzle-kit migrate"
+        }
+      },
+      "seed": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "npx tsx ./src/helpers/seed.ts"
+        }
+      }
+    }
+  }
+}

@@ -2,9 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../dist/server",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "sourceMap": true,
     "inlineSources": true,
     "rootDir": "src",
@@ -13,9 +11,7 @@
     "emitDecoratorMetadata": true,
     "target": "es2021"
   },
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts", "src/dbOld"],
   "exclude": [
     "out-tsc",
     "dist",
@@ -25,5 +21,10 @@
     "eslint.config.js",
     "eslint.config.cjs",
     "eslint.config.mjs"
+  ],
+  "references": [
+    {
+      "path": "../../libs/schemas/tsconfig.lib.json"
+    }
   ]
 }
