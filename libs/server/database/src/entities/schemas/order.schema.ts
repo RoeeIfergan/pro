@@ -3,7 +3,7 @@ import { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 import { WithIdPk } from '../helpers/with-id-pk.ts'
 import { WithModificationDates } from '../helpers/with-modification-dates.ts'
 import { steps } from './step.schema.ts'
-import { orderTypes } from '../order/consts.ts'
+import { orderTypes } from '@pro3/types'
 
 export const orders = pgTable('orders', {
   ...WithIdPk,

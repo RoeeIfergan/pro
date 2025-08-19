@@ -23,6 +23,9 @@
     },
     {
       "path": "./libs/server/database"
+    },
+    {
+      "path": "./libs/types"
     }
   ]
 }

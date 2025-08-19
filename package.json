@@ -119,7 +119,8 @@
     "apps/*",
     "e2e/*",
     "libs/ui/*",
-    "libs/server/*"
+    "libs/server/*",
+    "libs/*"
   ],
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [

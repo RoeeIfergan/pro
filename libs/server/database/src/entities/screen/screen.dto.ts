@@ -11,7 +11,7 @@ const createScreenSchema = z.object({
   name: nameSchema
 }) satisfies z.ZodType<Partial<ScreenEntity>>
 
-const getScreensSchema = z.object({
+export const ScreensSchema = z.object({
   id: idSchema,
   name: nameSchema,
   createdAt: z.date(),
@@ -22,10 +22,13 @@ const getScreensSchema = z.object({
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false
 // type Expect<T extends true> = T
 
-// type _SchemaMatchesTest = Expect<Equal<z.infer<typeof getScreensSchema>, ScreenEntity>>
+// type _SchemaMatchesTest = Expect<Equal<z.infer<typeof ScreensSchema>, ScreenEntity>>
 
-export class GetScreenSchemaDTO extends createZodDto(getScreensSchema) {}
-export class CreateScreenSchemaDTO extends createZodDto(createScreenSchema) {}
+export class ScreenDTO extends createZodDto(ScreensSchema) {}
+export class CreateScreenDTO extends createZodDto(createScreenSchema) {}
+
+export const updateScreenSchema = createScreenSchema.partial()
+export class UpdateScreenDTO extends createZodDto(createScreenSchema) {}
 
 export const getScreenByIdSchema = z.object({ id: idSchema })
 

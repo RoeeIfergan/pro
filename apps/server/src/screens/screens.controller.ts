@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { UseZodGuard } from 'nestjs-zod'
 import { ScreensService } from './screens.service'
-import { CreateScreenSchemaDTO, GetScreenByIdDTO, GetScreenSchemaDTO } from '@pro3/database'
+import { CreateScreenDTO, GetScreenByIdDTO, ScreenDTO } from '@pro3/database'
 
 @Controller('screens')
 export class ScreensController {
   constructor(private readonly screensService: ScreensService) {}
 
   @Get()
-  async getAllScreens(): Promise<GetScreenSchemaDTO[]> {
+  async getAllScreens(): Promise<ScreenDTO[]> {
     return this.screensService.getAllScreens()
   }
 
@@ -19,34 +19,34 @@ export class ScreensController {
 
   @Get(':id')
   @UseZodGuard('params', GetScreenByIdDTO)
-  async getById(@Param('id') screenId: string): Promise<GetScreenSchemaDTO[]> {
+  async getById(@Param('id') screenId: string): Promise<ScreenDTO[]> {
     return this.screensService.getById(screenId)
   }
 
   @Post()
-  @UseZodGuard('body', CreateScreenSchemaDTO)
-  async addScreen(@Body() screen: CreateScreenSchemaDTO): Promise<GetScreenSchemaDTO[]> {
+  @UseZodGuard('body', CreateScreenDTO)
+  async addScreen(@Body() screen: CreateScreenDTO): Promise<ScreenDTO[]> {
     return this.screensService.addScreen(screen.name)
   }
 
   @Patch(':id')
   @UseZodGuard('params', GetScreenByIdDTO)
-  @UseZodGuard('body', CreateScreenSchemaDTO)
+  @UseZodGuard('body', CreateScreenDTO)
   async updateScreen(
     @Param('id') screenId: string,
-    @Body() screen: CreateScreenSchemaDTO
-  ): Promise<Partial<GetScreenSchemaDTO>> {
+    @Body() screen: CreateScreenDTO
+  ): Promise<Partial<ScreenDTO>> {
     return this.screensService.updateScreen(screenId, screen)
   }
 
   @Delete(':id')
   @UseZodGuard('params', GetScreenByIdDTO)
-  async deleteScreen(@Param('id') screenId: string): Promise<Partial<GetScreenSchemaDTO>> {
+  async deleteScreen(@Param('id') screenId: string): Promise<Partial<ScreenDTO>> {
     return this.screensService.deleteScreen(screenId)
   }
 
   @Delete()
-  async deleteAllScreens(): Promise<Partial<GetScreenSchemaDTO>[]> {
+  async deleteAllScreens(): Promise<Partial<ScreenDTO>[]> {
     return this.screensService.deleteScreens()
   }
 }
