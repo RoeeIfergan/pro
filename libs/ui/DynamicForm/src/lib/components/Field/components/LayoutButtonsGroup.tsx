@@ -39,7 +39,15 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
               {label}
             </FormLabel>
           ) : null}
-          <Box sx={{ flex: 1, display: 'flex', height: '100%', minHeight: 0 }}>
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              height: '100%',
+              minHeight: 0,
+              maxHeight: '56px'
+            }}
+          >
             <ToggleButtonGroup
               {...field}
               exclusive
@@ -56,7 +64,11 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
                 height: '100%',
                 flex: 1,
                 minHeight: 0,
+                maxHeight: '56px',
+                overflowY: 'auto',
                 alignItems: 'stretch',
+                overflow: 'visible',
+
                 '& .MuiToggleButton-root': {
                   flex: 1, // Distribute buttons evenly
                   height: '100%',
