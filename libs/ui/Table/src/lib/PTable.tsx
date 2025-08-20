@@ -246,7 +246,7 @@ export function PTable<TData, TValue = unknown>({
       setColumnOrder(nextVisual)
       setActiveDragId(null)
     },
-    [setColumnOrder, table, isRtl, columnOrder]
+    [setColumnOrder, table, columnOrder]
   )
 
   return (
