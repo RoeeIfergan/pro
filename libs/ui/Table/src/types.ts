@@ -36,6 +36,7 @@ export interface PTableProps<TData = unknown, TValue = unknown> {
   getSubRows?: (originalRow: TData, index: number) => TData[] | undefined
   renderSubComponent?: (props: { row: Row<TData> }) => React.ReactElement
   getRowCanExpand?: (row: Row<TData>) => boolean
+  overscan?: number
 }
 
 export interface VirtualItem {

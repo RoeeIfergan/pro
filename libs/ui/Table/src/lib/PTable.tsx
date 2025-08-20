@@ -33,6 +33,8 @@ import { LoadingContent } from './components/LoadingContent'
 import { NoMoreDataConent } from './components/NoMoreDataConent'
 import { NoDataAvailableConent } from './components/NoDataAvailableConent'
 
+const DEFAULT_ROW_HEIGHT = 52
+
 export function PTable<TData, TValue = unknown>({
   data,
   columns,
@@ -57,7 +59,8 @@ export function PTable<TData, TValue = unknown>({
   enableColumnPinning = false,
   enableSorting = true,
   renderSubComponent,
-  getRowCanExpand
+  getRowCanExpand,
+  overscan = 10
 }: PTableProps<TData, TValue>) {
   const tableContainerRef = useRef<HTMLDivElement>(null)
   const theme = useTheme()
@@ -157,10 +160,11 @@ export function PTable<TData, TValue = unknown>({
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
-    estimateSize: () => 52,
-    measureElement: (el) => (el instanceof HTMLElement ? el.getBoundingClientRect().height : 52),
+    estimateSize: () => DEFAULT_ROW_HEIGHT,
+    measureElement: (el) =>
+      el instanceof HTMLElement ? el.getBoundingClientRect().height : DEFAULT_ROW_HEIGHT,
     getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 10
+    overscan
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
@@ -181,36 +185,30 @@ export function PTable<TData, TValue = unknown>({
     [loadMore, hasNext, isLoading]
   )
 
-  // Handle row clicks
-  const handleRowClick = (row: Row<TData>, event: React.MouseEvent) => {
-    if (event.detail === 1 && onClickRow) {
+  const handleRowClick = (event: React.MouseEvent, row: Row<TData>) => {
+    if (onClickRow) {
       onClickRow(row)
-    } else if (event.detail === 2 && onDoubleClickRow) {
+    }
+  }
+
+  const handleDoubleRowClick = (event: React.MouseEvent, row: Row<TData>) => {
+    if (onDoubleClickRow) {
       onDoubleClickRow(row)
     }
   }
 
-  // Helper function to determine if a column should have a right border
-  const shouldShowRightBorder = (columnId: string, allColumns: string[]) => {
-    const isSpecialColumn = columnId === 'select'
-    if (!isSpecialColumn) return true
-
-    const currentIndex = allColumns.indexOf(columnId)
-    const nextColumn = allColumns[currentIndex + 1]
-    const nextIsSpecial = nextColumn === 'select'
-
-    return !nextIsSpecial
-  }
+  const shouldShowRightBorder = useCallback((id: string, all: string[]) => {
+    const idx = all.indexOf(id)
+    if (idx === -1) return false
+    return idx < all.length - 1
+  }, [])
 
   const isHeaderReorderable = (header: TableHeader<TData, unknown>) => {
     const id = header.column.id
-    const meta = (header.column.columnDef as any)?.meta
-    const explicitlyReorderable = meta?.reorderable
     const isGrouped = header.column.getIsGrouped?.() === true
     const isSpecial = id === 'select'
     if (isSpecial) return false
     if (isGrouped) return false
-    if (explicitlyReorderable === false) return false
     return true
   }
 
@@ -283,8 +281,6 @@ export function PTable<TData, TValue = unknown>({
                       key={header.id}
                       header={header}
                       enableColumnResizing={!!enableColumnResizing}
-                      shouldShowRightBorder={shouldShowRightBorder}
-                      headerGroupColumnIds={headerGroup.headers.map((h) => h.column.id)}
                       isDraggable={isHeaderReorderable(header)}
                       showDivider={isHeaderReorderable(header)}
                     />
@@ -330,7 +326,8 @@ export function PTable<TData, TValue = unknown>({
                     data-index={virtualRow.index}
                     ref={rowVirtualizer.measureElement}
                     hover
-                    onClick={(e) => handleRowClick(row, e)}
+                    onClick={(e) => handleRowClick(e, row)}
+                    onDoubleClick={(e) => handleDoubleRowClick(e, row)}
                     sx={{
                       cursor: onClickRow || onDoubleClickRow ? 'pointer' : 'default',
                       height: virtualRow.size,
@@ -338,7 +335,7 @@ export function PTable<TData, TValue = unknown>({
                     }}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <SortableBodyCell
+                      <SortableBodyCell<TData, TValue>
                         key={cell.id}
                         cell={cell}
                         row={row}

@@ -14,8 +14,6 @@ import { ColumnResizer } from './ColumnResizer'
 export interface HeaderCellProps<TData> {
   header: TableHeader<TData, unknown>
   enableColumnResizing: boolean
-  shouldShowRightBorder: (columnId: string, allColumns: string[]) => boolean
-  headerGroupColumnIds: string[]
   isDraggable?: boolean
   showDivider?: boolean
   isRtl?: boolean
@@ -24,8 +22,6 @@ export interface HeaderCellProps<TData> {
 export function HeaderCell<TData>({
   header,
   enableColumnResizing,
-  shouldShowRightBorder,
-  headerGroupColumnIds,
   isDraggable = false,
   showDivider = false
 }: HeaderCellProps<TData>) {
@@ -48,9 +44,7 @@ export function HeaderCell<TData>({
         top: 0,
         left: isPinned === 'left' ? `${header.getStart('left')}px` : undefined,
         right: isPinned === 'right' ? `${header.getStart('right')}px` : undefined,
-        borderRight: shouldShowRightBorder(header.column.id, headerGroupColumnIds)
-          ? '1px solid'
-          : 'none',
+        borderRight: '1px solid',
         borderColor: 'divider',
         userSelect: 'none',
         backgroundColor: isPinned ? 'grey.50' : 'background.paper',

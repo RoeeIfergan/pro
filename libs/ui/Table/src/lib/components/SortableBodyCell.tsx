@@ -2,19 +2,19 @@ import { TableCell } from '@mui/material'
 import { useSortable } from '@dnd-kit/sortable'
 import { flexRender, Cell, Row } from '@tanstack/react-table'
 
-interface SortableBodyCellProps<TData> {
-  cell: Cell<TData, unknown>
+interface SortableBodyCellProps<TData, TValue = unknown> {
+  cell: Cell<TData, TValue>
   row: Row<TData>
   isRtl?: boolean
   shouldShowRightBorder: (id: string, all: string[]) => boolean
 }
 
-export function SortableBodyCell<TData>({
+export function SortableBodyCell<TData, TValue = unknown>({
   cell,
   row,
   isRtl,
   shouldShowRightBorder
-}: SortableBodyCellProps<TData>) {
+}: SortableBodyCellProps<TData, TValue>) {
   const isPinned = cell.column.getIsPinned()
   const { setNodeRef, transform, isDragging } = useSortable({ id: cell.column.id })
 
