@@ -40,7 +40,8 @@ export function GroupedRow<TData>({
         colSpan={colSpan}
         sx={{
           fontWeight: 'bold',
-          padding: '12px 16px',
+          padding: '12px',
+          paddingLeft: `${12 + row.depth * 20}px`,
           borderBottom: '2px solid',
           borderColor: 'divider'
         }}
