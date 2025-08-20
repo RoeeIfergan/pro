@@ -6,7 +6,8 @@ import {
   getExpandedRowModel,
   getSortedRowModel,
   Row,
-  Header as TableHeader
+  Header as TableHeader,
+  Cell
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import {
@@ -337,7 +338,7 @@ export function PTable<TData, TValue = unknown>({
                     {row.getVisibleCells().map((cell) => (
                       <SortableBodyCell<TData, TValue>
                         key={cell.id}
-                        cell={cell}
+                        cell={cell as Cell<TData, TValue>}
                         row={row}
                         isRtl={isRtl}
                         shouldShowRightBorder={shouldShowRightBorder}
