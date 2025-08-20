@@ -26,7 +26,7 @@ export function GroupedRow<TData>({
   return (
     <TableRow
       data-index={virtualRowIndex}
-      ref={measureElement as any}
+      ref={measureElement}
       hover
       sx={{
         backgroundColor: 'primary.light',
