@@ -9,7 +9,7 @@ const RootBox = styled(Box)(
     display: flex;
     width: 100%;
     height: 100%;
-    background-color: ${theme.palette.primary.main};
+    background-color: ${theme.palette.background.paper};
   `
 )
 

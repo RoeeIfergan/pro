@@ -9,6 +9,8 @@ export default [
   ...nx.configs['flat/javascript'],
   {
     ignores: [
+      '**/coverage',
+      '**/out-tsc',
       '**/dist',
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
