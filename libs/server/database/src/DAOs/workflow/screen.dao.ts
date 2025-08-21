@@ -3,11 +3,11 @@ import { Inject, Injectable } from '@nestjs/common'
 import { eq } from 'drizzle-orm'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 
-import { DatabaseConfig } from '../database/config/database.config.ts'
-import { PG_CONNECTION } from '../database/drizzle/pg-connection.ts'
+import { DatabaseConfig } from '../../database/config/database.config.ts'
+import { PG_CONNECTION } from '../../database/drizzle/pg-connection.ts'
 
-import * as screensSchema from './schemas/screen.schema.ts'
-import { screens, ScreenEntity } from './schemas/screen.schema.ts'
+import * as screensSchema from '../../schemas/workflow/screen.schema.ts'
+import { screens, ScreenEntity } from '../../schemas/workflow/screen.schema.ts'
 
 @Injectable()
 export class ScreenDao {

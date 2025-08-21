@@ -24,6 +24,15 @@ export type Screen = {
   updatedAt: Date
 }
 
+export type ScreenRelations = {
+  id: string
+  name: string
+  createdAt: Date
+  updatedAt: Date
+  steps: Step[]
+  transitions: Transition[]
+}
+
 export type Step = {
   id: string
   name: string
@@ -34,10 +43,32 @@ export type Step = {
 
 export type Transition = {
   id: string
-  name: string
   createdAt: Date
   updatedAt: Date
   screenId: string
   fromStepId: string
   toStepId: string
+}
+
+export type Organization = {
+  id: string
+  name: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type User = {
+  id: string
+  name: string
+  organizationId: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type UserGroup = {
+  id: string
+  name: string
+  stepId: string
+  createdAt: Date
+  updatedAt: Date
 }

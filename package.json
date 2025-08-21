@@ -4,7 +4,9 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky",
-    "dev": "nx run-many --target=dev",
+    "init": "nx run-many --target=init --configuration=force",
+    "stop": "nx run-many --target=docker-compose-down",
+    "dev": "nx run-many --target=dev --configuration=development",
     "server": "nx run-many --target=serve:server"
   },
   "private": true,
@@ -26,6 +28,7 @@
     "@tanstack/react-virtual": "^3.13.12",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/stylis": "^4.2.7",
+    "@xyflow/react": "^12.8.4",
     "axios": "^1.6.0",
     "copy-webpack-plugin": "^13.0.0",
     "dotenv": "^17.2.1",

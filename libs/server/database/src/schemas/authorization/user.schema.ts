@@ -2,16 +2,15 @@ import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core'
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 import { WithIdPk } from '../helpers/with-id-pk.ts'
 import { WithModificationDates } from '../helpers/with-modification-dates.ts'
-import { screens } from './screen.schema.ts'
+import { organizations } from './organization.schema.ts'
 
-export const steps = pgTable('steps', {
+export const users = pgTable('users', {
   ...WithIdPk,
   name: varchar('name', { length: 256 }).notNull(),
-  screenId: uuid('screen_id')
-    .references(() => screens.id)
-    .notNull(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id),
   ...WithModificationDates
 })
-
-export type StepEntity = InferSelectModel<typeof steps>
-export type StepEntityInsert = InferInsertModel<typeof steps>
+export type UserEntity = InferSelectModel<typeof users>
+export type UserEntityInsert = InferInsertModel<typeof users>

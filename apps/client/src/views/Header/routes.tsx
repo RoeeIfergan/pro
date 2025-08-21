@@ -4,6 +4,7 @@
 
 import DynamicFormView from '@pro3/client/src/views/DynamicFormView'
 import TableView from '@pro3/client/src/views/TableView'
+import WorkFlowView from '@pro3/client/src/views/WorkFlowView'
 import { initialData as cardLoader } from '../DynamicFormView/loader'
 import { initialData as tableLoader } from '@pro3/client/src/views/TableView/loader'
 import { initialData as homePageLoader } from '@pro3/client/src/views/Homepage/loader'
@@ -11,6 +12,7 @@ import { initialData as homePageLoader } from '@pro3/client/src/views/Homepage/l
 import DynamicFormIcon from '@mui/icons-material/DynamicForm'
 import TableChartIcon from '@mui/icons-material/TableChart'
 import HomeIcon from '@mui/icons-material/Home'
+import AccountTreeIcon from '@mui/icons-material/AccountTree'
 
 import { RouteObject } from 'react-router'
 import HomepageView from '../Homepage'
@@ -43,5 +45,11 @@ export const routes: (routeInfo & RouteObject)[] = [
     icon: <TableChartIcon />,
     Component: TableView,
     loader: tableLoader
+  },
+  {
+    label: 'workflow',
+    path: '/workflow',
+    icon: <AccountTreeIcon />,
+    Component: WorkFlowView
   }
 ]

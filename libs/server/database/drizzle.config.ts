@@ -8,7 +8,7 @@ const DATABASE_URL = postgresqlConnection()
 console.log('DB Connection:', DATABASE_URL)
 
 export default defineConfig({
-  schema: './src/entities/schemas',
+  schema: './src/schemas/**/**.schema.ts',
   out: './src/migrationFiles',
   dialect: 'postgresql',
   dbCredentials: {

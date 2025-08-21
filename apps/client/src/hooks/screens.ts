@@ -1,25 +1,25 @@
-import { Screen } from '@pro3/types'
-import { CreateScreenDTO, ScreenDTO, UpdateScreenDTO } from '@pro3/schemas'
+import { Screen, ScreenRelations } from '@pro3/types'
+import { CreateScreenDTO, UpdateScreenDTO } from '@pro3/schemas'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 
-export const useScreens = (query: ScreenDTO) =>
+axios.defaults.baseURL = 'http://localhost:3000'
+
+export const useScreens = () =>
   useQuery({
-    queryKey: ['screens', query],
+    queryKey: ['screens'],
     queryFn: async () => {
-      const { data } = await axios.get<Screen[]>('/api/screens', {
-        params: query
-      })
+      const { data } = await axios.get<Screen[]>('/api/screens')
 
       return data
     }
   })
 
-export const useScreenById = (id?: number) =>
-  useQuery<Screen>({
+export const useScreenById = (id?: string | null) =>
+  useQuery<ScreenRelations>({
     queryKey: ['screens', id],
     queryFn: async () => {
-      const { data } = await axios.get(`/api/screens/${id}`)
+      const { data } = await axios.get(`/api/screens/AllRelations/${id}`)
       return data
     },
     enabled: !!id

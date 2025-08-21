@@ -22,6 +22,18 @@
       "scope:server/database"
     ],
     "targets": {
+      "docker-compose-up": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker-compose up -d"
+        }
+      },
+      "docker-compose-down": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker-compose down"
+        }
+      },
       "genMigration": {
         "executor": "nx:run-commands",
         "options": {
@@ -45,9 +57,19 @@
       },
       "push": {
         "executor": "nx:run-commands",
+        "dependsOn": [
+          "docker-compose-up"
+        ],
+        "configurations": {
+          "force": {
+            "command": "drizzle-kit push --force"
+          },
+          "development": {
+            "command": "drizzle-kit push"
+          }
+        },
         "options": {
-          "cwd": "libs/server/database",
-          "command": "drizzle-kit push"
+          "cwd": "libs/server/database"
         }
       },
       "drop": {
@@ -64,21 +86,33 @@
           "command": "drizzle-kit studio"
         }
       },
-      "fast-migration": {
-        "executor": "nx:run-commands",
+      "seed": {
         "dependsOn": [
-          "genMigration"
+          "push:force"
         ],
+        "executor": "nx:run-commands",
         "options": {
           "cwd": "libs/server/database",
-          "command": "drizzle-kit migrate"
+          "command": "npx tsx ./src/seed.ts"
         }
       },
-      "seed": {
+      "init": {
         "executor": "nx:run-commands",
         "options": {
-          "cwd": "libs/server/database",
-          "command": "npx tsx ./src/helpers/seed.ts"
+          "commands": [
+            "nx run @pro3/database:seed"
+          ],
+          "parallel": false
+        },
+        "dependsOn": [
+          {
+            "target": "push",
+            "params": "forward"
+          }
+        ],
+        "configurations": {
+          "force": {},
+          "development": {}
         }
       }
     }

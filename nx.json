@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -15,7 +18,7 @@
     "sharedGlobals": []
   },
   "tui": {
-    "enabled": false
+    "enabled": true
   },
   "neverConnectToCloud": true,
   "plugins": [
@@ -32,7 +35,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/server/database/*", "libs/types/*", "libs/schemas/*"]
+      "exclude": [
+        "libs/server/database/*",
+        "libs/types/*",
+        "libs/schemas/*"
+      ]
     },
     {
       "plugin": "@nx/webpack/plugin",
@@ -55,7 +62,9 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["e2e/server-e2e/**/*"]
+      "exclude": [
+        "e2e/server-e2e/**/*"
+      ]
     },
     {
       "plugin": "@nx/react/router-plugin",
@@ -90,7 +99,11 @@
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/server/database/*", "libs/types/*", "libs/schemas/*"],
+      "include": [
+        "libs/server/database/*",
+        "libs/types/*",
+        "libs/schemas/*"
+      ],
       "options": {
         "typecheck": {
           "targetName": "typecheck"
@@ -100,7 +113,9 @@
   ],
   "targetDefaults": {
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     }
   },
   "generators": {

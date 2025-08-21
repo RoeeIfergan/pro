@@ -24,36 +24,18 @@
           }
         }
       },
-      "build2": {
-        "executor": "@nx/webpack:webpack",
-        "outputs": [
-          "{workspaceRoot}/dist/server"
-        ],
-        "options": {
-          "target": "node",
-          "compiler": "babel",
-          "main": "apps/server/src/main.ts",
-          "tsConfig": "apps/server/tsconfig.app.json",
-          "outputPath": "dist/server",
-          "outputFileName": "main.js",
-          "webpackConfig": "apps/server/webpack.config.js"
-        },
-        "configurations": {
-          "development": {
-            "optimization": false,
-            "sourceMap": true
-          },
-          "production": {
-            "optimization": true,
-            "sourceMap": false
-          }
-        }
-      },
       "dev": {
         "continuous": true,
         "executor": "@nx/js:node",
         "defaultConfiguration": "development",
         "dependsOn": [
+          "docker-compose-up",
+          {
+            "target": "push",
+            "projects": [
+              "@pro3/database"
+            ]
+          },
           "build"
         ],
         "options": {

@@ -1,2 +1,3 @@
 export * from './database/database.module.ts'
-export * from './entities/index.ts'
+export * from './DAOs/index.ts'
+export * from './schemas/index.ts'

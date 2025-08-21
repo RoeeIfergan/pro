@@ -1,12 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../dist/server",
+    "outDir": "../../dist/server-ts",
     "types": ["node"],
     "sourceMap": true,
     "inlineSources": true,
     "rootDir": "src",
-    "tsBuildInfoFile": "../../dist/server/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "../../dist/server-ts/tsconfig.app.tsbuildinfo",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2021"
