@@ -1,7 +1,6 @@
 import {
   FieldComponentType,
   IInputLayoutField,
-  JsonCondition,
   SingleCondition,
   ConditionGroup,
   ConditionOperator,
@@ -96,77 +95,37 @@ const evaluateSingleCondition = <Schema = DefaultSchema>(
   }
 }
 
-// Type guard to check if condition is a single condition
 const isSingleCondition = <Schema = DefaultSchema>(
   condition: SingleCondition<Schema> | ConditionGroup<Schema>
 ): condition is SingleCondition<Schema> => {
-  return 'field' in condition && 'operator' in condition
+  return 'field' in condition
 }
 
-// Helper function to evaluate a single condition or group recursively
-const evaluateConditionOrGroup = <Schema = DefaultSchema>(
-  condition: SingleCondition<Schema> | ConditionGroup<Schema>,
+export const evaluateCondition = <Schema = DefaultSchema>(
+  condition: SingleCondition<Schema> | ConditionGroup<Schema> | undefined,
   values: Schema
 ): boolean => {
+  if (!condition) {
+    return false
+  }
+
   if (isSingleCondition(condition)) {
     return evaluateSingleCondition(condition, values)
   }
 
-  // Handle condition group
-  const group = condition as ConditionGroup<Schema>
-  const results = group.conditions.map((subCondition) =>
-    evaluateConditionOrGroup(subCondition, values)
-  )
+  const group = condition
+  const results = group.conditions.map((subCondition) => evaluateCondition(subCondition, values))
+  const operator = group.operator ?? LogicalOperator.AND
 
-  if (group.operator === LogicalOperator.AND) {
+  if (operator === LogicalOperator.AND) {
     return results.every((result) => result)
-  } else if (group.operator === LogicalOperator.OR) {
+  } else if (operator === LogicalOperator.OR) {
     return results.some((result) => result)
   }
 
   return false
 }
 
-// Evaluate JSON conditions (now always a group)
-export const evaluateJsonCondition = <Schema = DefaultSchema>(
-  condition: JsonCondition<Schema>,
-  values: Schema
-): boolean => {
-  // JsonCondition is always a ConditionGroup now
-  return evaluateConditionOrGroup(condition, values)
-}
-
-// Universal condition evaluator that handles JSON conditions only
-export const evaluateCondition = <Schema = DefaultSchema>(
-  condition: JsonCondition<Schema>,
-  values: Schema
-): boolean => {
-  return evaluateJsonCondition(condition, values)
-}
-
-// Helper to evaluate hidden condition - returns true if should be hidden
-export const evaluateHidden = <Schema = DefaultSchema>(
-  hidden: JsonCondition<Schema> | undefined,
-  values: Schema
-): boolean => {
-  if (!hidden) return false
-  return evaluateCondition(hidden, values)
-}
-
-// Helper to evaluate disabled condition - returns true if should be disabled
-export const evaluateDisabled = <Schema = DefaultSchema>(
-  disabled: JsonCondition<Schema> | undefined,
-  values: Schema
-): boolean => {
-  if (!disabled) return false
-  return evaluateCondition(disabled, values)
-}
-
-// Get React component from IconType enum
 export const getIconComponent = (iconType: IconType): React.ComponentType => {
   return iconMap[iconType]
 }
-
-// export const getTypedField = <Schema = DefaultSchema>(field: ILayoutField<Schema>) => {
-//   field
-// }

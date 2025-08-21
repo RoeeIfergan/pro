@@ -30,11 +30,9 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        mb: 2,
-        px: 1,
-        py: 0.5,
-        borderRadius: 1,
-        backgroundColor: '#2b2b2b'
+        borderRadius: 0,
+        p: 1,
+        backgroundColor: 'primary.dark'
       }}
     >
       <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row-reverse' }}>

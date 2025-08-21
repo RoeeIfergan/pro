@@ -23,8 +23,8 @@ const getCollections = async ({
   loadPirates: () => Promise<IOption[]>
 }): Promise<ICollection[]> => {
   return Promise.all([
-    dimaCard({ loadPirates }),
     baseCard({ loadDepartments }),
+    dimaCard({ loadPirates }),
     multiSelectFields(),
     layoutExamples()
   ])

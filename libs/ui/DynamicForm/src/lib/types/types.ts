@@ -35,26 +35,23 @@ export type ConditionValue = string | number | boolean | null
 export type SingleCondition<Schema = DefaultSchema> = {
   field: Paths<Schema>
   operator: ConditionOperator
-  value?: ConditionValue // Optional for operators like is_empty, is_true, etc.
+  value?: ConditionValue
 }
 
 export type ConditionGroup<Schema = DefaultSchema> = {
-  operator: LogicalOperator
+  operator?: LogicalOperator
   conditions: (SingleCondition<Schema> | ConditionGroup<Schema>)[]
 }
-
-// JsonCondition is always a group now - no direct single conditions
-export type JsonCondition<Schema = DefaultSchema> = ConditionGroup<Schema>
 
 export type ILayoutBaseField<Schema = DefaultSchema> = {
   path: Paths<Schema>
   label?: string
-  hidden?: JsonCondition<Schema> // JSON-only conditions for hiding field
-  disabled?: JsonCondition<Schema> // JSON-only conditions for disabling field
-  width?: WidthKey // Column width (1-12) - enables field-based columns
-  required?: boolean // Whether the field is required
-  groupKey?: string // Optional key to group fields together in the same column/container
-  groupOrder?: number // Optional order for sorting groups (lower numbers appear more to the left)
+  hidden?: ConditionGroup<Schema>
+  disabled?: ConditionGroup<Schema>
+  width?: WidthKey
+  required?: boolean
+  groupKey?: string
+  groupOrder?: number
 }
 
 export type IInputLayoutField<Schema = DefaultSchema> = ILayoutBaseField<Schema> & {
@@ -73,8 +70,6 @@ export type IInputLayoutField<Schema = DefaultSchema> = ILayoutBaseField<Schema>
 export type ISelectLayoutFieldOptions = {
   values?: Array<IOption>
   lazyValues?: LazyLoaderType
-  // Optional mapping to support boolean-backed fields rendered via select/buttons
-  // true maps to the option value provided in `true`, false maps to `false`
   mapBoolean?: { true: string; false: string }
 }
 
@@ -117,8 +112,8 @@ export interface IFieldRow<Schema = DefaultSchema> {
   fields?: ILayoutField<Schema>[]
   fieldsPerRow?: number // Deprecated: Use field.width instead for more flexibility
   gap?: number | string
-  hidden?: JsonCondition<Schema> // JSON-only conditions for hiding row
-  disabled?: JsonCondition<Schema> // JSON-only conditions for disabling row
+  hidden?: ConditionGroup<Schema>
+  disabled?: ConditionGroup<Schema>
   title?: string // Optional title for the row
   collapsible?: boolean // Makes the row collapsible with expand/collapse functionality
   defaultExpanded?: boolean // Default expanded state when collapsible is true
@@ -133,3 +128,5 @@ export type FieldComponentValue = React.ComponentType<{ field: ILayoutField; dis
 export type FieldComponentMapper = {
   [key in FieldComponentType]: FieldComponentValue
 }
+
+export type UnknownRecord = Record<string, unknown>

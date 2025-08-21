@@ -10,7 +10,7 @@ const LayoutCheckbox = ({ field }: { field: ILayoutField }) => {
     <Controller
       name={path}
       control={control}
-      render={({ field, fieldState: { error } }) => (
+      render={({ field }) => (
         <FormControlLabel
           control={
             <Checkbox

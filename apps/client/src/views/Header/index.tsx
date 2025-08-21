@@ -204,7 +204,13 @@ const Header = () => {
           ))}
         </List>
       </Drawer>
-      <Box component='main' id='main' sx={{ width: '100%' }}>
+      <Box
+        component='main'
+        display='flex'
+        flexDirection='column'
+        id='main'
+        sx={{ width: '100%', overflow: 'hidden', height: '100%' }}
+      >
         <DrawerHeader />
         <Outlet />
       </Box>

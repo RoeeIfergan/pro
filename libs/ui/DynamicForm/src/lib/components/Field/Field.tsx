@@ -2,7 +2,6 @@ import { ILayoutField } from '../../types'
 import { componentMap } from '../../constants/mappers'
 
 export const Field = ({ field, disabled = false }: { field: ILayoutField; disabled?: boolean }) => {
-  // Get the component from the mapper
   const Component = componentMap[field.component]
 
   if (!Component) {

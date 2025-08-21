@@ -4,8 +4,12 @@ import { useFormContext } from 'react-hook-form'
 import { LayoutRenderer } from './Layouts/LayoutRenderer'
 import { ICollection } from '../dev/collections'
 import { CardHeader } from './CardHeader'
+import type { EditingState } from '../../DNDCardBuilder/components/DNDCardBuilder'
 
-export const Card: React.FC<{ collection: ICollection }> = ({ collection }) => {
+export const Card: React.FC<{
+  collection: ICollection
+  editingState?: EditingState
+}> = ({ collection, editingState }) => {
   const { handleSubmit } = useFormContext()
 
   const onSubmit: Parameters<typeof handleSubmit>[0] = (data) => {
@@ -20,7 +24,15 @@ export const Card: React.FC<{ collection: ICollection }> = ({ collection }) => {
       component='form'
       noValidate
       onSubmit={handleSubmit(onSubmit, onError)}
-      sx={{ width: 500, mx: 'auto', backgroundColor: '#353535' }}
+      sx={{
+        width: 500,
+        mx: 'auto',
+        backgroundColor: 'background.default',
+        overflow: 'hidden',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
     >
       <CardHeader
         onSend={() => console.log('send')}
@@ -28,7 +40,7 @@ export const Card: React.FC<{ collection: ICollection }> = ({ collection }) => {
         onHelp={() => console.log('help')}
       />
 
-      <LayoutRenderer rows={collection.uiSchema.layout} gap={2} />
+      <LayoutRenderer rows={collection.uiSchema.layout} editingState={editingState} />
     </Box>
   )
 }

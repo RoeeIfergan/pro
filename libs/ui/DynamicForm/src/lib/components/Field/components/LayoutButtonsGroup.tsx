@@ -1,6 +1,5 @@
 import {
   FormControl,
-  FormLabel,
   ToggleButtonGroup,
   ToggleButton,
   FormHelperText,
@@ -34,12 +33,15 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
             minHeight: 0
           }}
         >
-          {label ? (
-            <FormLabel component='legend' sx={{ mb: 1 }}>
-              {label}
-            </FormLabel>
-          ) : null}
-          <Box sx={{ flex: 1, display: 'flex', height: '100%', minHeight: 0 }}>
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              height: '100%',
+              minHeight: 0,
+              maxHeight: '56px'
+            }}
+          >
             <ToggleButtonGroup
               {...field}
               exclusive
@@ -56,9 +58,13 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
                 height: '100%',
                 flex: 1,
                 minHeight: 0,
+                maxHeight: '56px',
+                overflowY: 'auto',
                 alignItems: 'stretch',
+                overflow: 'visible',
+
                 '& .MuiToggleButton-root': {
-                  flex: 1, // Distribute buttons evenly
+                  flex: 1,
                   height: '100%',
                   minHeight: 0,
                   display: 'flex',
@@ -99,16 +105,13 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
                 const IconComponent = option.icon ? getIconComponent(option.icon) : null
                 const hasIcon = !!IconComponent
 
-                // Simplified button display logic
                 let buttonContent
                 let showTooltip = false
 
                 if (option.isIconOnly && hasIcon) {
-                  // Icon only mode - show icon with label as tooltip
                   buttonContent = <IconComponent />
                   showTooltip = true
                 } else if (hasIcon) {
-                  // Show both icon and text (default when icon exists and not isIconOnly)
                   buttonContent = (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <IconComponent />
@@ -116,7 +119,6 @@ const ButtonsGroup = ({ field }: { field: ILayoutField }) => {
                     </Box>
                   )
                 } else {
-                  // Text only mode (no icon)
                   buttonContent = option.label
                 }
 

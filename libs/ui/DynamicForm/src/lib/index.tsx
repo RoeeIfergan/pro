@@ -5,9 +5,18 @@ import { ICollection } from './dev/collections'
 import { z } from 'zod'
 import { DefaultSchema } from './types'
 import { Box } from '@mui/material'
-export { CardHeader } from './components/CardHeader'
+import type { EditingState } from '../DNDCardBuilder/components/DNDCardBuilder'
 
-export const DynamicForm = ({ collection }: { collection?: ICollection }) => {
+export { CardHeader } from './components/CardHeader'
+export type { EditingState } from '../DNDCardBuilder/components/DNDCardBuilder'
+
+export const DynamicForm = ({
+  collection,
+  editingState
+}: {
+  collection?: ICollection
+  editingState?: EditingState
+}) => {
   if (!collection) return <div>skeleton...</div>
 
   return (
@@ -18,22 +27,22 @@ export const DynamicForm = ({ collection }: { collection?: ICollection }) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        overflow: 'hidden'
       }}
     >
-      <DynamicFormContent collection={collection} />
+      <DynamicFormContent collection={collection} editingState={editingState} />
     </Box>
   )
 }
 
 export const DynamicFormContent = <T extends DefaultSchema>({
-  collection
+  collection,
+  editingState
 }: {
   collection: ICollection<T>
+  editingState?: EditingState
 }) => {
-  console.log('💪💪 schema', collection.schema)
-  console.log('💪💪 uiSchema', collection.uiSchema)
-
   const methods = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -43,7 +52,7 @@ export const DynamicFormContent = <T extends DefaultSchema>({
 
   return (
     <FormProvider {...methods}>
-      <Card collection={collection} />
+      <Card collection={collection} editingState={editingState} />
     </FormProvider>
   )
 }

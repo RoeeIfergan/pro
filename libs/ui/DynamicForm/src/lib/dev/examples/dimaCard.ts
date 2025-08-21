@@ -99,6 +99,7 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
     {
       fields: [
         {
+          label: 'דיסני',
           path: 'disney',
           component: FieldComponentType.buttonsGroup,
           options: {
@@ -170,7 +171,6 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
     },
     {
       hidden: {
-        operator: LogicalOperator.AND,
         conditions: [
           { field: 'transportation', operator: ConditionOperator.NOT_EQUALS, value: 'car' }
         ]
@@ -254,7 +254,6 @@ export const uiSchema: ICardSchemaMeta<IDimaCardSchema> = {
             ]
           },
           hidden: {
-            operator: LogicalOperator.AND,
             conditions: [
               {
                 field: 'subscribed',
@@ -286,5 +285,3 @@ export const dimaCard = async ({
     uiSchema
   }
 }
-
-console.log('💪💪 uiSchema!!', JSON.stringify(uiSchema, null, 4))
