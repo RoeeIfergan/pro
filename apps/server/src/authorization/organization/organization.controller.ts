@@ -1,6 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { OrganizationsService } from './organization.service'
-import { GetOrganizationByIdDTO, CreateOrganizationSchemaDTO, GetOrganizationSchemaDTO } from '@pro3/schemas'
+import {
+  GetOrganizationByIdDTO,
+  CreateOrganizationSchemaDTO,
+  GetOrganizationSchemaDTO
+} from '@pro3/schemas'
 import { UseZodGuard } from 'nestjs-zod'
 
 @Controller('organizations')
@@ -20,7 +24,9 @@ export class OrganizationsController {
 
   @Post()
   @UseZodGuard('body', CreateOrganizationSchemaDTO)
-  async addOrganization(@Body() organization: CreateOrganizationSchemaDTO): Promise<GetOrganizationSchemaDTO[]> {
+  async addOrganization(
+    @Body() organization: CreateOrganizationSchemaDTO
+  ): Promise<GetOrganizationSchemaDTO[]> {
     return this.organizationsService.addOrganization(organization)
   }
 
@@ -36,7 +42,9 @@ export class OrganizationsController {
 
   @Delete(':id')
   @UseZodGuard('params', GetOrganizationByIdDTO)
-  async deleteOrganization(@Param('id') organizationId: string): Promise<Partial<GetOrganizationSchemaDTO>> {
+  async deleteOrganization(
+    @Param('id') organizationId: string
+  ): Promise<Partial<GetOrganizationSchemaDTO>> {
     return this.organizationsService.deleteOrganization(organizationId)
   }
 

@@ -20,7 +20,9 @@ export class UserGroupsController {
 
   @Post()
   @UseZodGuard('body', CreateUserGroupSchemaDTO)
-  async addUserGroup(@Body() userGroup: CreateUserGroupSchemaDTO): Promise<GetUserGroupSchemaDTO[]> {
+  async addUserGroup(
+    @Body() userGroup: CreateUserGroupSchemaDTO
+  ): Promise<GetUserGroupSchemaDTO[]> {
     return this.userGroupsService.addUserGroup(userGroup)
   }
 
