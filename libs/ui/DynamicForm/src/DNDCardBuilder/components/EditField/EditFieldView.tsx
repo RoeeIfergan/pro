@@ -332,12 +332,6 @@ const EditFieldView: React.FC<EditFieldViewProps> = ({ rowIndex, fieldIndex, con
             borderColor: 'divider'
           }}
         >
-          <Box sx={{ p: 2 }}>
-            <Typography variant='h6' sx={{ fontSize: '1rem', fontWeight: 600 }}>
-              קטגוריות
-            </Typography>
-          </Box>
-          <Divider />
           <List sx={{ flex: 1, p: 0 }}>
             {availableCategories.map((categoryId) => {
               const category = categories.find((c) => c.id === categoryId)
@@ -371,17 +365,7 @@ const EditFieldView: React.FC<EditFieldViewProps> = ({ rowIndex, fieldIndex, con
           </List>
         </Paper>
 
-        {/* Content area */}
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          {/* Category header */}
-          <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-            <Typography variant='h6' sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {categories.find((c) => c.id === selectedCategory)?.icon}
-              {categories.find((c) => c.id === selectedCategory)?.label}
-            </Typography>
-          </Box>
-
-          {/* Category content */}
           <Box sx={{ flex: 1, overflow: 'auto', p: 3 }}>{renderCategoryContent()}</Box>
         </Box>
       </Box>
