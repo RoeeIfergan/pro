@@ -173,6 +173,32 @@ async function main() {
   console.log('Inserting step-to-usergroup relationships...')
   await db.insert(EntitiesSchema.stepsToUserGroups).values(stepsToUserGroups).execute()
 
+  // Get all users to assign them to user groups
+  console.log('Getting users...')
+  const allUsers = await db.select().from(EntitiesSchema.users).execute()
+
+  // Create relationships between users and user groups
+  console.log('Creating user-to-usergroup relationships...')
+  const usersToUserGroups = []
+
+  // Create a pool of available user groups for each user
+  for (const user of allUsers) {
+    // Assign 1-2 random user groups to each user
+    const numGroups = Math.floor(Math.random() * 2) + 1 // 1 or 2
+    const shuffledGroups = [...userGroups].sort(() => Math.random() - 0.5).slice(0, numGroups)
+
+    // Add relationships
+    for (const group of shuffledGroups) {
+      usersToUserGroups.push({
+        userId: user.id,
+        userGroupId: group.id
+      })
+    }
+  }
+
+  console.log('Inserting user-to-usergroup relationships...')
+  await db.insert(EntitiesSchema.usersToUserGroups).values(usersToUserGroups).execute()
+
   console.log('Finished')
 }
 main()
