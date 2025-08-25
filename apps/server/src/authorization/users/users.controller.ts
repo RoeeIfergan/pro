@@ -44,4 +44,10 @@ export class UsersController {
   async deleteAllUsers(): Promise<Partial<GetUserSchemaDTO>[]> {
     return this.usersService.deleteUsers()
   }
+
+  @Get(':id/orders')
+  @UseZodGuard('params', GetUserByIdDTO)
+  async getUserOrders(@Param('id') userId: string) {
+    return this.usersService.getUserOrders(userId)
+  }
 }

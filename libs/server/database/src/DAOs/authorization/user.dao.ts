@@ -4,8 +4,14 @@ import { DatabaseConfig } from '../../database/config/database.config.ts'
 import { PG_CONNECTION } from '../../database/drizzle/pg-connection.ts'
 
 import * as usersSchema from '../../schemas/authorization/user.schema.ts'
-import { users, UserEntityInsert } from '../../schemas/authorization/user.schema.ts'
-import { eq } from 'drizzle-orm'
+import {
+  users,
+  UserEntityInsert,
+  usersToUserGroups
+} from '../../schemas/authorization/user.schema.ts'
+import { stepsToUserGroups } from '../../schemas/workflow/step.schema.ts'
+import { orders } from '../../schemas/workflow/order.schema.ts'
+import { eq, inArray } from 'drizzle-orm'
 
 @Injectable()
 export class UserDao {
@@ -19,7 +25,8 @@ export class UserDao {
   }
 
   async getById(id: string) {
-    return this.db.select().from(users).where(eq(users.id, id)).execute()
+    const result = await this.db.select().from(users).where(eq(users.id, id)).execute()
+    return result[0] || null
   }
 
   async getPartOfById(id: string) {
@@ -80,5 +87,49 @@ export class UserDao {
 
   async deleteAllUsers() {
     return this.db.delete(users).returning().execute()
+  }
+
+  async getUserOrders(userId: string) {
+    // First get the user's group IDs
+    const userGroupIds = await this.db
+      .select({ userGroupId: usersToUserGroups.userGroupId })
+      .from(usersToUserGroups)
+      .where(eq(usersToUserGroups.userId, userId))
+      .execute()
+
+    if (!userGroupIds.length) return []
+
+    // Get step IDs that contain any of the user's groups
+    const stepIds = await this.db
+      .select({ stepId: stepsToUserGroups.stepId })
+      .from(stepsToUserGroups)
+      .where(
+        inArray(
+          stepsToUserGroups.userGroupId,
+          userGroupIds.map((g) => g.userGroupId)
+        )
+      )
+      .execute()
+
+    if (!stepIds.length) return []
+
+    // Get orders from those steps
+    return this.db
+      .select({
+        id: orders.id,
+        name: orders.name,
+        type: orders.type,
+        stepId: orders.stepId,
+        createdAt: orders.createdAt,
+        updatedAt: orders.updatedAt
+      })
+      .from(orders)
+      .where(
+        inArray(
+          orders.stepId,
+          stepIds.map((s) => s.stepId)
+        )
+      )
+      .execute()
   }
 }

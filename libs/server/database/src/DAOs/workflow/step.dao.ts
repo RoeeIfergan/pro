@@ -4,7 +4,14 @@ import { DatabaseConfig } from '../../database/config/database.config.ts'
 import { PG_CONNECTION } from '../../database/drizzle/pg-connection.ts'
 
 import * as stepsSchema from '../../schemas/workflow/step.schema.ts'
-import { steps, StepEntity, StepEntityInsert } from '../../schemas/workflow/step.schema.ts'
+import {
+  steps,
+  StepEntity,
+  StepEntityInsert,
+  stepsToUserGroups
+} from '../../schemas/workflow/step.schema.ts'
+import { orders } from '../../schemas/workflow/order.schema.ts'
+import { userGroups } from '../../schemas/authorization/userGroup.schema.ts'
 import { eq } from 'drizzle-orm'
 
 @Injectable()
@@ -80,5 +87,23 @@ export class StepDao {
 
   async deleteAllSteps() {
     return this.db.delete(steps).returning().execute()
+  }
+
+  async getStepUserGroups(stepId: string) {
+    return this.db
+      .select({
+        id: userGroups.id,
+        name: userGroups.name,
+        createdAt: userGroups.createdAt,
+        updatedAt: userGroups.updatedAt
+      })
+      .from(stepsToUserGroups)
+      .innerJoin(userGroups, eq(stepsToUserGroups.userGroupId, userGroups.id))
+      .where(eq(stepsToUserGroups.stepId, stepId))
+      .execute()
+  }
+
+  async getStepOrders(stepId: string) {
+    return this.db.select().from(orders).where(eq(orders.stepId, stepId)).execute()
   }
 }

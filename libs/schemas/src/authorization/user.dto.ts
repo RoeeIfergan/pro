@@ -14,6 +14,7 @@ const getUsersSchema = z.object({
   id: idSchema,
   name: nameSchema,
   organizationId: organizationId,
+  userGroupIds: z.array(z.string()),
   createdAt: z.date(),
   updatedAt: z.date()
 }) satisfies z.ZodType<User>

@@ -39,6 +39,7 @@ export type Step = {
   createdAt: Date
   updatedAt: Date
   screenId: string
+  userGroupIds: string[]
 }
 
 export type Transition = {
@@ -61,6 +62,7 @@ export type User = {
   id: string
   name: string
   organizationId: string
+  userGroupIds: string[]
   createdAt: Date
   updatedAt: Date
 }
@@ -68,7 +70,6 @@ export type User = {
 export type UserGroup = {
   id: string
   name: string
-  stepId: string
   createdAt: Date
   updatedAt: Date
 }

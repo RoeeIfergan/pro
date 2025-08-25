@@ -10,12 +10,17 @@ import {
   Edge,
   Background,
   Controls,
-  MiniMap
+  MiniMap,
+  NodeChange,
+  EdgeChange,
+  Connection,
+  Position
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { useScreenById } from '../../hooks/screens'
 import { layoutDagTree } from './positionElements'
-import OrderNode from './orderNode'
+import OrderNode from './OrderNode'
+import UserCard from './UserCard'
 
 const nodeTypes = {
   OrderNode
@@ -42,21 +47,34 @@ const Workflow = ({ selectedScreenId }: { selectedScreenId: string | null }) => 
       }
     )
 
-    const computedNodes = nodes.map((node) => ({ ...node, type: 'default' }))
+    const computedNodes = nodes.map((node) => ({
+      id: node.id,
+      type: 'OrderNode',
+      position: node.position,
+      sourcePosition: Position.Bottom,
+      targetPosition: Position.Top,
+      data: {
+        id: node.id,
+        name: node.data.label,
+        label: node.data.label
+      }
+    }))
     setNodes(computedNodes)
     setEdges(edges)
   }, [screen])
 
   const onNodesChange = useCallback(
-    (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+    (changes: NodeChange[]) =>
+      setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
     []
   )
   const onEdgesChange = useCallback(
-    (changes) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+    (changes: EdgeChange[]) =>
+      setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
     []
   )
   const onConnect = useCallback(
-    (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+    (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
     []
   )
   return (
@@ -71,6 +89,7 @@ const Workflow = ({ selectedScreenId }: { selectedScreenId: string | null }) => 
         borderRadius: '5px'
       }}
     >
+      <UserCard />
       <ReactFlow
         fitView
         nodes={nodes}

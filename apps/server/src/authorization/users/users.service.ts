@@ -57,4 +57,8 @@ export class UsersService {
 
     return deletedUsers
   }
+
+  async getUserOrders(userId: string) {
+    return await this.userDao.getUserOrders(userId)
+  }
 }

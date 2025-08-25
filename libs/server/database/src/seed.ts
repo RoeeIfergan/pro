@@ -93,18 +93,85 @@ async function main() {
         })
       }
     },
-    orders: {
+    userGroups: {
+      count: 50,
       columns: {
-        type: f.valuesFromArray({ values: [...orderTypes] })
+        name: f.valuesFromArray({
+          values: Array.from({ length: 50 }, (_, i) => `User Group ${i + 1}`),
+          isUnique: true
+        })
       }
     }
   }))
+
+  // Get all steps to use for orders and relationships
+  console.log('Getting steps...')
+  const allSteps = await db.select().from(EntitiesSchema.steps).execute()
+
+  // Create 20 orders with random step assignments
+  const orderNames = generateLabels(20).map((label) => `Order ${label}`)
+  const orderData = orderNames.map((name) => ({
+    name,
+    type: orderTypes[Math.floor(Math.random() * orderTypes.length)],
+    stepId: allSteps[Math.floor(Math.random() * allSteps.length)].id,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }))
+
+  console.log('Inserting orders...')
+  await db.insert(EntitiesSchema.orders).values(orderData).execute()
 
   console.log('Generating transitions...')
   const transitionsData = await generateTransitions(db)
 
   console.log('Inserting transitions...')
   await db.insert(transitions).values(transitionsData).execute()
+
+  // Get user groups
+  console.log('Creating step-to-usergroup relationships...')
+  const userGroups = await db.select().from(EntitiesSchema.userGroups).execute()
+
+  // Create relationships between steps and user groups
+  const stepsToUserGroups = []
+  // Create a pool of available user groups that we'll remove from as we assign them
+  const availableUserGroups = [...userGroups].sort(() => Math.random() - 0.5)
+
+  for (const step of allSteps) {
+    // Calculate how many groups to assign (1-3, but limited by available groups)
+    const maxPossibleGroups = Math.min(3, availableUserGroups.length)
+    if (maxPossibleGroups === 0) {
+      console.log('Warning: Ran out of available user groups')
+      break
+    }
+    const numGroups = Math.max(1, Math.min(maxPossibleGroups, Math.floor(Math.random() * 3) + 1))
+
+    // Take groups from the available pool
+    const selectedGroups = availableUserGroups.splice(0, numGroups)
+
+    // Log the assignment
+    console.log(`Step ${step.name}: Assigning ${numGroups} groups`)
+
+    // Add relationships
+    for (const group of selectedGroups) {
+      stepsToUserGroups.push({
+        stepId: step.id,
+        userGroupId: group.id
+      })
+    }
+  }
+
+  // Verify no step has more than 3 groups
+  const stepCounts = new Map()
+  for (const rel of stepsToUserGroups) {
+    const count = (stepCounts.get(rel.stepId) || 0) + 1
+    stepCounts.set(rel.stepId, count)
+    if (count > 3) {
+      console.error(`Error: Step ${rel.stepId} has ${count} groups!`)
+    }
+  }
+
+  console.log('Inserting step-to-usergroup relationships...')
+  await db.insert(EntitiesSchema.stepsToUserGroups).values(stepsToUserGroups).execute()
 
   console.log('Finished')
 }

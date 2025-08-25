@@ -44,4 +44,16 @@ export class StepsController {
   async deleteAllSteps(): Promise<Partial<GetStepSchemaDTO>[]> {
     return this.stepsService.deleteSteps()
   }
+
+  @Get(':id/userGroups')
+  @UseZodGuard('params', GetStepByIdDTO)
+  async getStepUserGroups(@Param('id') stepId: string) {
+    return this.stepsService.getStepUserGroups(stepId)
+  }
+
+  @Get(':id/orders')
+  @UseZodGuard('params', GetStepByIdDTO)
+  async getStepOrders(@Param('id') stepId: string) {
+    return this.stepsService.getStepOrders(stepId)
+  }
 }

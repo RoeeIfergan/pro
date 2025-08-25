@@ -3,6 +3,7 @@ import { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 import { WithIdPk } from '../helpers/with-id-pk.ts'
 import { WithModificationDates } from '../helpers/with-modification-dates.ts'
 import { organizations } from './organization.schema.ts'
+import { userGroups } from './userGroup.schema.ts'
 
 export const users = pgTable('users', {
   ...WithIdPk,
@@ -12,5 +13,15 @@ export const users = pgTable('users', {
     .references(() => organizations.id),
   ...WithModificationDates
 })
+
+export const usersToUserGroups = pgTable('users_to_user_groups', {
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id),
+  userGroupId: uuid('user_group_id')
+    .notNull()
+    .references(() => userGroups.id)
+})
+
 export type UserEntity = InferSelectModel<typeof users>
 export type UserEntityInsert = InferInsertModel<typeof users>

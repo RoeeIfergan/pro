@@ -8,19 +8,25 @@ import {
   Stack,
   Typography
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import '@xyflow/react/dist/style.css'
 import { useScreens } from '../../hooks/screens'
 import Workflow from './Workflow'
 
 const WorkFlowView = () => {
-  const [selectedScreenId, setSelectedScreenId] = useState(null)
+  const [selectedScreenId, setSelectedScreenId] = useState<string | null>(null)
   const { data: screens } = useScreens()
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedScreenId(event.target.value as string)
   }
+
+  useEffect(() => {
+    if (screens) {
+      setSelectedScreenId(screens?.[0]?.id)
+    }
+  }, [screens])
 
   return (
     <Box p={3}>
@@ -29,8 +35,8 @@ const WorkFlowView = () => {
           Card View
         </Typography>
         <FormControl fullWidth>
-          <InputLabel>Screen..</InputLabel>
-          <Select value={selectedScreenId} label='Age' onChange={handleChange}>
+          <InputLabel>Screen</InputLabel>
+          <Select value={selectedScreenId || ''} onChange={handleChange}>
             {screens?.map((screen) => (
               <MenuItem value={screen.id}>{screen.name}</MenuItem>
             ))}

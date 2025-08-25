@@ -57,4 +57,12 @@ export class StepsService {
 
     return deletedSteps
   }
+
+  async getStepUserGroups(stepId: string) {
+    return await this.stepDao.getStepUserGroups(stepId)
+  }
+
+  async getStepOrders(stepId: string) {
+    return await this.stepDao.getStepOrders(stepId)
+  }
 }
