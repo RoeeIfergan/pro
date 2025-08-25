@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import { useState, useCallback, useEffect } from 'react'
-
+import dagre from '@dagrejs/dagre'
 import {
   applyNodeChanges,
   applyEdgeChanges,
@@ -18,12 +18,57 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { useScreenById } from '../../hooks/screens'
-import { layoutDagTree } from './positionElements'
 import OrderNode from './OrderNode'
 import UserCard from './UserCard'
 
 const nodeTypes = {
   OrderNode
+}
+
+const NODE_WIDTH = 280
+const NODE_HEIGHT = 80
+const HORIZONTAL_SPACING = 160
+const VERTICAL_SPACING = 200
+
+// Helper function to layout the graph using Dagre
+const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
+  const g = new dagre.graphlib.Graph()
+  g.setGraph({
+    rankdir: 'TB', // Top to bottom layout
+    nodesep: HORIZONTAL_SPACING, // Horizontal spacing between nodes
+    ranksep: VERTICAL_SPACING, // Vertical spacing between ranks
+    edgesep: 50, // Minimum edge separation
+    marginx: 20, // Horizontal margin
+    marginy: 20 // Vertical margin
+  })
+  g.setDefaultEdgeLabel(() => ({}))
+
+  // Add nodes to the graph
+  nodes.forEach((node) => {
+    g.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT })
+  })
+
+  // Add edges to the graph
+  edges.forEach((edge) => {
+    g.setEdge(edge.source, edge.target)
+  })
+
+  // Run the layout
+  dagre.layout(g)
+
+  // Get the positioned nodes
+  const layoutedNodes = nodes.map((node) => {
+    const nodeWithPosition = g.node(node.id)
+    return {
+      ...node,
+      position: {
+        x: nodeWithPosition.x - NODE_WIDTH / 2,
+        y: nodeWithPosition.y - NODE_HEIGHT / 2
+      }
+    }
+  })
+
+  return { nodes: layoutedNodes, edges }
 }
 
 const Workflow = ({ selectedScreenId }: { selectedScreenId: string | null }) => {
@@ -35,32 +80,34 @@ const Workflow = ({ selectedScreenId }: { selectedScreenId: string | null }) => 
   useEffect(() => {
     if (!screen) return
 
-    const { nodes, edges } = layoutDagTree(
-      { steps: screen.steps, transitions: screen.transitions },
-      {
-        nodeWidth: 220,
-        nodeHeight: 60,
-        horizontalGap: 80,
-        verticalGap: 140,
-        direction: 'TB', // top → bottom (y increases downward)
-        sweeps: 6 // a few extra ordering passes for tidier trees
-      }
-    )
-
-    const computedNodes = nodes.map((node) => ({
-      id: node.id,
+    // Create initial nodes and edges
+    const initialNodes = screen.steps.map((step) => ({
+      id: step.id,
       type: 'OrderNode',
-      position: node.position,
+      position: { x: 0, y: 0 }, // Initial position will be calculated by Dagre
       sourcePosition: Position.Bottom,
       targetPosition: Position.Top,
       data: {
-        id: node.id,
-        name: node.data.label,
-        label: node.data.label
+        id: step.id,
+        name: step.name,
+        label: step.name
       }
     }))
-    setNodes(computedNodes)
-    setEdges(edges)
+
+    const initialEdges = screen.transitions.map((transition) => ({
+      id: `${transition.fromStepId}-${transition.toStepId}`,
+      source: transition.fromStepId,
+      target: transition.toStepId
+    }))
+
+    // Apply the layout
+    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+      initialNodes,
+      initialEdges
+    )
+
+    setNodes(layoutedNodes)
+    setEdges(layoutedEdges)
   }, [screen])
 
   const onNodesChange = useCallback(
@@ -77,6 +124,7 @@ const Workflow = ({ selectedScreenId }: { selectedScreenId: string | null }) => 
     (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
     []
   )
+
   return (
     <Box
       sx={{
