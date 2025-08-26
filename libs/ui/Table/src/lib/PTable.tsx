@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useCallback, Fragment, useState } from 'react'
+import React, { useRef, useMemo, useCallback, Fragment } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -23,13 +23,13 @@ import {
 } from '@mui/material'
 import { ExpandMore, ExpandLess } from '@mui/icons-material'
 import { useTheme } from '@mui/material/styles'
-import { DndContext, DragStartEvent, DragEndEvent, DragOverlay } from '@dnd-kit/core'
-import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
+
+import { CustomDndContext } from './components/CustomDndContext'
 import { PTableProps } from '../types'
 import { SortableBodyCell } from './components/SortableBodyCell'
 import { HeaderCell } from './components/HeaderCell'
 import { GroupedRow } from './components/GroupedRow'
-import { DragOverlayLabel } from './components/DragOverlayLabel'
+
 import { LoadingContent } from './components/LoadingContent'
 import { NoMoreDataConent } from './components/NoMoreDataConent'
 import { NoDataAvailableConent } from './components/NoDataAvailableConent'
@@ -66,7 +66,7 @@ export function PTable<TData, TValue = unknown>({
   const tableContainerRef = useRef<HTMLDivElement>(null)
   const theme = useTheme()
   const isRtl = theme.direction === 'rtl'
-  const [activeDragId, setActiveDragId] = useState<string | null>(null)
+  // Drag state moved to CustomDndContext
 
   // Memoize table columns with selection column if enabled
   const tableColumns = useMemo(() => {
@@ -213,42 +213,7 @@ export function PTable<TData, TValue = unknown>({
     return true
   }
 
-  const handleColumnDragStart = useCallback((event: DragStartEvent) => {
-    const id = String(event.active.id)
-    setActiveDragId(id.startsWith('col:') ? id.slice(4) : id)
-  }, [])
-
-  const handleColumnDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event
-      if (!over || !setColumnOrder) return
-      const allIds = table.getAllLeafColumns().map((c) => c.id)
-
-      // Current reorderable order, controlled or fallback
-      const current = columnOrder && columnOrder.length > 0 ? columnOrder : allIds
-
-      const activeId = String(active.id).replace(/^col:/, '')
-      const overDividerId = String(over.id).replace(/^divider:/, '')
-
-      const from = current.indexOf(activeId)
-      const to = current.indexOf(overDividerId)
-      if (from === -1 || to === -1) return
-
-      // If dropped on same index or to the right, do nothing per spec
-      if (to === from || to === from - 1) {
-        setActiveDragId(null)
-        return
-      }
-
-      const nextVisual = current.slice()
-      const [item] = nextVisual.splice(from, 1)
-      nextVisual.splice(to > from ? to : to + 1, 0, item)
-
-      setColumnOrder(nextVisual)
-      setActiveDragId(null)
-    },
-    [setColumnOrder, table, columnOrder]
-  )
+  // Column drag and drop handlers moved to CustomDndContext
 
   return (
     <TableContainer
@@ -261,10 +226,10 @@ export function PTable<TData, TValue = unknown>({
       }}
       onScroll={handleScroll}
     >
-      <DndContext
-        onDragStart={handleColumnDragStart}
-        onDragEnd={handleColumnDragEnd}
-        modifiers={[restrictToHorizontalAxis]}
+      <CustomDndContext
+        columnOrder={columnOrder}
+        setColumnOrder={setColumnOrder}
+        getAllLeafColumns={table.getAllLeafColumns}
       >
         <Table
           stickyHeader
@@ -405,10 +370,7 @@ export function PTable<TData, TValue = unknown>({
             )}
           </TableBody>
         </Table>
-        <DragOverlay dropAnimation={null}>
-          {activeDragId && <DragOverlayLabel label={activeDragId} />}
-        </DragOverlay>
-      </DndContext>
+      </CustomDndContext>
     </TableContainer>
   )
 }
