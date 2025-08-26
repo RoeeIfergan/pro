@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { User } from '@pro3/types'
+import { User, UserWithGroups } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
@@ -26,6 +26,8 @@ const getUsersSchema = z.object({
 // type _SchemaMatchesTest = Expect<Equal<z.infer<typeof getUsersSchema>, User>>
 
 export class GetUserSchemaDTO extends createZodDto(getUsersSchema) {}
+export type GetUserWithUserGroupsSchemaDTO = UserWithGroups
+
 export class CreateUserSchemaDTO extends createZodDto(createUserSchema) {}
 
 export const getUserByIdSchema = z.object({ id: idSchema })

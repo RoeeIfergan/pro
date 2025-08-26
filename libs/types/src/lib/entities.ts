@@ -73,3 +73,8 @@ export type UserGroup = {
   createdAt: Date
   updatedAt: Date
 }
+
+export type UserWithGroups = {
+  user: User
+  userGroups: UserGroup[]
+}

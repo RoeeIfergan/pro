@@ -12,6 +12,7 @@ import {
 import { stepsToUserGroups } from '../../schemas/workflow/step.schema.ts'
 import { orders } from '../../schemas/workflow/order.schema.ts'
 import { eq, inArray } from 'drizzle-orm'
+import { UserWithGroups } from '@pro3/types'
 
 @Injectable()
 export class UserDao {
@@ -25,8 +26,26 @@ export class UserDao {
   }
 
   async getById(id: string) {
-    const result = await this.db.select().from(users).where(eq(users.id, id)).execute()
-    return result[0] || null
+    const results = await this.db.query.usersToUserGroups
+      .findMany({
+        where: eq(usersToUserGroups.userId, id),
+        with: {
+          group: true,
+          user: true
+        }
+      })
+      .execute()
+
+    const groupedUserGroups = results.reduce(
+      (acc, userGroup) => {
+        acc.userGroups.push(userGroup.group)
+
+        return acc
+      },
+      { user: results[0].user, userGroups: [] } as UserWithGroups
+    )
+
+    return groupedUserGroups || null
   }
 
   async getPartOfById(id: string) {

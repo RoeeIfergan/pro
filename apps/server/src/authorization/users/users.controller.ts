@@ -1,6 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { UsersService } from './users.service'
-import { GetUserByIdDTO, CreateUserSchemaDTO, GetUserSchemaDTO } from '@pro3/schemas'
+import {
+  GetUserByIdDTO,
+  CreateUserSchemaDTO,
+  GetUserSchemaDTO,
+  GetUserWithUserGroupsSchemaDTO
+} from '@pro3/schemas'
 import { UseZodGuard } from 'nestjs-zod'
 
 @Controller('users')
@@ -14,7 +19,7 @@ export class UsersController {
 
   @Get(':id')
   @UseZodGuard('params', GetUserByIdDTO)
-  async getById(@Param('id') userId: string): Promise<GetUserSchemaDTO[]> {
+  async getById(@Param('id') userId: string): Promise<GetUserWithUserGroupsSchemaDTO> {
     return this.usersService.getById(userId)
   }
 

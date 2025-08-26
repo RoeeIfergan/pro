@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { UserDao, UserEntityInsert } from '@pro3/database'
 import { UserEntity } from '@pro3/database/'
+import { UserWithGroups } from '@pro3/types'
 
 @Injectable()
 export class UsersService {
   constructor(private readonly userDao: UserDao) {}
 
-  async getById(id: string): Promise<UserEntity[]> {
+  async getById(id: string): Promise<UserWithGroups> {
     return await this.userDao.getById(id)
   }
 
