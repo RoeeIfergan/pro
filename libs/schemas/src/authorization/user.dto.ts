@@ -5,9 +5,11 @@ import { User, UserWithGroups } from '@pro3/types'
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
 const organizationId = z.string().nonempty()
+
 const createUserSchema = z.object({
   name: nameSchema,
-  organizationId: organizationId
+  organizationId: organizationId,
+  userGroupIds: z.array(z.string())
 }) satisfies z.ZodType<Partial<User>>
 
 const getUsersSchema = z.object({

@@ -3,17 +3,14 @@ import { createZodDto } from 'nestjs-zod'
 import { UserGroup } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
-const stepIdSchema = z.string().nonempty()
 const nameSchema = z.string()
 const createUserGroupSchema = z.object({
-  name: nameSchema,
-  stepId: stepIdSchema
+  name: nameSchema
 }) satisfies z.ZodType<Partial<UserGroup>>
 
-const getUserGroupsSchema = z.object({
+const userGroupsSchema = z.object({
   id: idSchema,
   name: nameSchema,
-  stepId: stepIdSchema,
   createdAt: z.date(),
   updatedAt: z.date()
 }) satisfies z.ZodType<UserGroup>
@@ -24,8 +21,9 @@ const getUserGroupsSchema = z.object({
 
 // type _SchemaMatchesTest = Expect<Equal<z.infer<typeof getUserGroupsSchema>, UserGroup>>
 
-export class GetUserGroupSchemaDTO extends createZodDto(getUserGroupsSchema) {}
-export class CreateUserGroupSchemaDTO extends createZodDto(createUserGroupSchema) {}
+export class UserGroupSchemaDTO extends createZodDto(userGroupsSchema) {}
+
+export class ModifyUserGroupSchemaDTO extends createZodDto(createUserGroupSchema) {}
 
 export const getUserGroupByIdSchema = z.object({ id: idSchema })
 
