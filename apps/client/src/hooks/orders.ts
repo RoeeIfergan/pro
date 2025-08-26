@@ -1,18 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 
 export const USER_ORDERS_QUERY_KEY = ['userOrders'] as const
-
-export const useUserOrders = (userId: string) => {
-  return useQuery({
-    queryKey: [...USER_ORDERS_QUERY_KEY, userId],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/users/${userId}/orders`)
-      return data
-    },
-    enabled: !!userId
-  })
-}
 
 export const useApproveOrders = () => {
   const queryClient = useQueryClient()
@@ -23,7 +12,7 @@ export const useApproveOrders = () => {
       return data
     },
     onSuccess: (_, { userId }) => {
-      queryClient.invalidateQueries({ queryKey: [...USER_ORDERS_QUERY_KEY, userId] })
+      queryClient.invalidateQueries({ queryKey: [...USER_ORDERS_QUERY_KEY, 'orders', userId] })
     }
   })
 }
@@ -37,7 +26,7 @@ export const useRejectOrders = () => {
       return data
     },
     onSuccess: (_, { userId }) => {
-      queryClient.invalidateQueries({ queryKey: [...USER_ORDERS_QUERY_KEY, userId] })
+      queryClient.invalidateQueries({ queryKey: [...USER_ORDERS_QUERY_KEY, 'orders', userId] })
     }
   })
 }

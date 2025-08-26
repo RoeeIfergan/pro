@@ -8,12 +8,20 @@ import {
   Select,
   Typography,
   Divider,
-  Chip
+  Chip,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText
 } from '@mui/material'
-import { useUsers, useUser } from '../../../hooks/users'
+import SendIcon from '@mui/icons-material/Send'
+import BlockIcon from '@mui/icons-material/Block'
+import { useUsers, useUser, useUpdateUserGroups, useUserOrders } from '../../../hooks/users'
+import { useApproveOrders, useRejectOrders } from '../../../hooks/orders'
 import { useUserGroups } from '../../../hooks/userGroups'
-import { useUserOrders } from '../../../hooks/userOrders'
 import { useState } from 'react'
+import { EditUserGroupsDialog } from './EditUserGroupsDialog'
+import EditIcon from '@mui/icons-material/Edit'
 
 interface Order {
   id: string
@@ -26,23 +34,46 @@ interface Order {
 
 const UserCard = () => {
   const [selectedUserId, setSelectedUserId] = useState<string>('')
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const { data: users, isLoading: isLoadingUsers } = useUsers()
   const { data: selectedUser } = useUser(selectedUserId)
   const { data: userGroups, isLoading: isLoadingGroups } = useUserGroups()
   const { data: userOrders, isLoading: isLoadingOrders } = useUserOrders(selectedUserId)
-  const { isPending: isUpdating } = { isPending: false }
+  const { mutate: approveOrders, isPending: isApproving } = useApproveOrders()
+  const { mutate: rejectOrders, isPending: isRejecting } = useRejectOrders()
+  const { mutate: updateUserGroups, isPending: isUpdating } = useUpdateUserGroups()
 
   const handleUserChange = (userId: string) => {
     setSelectedUserId(userId)
   }
 
-  const loading = isLoadingUsers || isLoadingGroups || isLoadingOrders || isUpdating
+  const handleEditGroups = () => {
+    setIsEditDialogOpen(true)
+  }
 
-  console.log(selectedUser)
+  const handleSaveGroups = (groupIds: string[]) => {
+    if (selectedUserId) {
+      updateUserGroups({ userId: selectedUserId, groupIds })
+    }
+  }
+
+  const loading =
+    isLoadingUsers || isLoadingGroups || isLoadingOrders || isUpdating || isApproving || isRejecting
+
+  // console.log(selectedUser)
+  console.log(userOrders)
 
   return (
-    <Card sx={{ minWidth: 275, maxWidth: 500, m: 2 }}>
-      <CardContent>
+    <Card
+      sx={{
+        width: '100%',
+        maxWidth: 500,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
+      <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Typography variant='h5' component='div' gutterBottom>
           User Selection
         </Typography>
@@ -52,7 +83,7 @@ const UserCard = () => {
           <Select
             labelId='user-select-label'
             id='user-select'
-            value={selectedUser?.id || ''}
+            value={selectedUser?.user.id || ''}
             label='Select User'
             onChange={(e) => handleUserChange(e.target.value as string)}
             disabled={loading}
@@ -73,25 +104,40 @@ const UserCard = () => {
             </Typography>
             <Box sx={{ mb: 2 }}>
               <Typography variant='body1'>
-                <strong>Name:</strong> {selectedUser.name}
+                <strong>Name:</strong> {selectedUser.user.name}
               </Typography>
               <Typography variant='body1'>
-                <strong>Organization ID:</strong> {selectedUser.organizationId}
+                <strong>Organization ID:</strong> {selectedUser.user.organizationId}
               </Typography>
             </Box>
 
             <Box>
-              <Typography variant='body1' gutterBottom>
-                <strong>User Groups:</strong>
-              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 1
+                }}
+              >
+                <Typography variant='body1'>
+                  <strong>User Groups:</strong>
+                </Typography>
+                <IconButton
+                  size='small'
+                  onClick={handleEditGroups}
+                  disabled={loading || !selectedUserId}
+                >
+                  <EditIcon fontSize='small' />
+                </IconButton>
+              </Box>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
-                {selectedUser?.userGroupIds?.length > 0 ? (
-                  selectedUser.userGroupIds.map((groupId: string) => {
-                    const group = userGroups?.find((g) => g.id === groupId)
+                {selectedUser?.userGroups?.length > 0 ? (
+                  selectedUser.userGroups.map((group) => {
                     return (
                       <Chip
-                        key={groupId}
-                        label={group?.name || 'Loading...'}
+                        key={group.id}
+                        label={group.name || 'Loading...'}
                         size='small'
                         color='primary'
                         variant='outlined'
@@ -104,29 +150,67 @@ const UserCard = () => {
                   </Typography>
                 )}
               </Box>
+              {userGroups && selectedUser && (
+                <EditUserGroupsDialog
+                  open={isEditDialogOpen}
+                  onClose={() => setIsEditDialogOpen(false)}
+                  onSave={handleSaveGroups}
+                  userGroups={userGroups}
+                  currentUserGroups={selectedUser.userGroups || []}
+                />
+              )}
             </Box>
 
             <Divider sx={{ my: 2 }} />
             <Typography variant='h6' gutterBottom>
               Accessible Orders
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <List
+              sx={{
+                flex: 1,
+                maxHeight: 200,
+                overflowY: 'auto',
+                '& .MuiListItem-root': {
+                  borderBottom: '1px solid',
+                  borderColor: 'divider',
+                  '&:last-child': {
+                    borderBottom: 'none'
+                  }
+                }
+              }}
+            >
               {userOrders?.map((order: Order) => (
-                <Box key={order.id} sx={{ p: 1, borderRadius: 1 }}>
-                  <Typography variant='body2'>
-                    <strong>{order.name}</strong>
-                  </Typography>
-                  <Typography variant='caption' color='textSecondary'>
-                    Type: {order.type}
-                  </Typography>
-                </Box>
+                <ListItem
+                  key={order.id}
+                  secondaryAction={
+                    <Box>
+                      <IconButton
+                        size='small'
+                        color='error'
+                        onClick={() => rejectOrders({ userId: selectedUserId, ids: [order.id] })}
+                        disabled={loading}
+                      >
+                        <BlockIcon />
+                      </IconButton>
+                      <IconButton
+                        size='small'
+                        onClick={() => approveOrders({ userId: selectedUserId, ids: [order.id] })}
+                        disabled={loading}
+                      >
+                        <SendIcon />
+                      </IconButton>
+                    </Box>
+                  }
+                >
+                  <ListItemText primary={order.name} />
+                </ListItem>
               ))}
-              {userOrders?.length === 0 && (
-                <Typography variant='body2' color='textSecondary'>
-                  No orders available
-                </Typography>
+              {(!userOrders || userOrders.length === 0) && (
+                <ListItem>
+                  <ListItemText primary='No orders available' sx={{ color: 'text.secondary' }} />
+                </ListItem>
               )}
-            </Box>
+            </List>
           </>
         )}
 
