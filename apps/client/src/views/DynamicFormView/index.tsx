@@ -20,7 +20,16 @@ const DynamicFormView = () => {
   }, [collections, collection])
 
   return (
-    <Box p={3} sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
+    <Box
+      p={3}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        alignItems: 'center',
+        overflow: 'hidden'
+      }}
+    >
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant='h4' p={2}>
           Dynamic Form
