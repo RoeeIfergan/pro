@@ -11,6 +11,7 @@ import DynamicFormIcon from '@mui/icons-material/DynamicForm'
 import TableChartIcon from '@mui/icons-material/TableChart'
 
 import { RouteObject } from 'react-router'
+import DNDCard from '../DNDCard'
 
 type routeInfo = {
   label: string
@@ -27,6 +28,14 @@ export const routes: (routeInfo & RouteObject)[] = [
     Component: DynamicFormView,
     loader: cardLoader
   },
+  {
+    label: 'DNDCard',
+    path: '/DNDCard',
+    icon: <DynamicFormIcon />,
+    Component: DNDCard,
+    loader: cardLoader
+  },
+
   {
     label: 'table',
     path: '/table',
