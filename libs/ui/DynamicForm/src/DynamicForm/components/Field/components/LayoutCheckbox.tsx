@@ -16,6 +16,7 @@ const LayoutCheckbox = ({
     <Controller
       name={path}
       control={control}
+      shouldUnregister
       render={({ field }) => (
         <FormControlLabel
           control={

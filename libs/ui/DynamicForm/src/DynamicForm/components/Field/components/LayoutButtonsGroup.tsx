@@ -19,6 +19,7 @@ const ButtonsGroup = ({ field, disabled = false }: { field: ILayoutField; disabl
     <Controller
       name={path}
       control={control}
+      shouldUnregister
       render={({ field, fieldState: { error } }) => (
         <FormControl
           component='fieldset'

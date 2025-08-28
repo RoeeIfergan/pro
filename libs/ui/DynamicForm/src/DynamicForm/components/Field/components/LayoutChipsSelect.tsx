@@ -55,6 +55,7 @@ const LayoutChipsSelect = ({
     <Controller
       name={path}
       control={control}
+      shouldUnregister
       render={({ field, fieldState: { error } }) => {
         const handleChipToggle = (optionValue: IOption['value']) => {
           if (disabled) return

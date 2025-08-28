@@ -36,6 +36,7 @@ const LayoutTextField = ({
     <Controller
       name={path}
       control={control}
+      shouldUnregister
       render={({ field, fieldState: { error } }) => {
         const isNumber = type === 'number'
 

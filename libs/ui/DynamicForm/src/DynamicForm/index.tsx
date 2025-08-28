@@ -45,7 +45,10 @@ export const DynamicFormContent = <T extends DefaultSchema>({
   const methods = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
-    resolver: zodResolver(collection.schema as z.ZodObject<Record<string, z.ZodTypeAny>>),
+    resolver:
+      collection.name === 'Preview'
+        ? undefined
+        : zodResolver(collection.schema as z.ZodObject<Record<string, z.ZodTypeAny>>),
     defaultValues: collection.defaultValues as FieldValues
   })
 

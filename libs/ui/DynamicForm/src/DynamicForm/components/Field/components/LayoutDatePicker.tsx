@@ -19,6 +19,7 @@ const LayoutDatePicker = ({
       <Controller
         name={path}
         control={control}
+        shouldUnregister
         render={({ field, fieldState: { error } }) => (
           <DatePicker
             {...field}

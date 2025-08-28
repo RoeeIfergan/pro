@@ -89,6 +89,7 @@ const LayoutDateRangePicker = ({
       <Controller
         name={path}
         control={control}
+        shouldUnregister
         render={({ field, fieldState: { error } }) => (
           <Box sx={{ width: '100%' }}>
             {label ? (

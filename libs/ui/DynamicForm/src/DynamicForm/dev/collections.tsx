@@ -16,8 +16,8 @@ const getCollections = async ({
   loadPirates: () => Promise<IOption[]>
 }): Promise<ICollection[]> => {
   return Promise.all([
-    baseCard({ loadDepartments }),
     emptyCard,
+    baseCard({ loadDepartments }),
     dimaCard({ loadPirates }),
     multiSelectFields(),
     layoutExamples()

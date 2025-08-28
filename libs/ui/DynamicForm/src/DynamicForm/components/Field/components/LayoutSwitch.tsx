@@ -10,6 +10,7 @@ const LayoutSwitch = ({ field, disabled = false }: { field: ILayoutField; disabl
     <Controller
       name={path}
       control={control}
+      shouldUnregister
       render={({ field }) => (
         <FormControlLabel
           control={
