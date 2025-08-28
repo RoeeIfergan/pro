@@ -103,9 +103,18 @@ const ItemsList = ({
           </SortableContext>
         </DndContext>
       ) : (
-        <Typography color='text.secondary' sx={{ fontWeight: 500 }}>
-          {emptyListMessage}
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%'
+          }}
+        >
+          <Typography color='text.secondary' sx={{ fontWeight: 500 }}>
+            {emptyListMessage}
+          </Typography>
+        </Box>
       )}
 
       <Box
