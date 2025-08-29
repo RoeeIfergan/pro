@@ -24,7 +24,6 @@ import {
 import { ExpandMore, ExpandLess } from '@mui/icons-material'
 import { useTheme } from '@mui/material/styles'
 
-import { CustomDndContext } from './components/CustomDndContext'
 import { PTableProps } from '../types'
 import { SortableBodyCell } from './components/SortableBodyCell'
 import { HeaderCell } from './components/HeaderCell'
@@ -33,6 +32,7 @@ import { GroupedRow } from './components/GroupedRow'
 import { LoadingContent } from './components/LoadingContent'
 import { NoMoreDataConent } from './components/NoMoreDataConent'
 import { NoDataAvailableConent } from './components/NoDataAvailableConent'
+import { CustomDndProvider } from './components/CustomDndProvider'
 
 const DEFAULT_ROW_HEIGHT = 52
 
@@ -226,7 +226,7 @@ export function PTable<TData, TValue = unknown>({
       }}
       onScroll={handleScroll}
     >
-      <CustomDndContext
+      <CustomDndProvider
         columnOrder={columnOrder}
         setColumnOrder={setColumnOrder}
         getAllLeafColumns={table.getAllLeafColumns}
@@ -370,7 +370,7 @@ export function PTable<TData, TValue = unknown>({
             )}
           </TableBody>
         </Table>
-      </CustomDndContext>
+      </CustomDndProvider>
     </TableContainer>
   )
 }

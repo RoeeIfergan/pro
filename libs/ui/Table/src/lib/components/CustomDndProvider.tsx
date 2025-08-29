@@ -10,7 +10,7 @@ interface CustomDndContextProps {
   getAllLeafColumns: () => { id: string }[]
 }
 
-export function CustomDndContext({
+export function CustomDndProvider({
   children,
   columnOrder,
   setColumnOrder,
