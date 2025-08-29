@@ -94,13 +94,12 @@ export class OrdersService {
           (transition) => !transition.isCustomRoute
         )
         if (defaultTransitions.length > 1 || defaultTransitions.length === 0) {
-          //TODO: Code is correct, seed is incorrect. Transitions are wrong (they are backwards)
           throw new HttpException(
             {
-              status: HttpStatus.INTERNAL_SERVER_ERROR,
+              status: HttpStatus.BAD_REQUEST,
               error: `Found ${defaultTransitions.length} default transtions`
             },
-            HttpStatus.INTERNAL_SERVER_ERROR
+            HttpStatus.BAD_REQUEST
           )
         }
         const defaultTransition = defaultTransitions[0]
