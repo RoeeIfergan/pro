@@ -12,7 +12,7 @@ import {
 } from '../../schemas/workflow/step.schema.ts'
 import { orders } from '../../schemas/workflow/order.schema.ts'
 import { userGroups } from '../../schemas/authorization/userGroup.schema.ts'
-import { eq } from 'drizzle-orm'
+import { eq, inArray } from 'drizzle-orm'
 
 @Injectable()
 export class StepDao {
@@ -40,6 +40,15 @@ export class StepDao {
       .execute()
   }
 
+  async getOrdersByStepIds(stepIds: string[]) {
+    const steps = await this.db
+      .select()
+      .from(orders)
+      .where(inArray(orders.stepId, stepIds))
+      .execute()
+
+    return steps
+  }
   async insertStep(step: StepEntityInsert) {
     return this.db.insert(steps).values(step).returning().execute()
   }

@@ -1,17 +1,22 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../dist/server-ts",
-    "types": ["node"],
+    "outDir": "../../out-tsc/server",
+    "types": [
+      "node"
+    ],
     "sourceMap": true,
     "inlineSources": true,
     "rootDir": "src",
-    "tsBuildInfoFile": "../../dist/server-ts/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "../../out-tsc/server/tsconfig.app.tsbuildinfo",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2021"
   },
-  "include": ["src/**/*.ts", "src/dbOld"],
+  "include": [
+    "src/**/*.ts",
+    "src/dbOld"
+  ],
   "exclude": [
     "out-tsc",
     "dist",

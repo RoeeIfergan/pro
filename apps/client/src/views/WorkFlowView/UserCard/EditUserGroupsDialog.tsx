@@ -9,14 +9,14 @@ import {
   Autocomplete,
   TextField
 } from '@mui/material'
-import { GetUserGroupSchemaDTO } from '@pro3/schemas'
+import { TUserGroup } from '@pro3/types'
 
 interface EditUserGroupsDialogProps {
   open: boolean
   onClose: () => void
   onSave: (selectedGroups: string[]) => void
-  userGroups: GetUserGroupSchemaDTO[]
-  currentUserGroups: GetUserGroupSchemaDTO[]
+  userGroups: TUserGroup[]
+  currentUserGroups: TUserGroup[]
 }
 
 export function EditUserGroupsDialog({

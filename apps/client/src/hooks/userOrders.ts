@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { STEP_ORDERS_QUERY_KEY } from './stepOrders'
 
 export const USER_ORDERS_QUERY_KEY = ['userOrders'] as const
 
@@ -24,6 +25,7 @@ export const useApproveOrders = () => {
     },
     onSuccess: (_, { userId }) => {
       queryClient.invalidateQueries({ queryKey: [...USER_ORDERS_QUERY_KEY, userId] })
+      queryClient.invalidateQueries({ queryKey: STEP_ORDERS_QUERY_KEY })
     }
   })
 }
@@ -38,6 +40,7 @@ export const useRejectOrders = () => {
     },
     onSuccess: (_, { userId }) => {
       queryClient.invalidateQueries({ queryKey: [...USER_ORDERS_QUERY_KEY, userId] })
+      queryClient.invalidateQueries({ queryKey: STEP_ORDERS_QUERY_KEY })
     }
   })
 }

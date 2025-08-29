@@ -1,19 +1,19 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { UserGroup } from '@pro3/types'
+import { TUserGroup } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
 const createUserGroupSchema = z.object({
   name: nameSchema
-}) satisfies z.ZodType<Partial<UserGroup>>
+}) satisfies z.ZodType<Partial<TUserGroup>>
 
 const userGroupsSchema = z.object({
   id: idSchema,
   name: nameSchema,
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<UserGroup>
+}) satisfies z.ZodType<TUserGroup>
 
 // type Equal<A, B> =
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false

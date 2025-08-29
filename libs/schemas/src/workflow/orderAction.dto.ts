@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { OrderAction } from '@pro3/types'
+import { TOrderAction } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const orderIdSchema = z.string().nonempty()
@@ -9,7 +9,7 @@ const stepIdSchema = z.string().nonempty()
 const createOrderActionSchema = z.object({
   orderId: orderIdSchema,
   stepId: stepIdSchema
-}) satisfies z.ZodType<Partial<OrderAction>>
+}) satisfies z.ZodType<Partial<TOrderAction>>
 
 const getOrderActionsSchema = z.object({
   id: idSchema,
@@ -17,7 +17,7 @@ const getOrderActionsSchema = z.object({
   stepId: stepIdSchema,
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<OrderAction>
+}) satisfies z.ZodType<TOrderAction>
 
 // type Equal<A, B> =
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false

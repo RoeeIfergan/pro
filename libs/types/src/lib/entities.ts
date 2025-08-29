@@ -1,6 +1,6 @@
 import { OrderType } from './utils.ts'
 
-export type Order = {
+export type TOrder = {
   id: string
   name: string
   type: OrderType
@@ -9,7 +9,7 @@ export type Order = {
   stepId: string
 }
 
-export type OrderAction = {
+export type TOrderAction = {
   stepId: string
   id: string
   createdAt: Date
@@ -17,32 +17,32 @@ export type OrderAction = {
   orderId: string
 }
 
-export type Screen = {
+export type TScreen = {
   id: string
   name: string
   createdAt: Date
   updatedAt: Date
 }
 
-export type ScreenRelations = {
+export type TScreenRelations = {
   id: string
   name: string
   createdAt: Date
   updatedAt: Date
-  steps: Step[]
-  transitions: Transition[]
+  steps: TStep[]
+  transitions: TTransition[]
 }
 
-export type Step = {
+export type TStep = {
   id: string
   name: string
   createdAt: Date
   updatedAt: Date
   screenId: string
-  userGroupIds: string[]
+  // userGroupIds: string[]
 }
 
-export type Transition = {
+export type TTransition = {
   id: string
   createdAt: Date
   updatedAt: Date
@@ -51,14 +51,14 @@ export type Transition = {
   toStepId: string
 }
 
-export type Organization = {
+export type TOrganization = {
   id: string
   name: string
   createdAt: Date
   updatedAt: Date
 }
 
-export type User = {
+export type TUser = {
   id: string
   name: string
   organizationId: string
@@ -67,14 +67,25 @@ export type User = {
   updatedAt: Date
 }
 
-export type UserGroup = {
+export type TFullUser = {
+  userGroups: TUserGroup[]
+  stepsIds: string[]
+  id: string
+  name: string
+  createdAt: Date
+  updatedAt: Date
+  organizationId: string
+}
+
+export type TUserGroup = {
   id: string
   name: string
   createdAt: Date
   updatedAt: Date
 }
 
-export type UserWithGroups = {
-  user: User
-  userGroups: UserGroup[]
+export type TUserWithGroups = {
+  user: TUser
+  steps: TStep[]
+  userGroups: TUserGroup[]
 }

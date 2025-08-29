@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import { Order } from '@pro3/types'
+import { TOrder } from '@pro3/types'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
@@ -7,7 +7,7 @@ const HomepageView = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ['orders'],
     queryFn: async () => {
-      const { data } = await axios.get<Order[]>('http://localhost:3000/api/orders')
+      const { data } = await axios.get<TOrder[]>('http://localhost:3000/api/orders')
 
       return data
     }

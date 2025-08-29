@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-const STEP_ORDERS_QUERY_KEY = ['stepOrders'] as const
+export const STEP_ORDERS_QUERY_KEY = ['stepOrders'] as const
 
 export const useStepOrders = (stepId: string) => {
   return useQuery({

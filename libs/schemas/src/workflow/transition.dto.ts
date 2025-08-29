@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { Transition } from '@pro3/types'
+import { TTransition } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
@@ -12,7 +12,7 @@ const createTransitionSchema = z.object({
   screenId: screenIdSchema,
   fromStepId: stepIdSchema,
   toStepId: stepIdSchema
-}) satisfies z.ZodType<Partial<Transition>>
+}) satisfies z.ZodType<Partial<TTransition>>
 
 const getTransitionsSchema = z.object({
   id: idSchema,
@@ -22,7 +22,7 @@ const getTransitionsSchema = z.object({
   toStepId: stepIdSchema,
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<Transition>
+}) satisfies z.ZodType<TTransition>
 
 // type Equal<A, B> =
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false

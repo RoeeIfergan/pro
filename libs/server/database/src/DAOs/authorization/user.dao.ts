@@ -3,7 +3,7 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DatabaseConfig } from '../../database/config/database.config.ts'
 import { PG_CONNECTION } from '../../database/drizzle/pg-connection.ts'
 
-import * as usersSchema from '../../schemas/authorization/user.schema.ts'
+import * as schemas from '../../schemas/index.ts'
 import {
   users,
   UserEntityInsert,
@@ -12,40 +12,69 @@ import {
 import { stepsToUserGroups } from '../../schemas/workflow/step.schema.ts'
 import { orders } from '../../schemas/workflow/order.schema.ts'
 import { eq, inArray } from 'drizzle-orm'
-import { UserWithGroups } from '@pro3/types'
+import { TUserGroup } from '@pro3/types'
 
 @Injectable()
 export class UserDao {
   constructor(
-    @Inject(PG_CONNECTION) protected readonly db: NodePgDatabase<typeof usersSchema>,
+    @Inject(PG_CONNECTION) protected readonly db: NodePgDatabase<typeof schemas>,
     protected readonly dbConfig: DatabaseConfig
   ) {}
 
   async getAll() {
-    return this.db.select().from(users).execute()
+    return this.db
+      .select()
+      .from(users)
+      .leftJoin(usersToUserGroups, eq(users.id, usersToUserGroups.userId))
+      .execute()
   }
 
   async getById(id: string) {
-    const results = await this.db.query.usersToUserGroups
+    const [result] = await this.db.query.users
       .findMany({
-        where: eq(usersToUserGroups.userId, id),
+        where: eq(users.id, id),
         with: {
-          group: true,
-          user: true
+          userWithUserGroup: {
+            with: {
+              userGroup: {
+                with: {
+                  steps: {
+                    columns: {
+                      stepId: true
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       })
       .execute()
 
-    const groupedUserGroups = results.reduce(
-      (acc, userGroup) => {
-        acc.userGroups.push(userGroup.group)
+    const { userWithUserGroup, ...computedUser } = result
+    const { flattenedUserGroups, stepsIds } = userWithUserGroup.reduce(
+      (acc, userWithUserGroup) => {
+        const { userGroup, ..._rest } = userWithUserGroup
+        const { steps, ...restOfUserGroup } = userGroup
+        const stepsIds = steps.map((step) => step.stepId)
+        acc.stepsIds.push(...stepsIds)
+        acc.flattenedUserGroups.push(restOfUserGroup)
 
         return acc
       },
-      { user: results[0].user, userGroups: [] } as UserWithGroups
+      { flattenedUserGroups: [], stepsIds: [] } as {
+        flattenedUserGroups: TUserGroup[]
+        stepsIds: string[]
+      }
     )
 
-    return groupedUserGroups || null
+    const user = {
+      ...computedUser,
+      userGroups: flattenedUserGroups,
+      stepsIds: stepsIds
+    }
+
+    return user
   }
 
   async getPartOfById(id: string) {
@@ -84,6 +113,12 @@ export class UserDao {
     return updatedUsers[0]
   }
 
+  async addUserGroupsToUser(userId: string, userGroupIds: string[]) {
+    return this.db
+      .insert(usersToUserGroups)
+      .values(userGroupIds.map((userGroupId) => ({ userId, userGroupId })))
+      .execute()
+  }
   async deleteUser(userId: string) {
     if (!userId) {
       throw new Error('User ID is required for deletion')
@@ -108,8 +143,16 @@ export class UserDao {
     return this.db.delete(users).returning().execute()
   }
 
+  async getUserGroupIdsByUserId(userId: string) {
+    const userGroupIds = await this.db
+      .select({ userGroupId: usersToUserGroups.userGroupId })
+      .from(usersToUserGroups)
+      .where(eq(usersToUserGroups.userId, userId))
+      .execute()
+
+    return userGroupIds.map((userGroup) => userGroup.userGroupId)
+  }
   async getUserOrders(userId: string) {
-    // First get the user's group IDs
     const userGroupIds = await this.db
       .select({ userGroupId: usersToUserGroups.userGroupId })
       .from(usersToUserGroups)
@@ -134,14 +177,7 @@ export class UserDao {
 
     // Get orders from those steps
     return this.db
-      .select({
-        id: orders.id,
-        name: orders.name,
-        type: orders.type,
-        stepId: orders.stepId,
-        createdAt: orders.createdAt,
-        updatedAt: orders.updatedAt
-      })
+      .select()
       .from(orders)
       .where(
         inArray(

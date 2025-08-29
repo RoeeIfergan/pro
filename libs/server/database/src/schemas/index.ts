@@ -1,12 +1,9 @@
 export * from './workflow/order.schema.ts'
-export * from './workflow/order.schema.ts'
 export * from './workflow/screen.schema.ts'
 export * from './workflow/step.schema.ts'
 export * from './workflow/transition.schema.ts'
 export * from './workflow/orderAction.schema.ts'
-export * from './workflow/relations.schema.ts'
 
 export * from './authorization/organization.schema.ts'
-export * from './authorization/user.schema.ts'
 export * from './authorization/userGroup.schema.ts'
-export * from './authorization/relations.schema.ts'
+export * from './authorization/user.schema.ts'

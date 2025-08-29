@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { User, UserWithGroups } from '@pro3/types'
+import { TUser, TUserWithGroups } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
@@ -10,7 +10,7 @@ const createUserSchema = z.object({
   name: nameSchema,
   organizationId: organizationId,
   userGroupIds: z.array(z.string())
-}) satisfies z.ZodType<Partial<User>>
+}) satisfies z.ZodType<Partial<TUser>>
 
 const getUsersSchema = z.object({
   id: idSchema,
@@ -19,8 +19,9 @@ const getUsersSchema = z.object({
   userGroupIds: z.array(z.string()),
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<User>
+}) satisfies z.ZodType<TUser>
 
+const showUserStepsSchema = z.object({ showSteps: z.boolean().optional() })
 // type Equal<A, B> =
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false
 // type Expect<T extends true> = T
@@ -28,13 +29,14 @@ const getUsersSchema = z.object({
 // type _SchemaMatchesTest = Expect<Equal<z.infer<typeof getUsersSchema>, User>>
 
 export class GetUserSchemaDTO extends createZodDto(getUsersSchema) {}
-export type GetUserWithUserGroupsSchemaDTO = UserWithGroups
+export type GetUserWithUserGroupsSchemaDTO = TUserWithGroups
 
 export class CreateUserSchemaDTO extends createZodDto(createUserSchema) {}
 
 export const getUserByIdSchema = z.object({ id: idSchema })
 
 export class GetUserByIdDTO extends createZodDto(getUserByIdSchema) {}
+export class showUserStepsDTO extends createZodDto(showUserStepsSchema) {}
 
 // const updateDemandSchema = createDemandSchema.partial()
 

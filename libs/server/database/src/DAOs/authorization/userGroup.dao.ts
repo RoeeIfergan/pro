@@ -2,10 +2,11 @@ import { Inject, Injectable } from '@nestjs/common'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DatabaseConfig } from '../../database/config/database.config.ts'
 import { PG_CONNECTION } from '../../database/drizzle/pg-connection.ts'
-
 import * as userGroupsSchema from '../../schemas/authorization/userGroup.schema.ts'
 import { userGroups, UserGroupEntityInsert } from '../../schemas/authorization/userGroup.schema.ts'
-import { eq } from 'drizzle-orm'
+import { eq, inArray } from 'drizzle-orm'
+import { stepsToUserGroups, StepsToUserGroupsEntity } from '../../schemas/index.ts'
+import { convertOptions } from '../utils.ts'
 
 @Injectable()
 export class UserGroupDao {
@@ -33,8 +34,23 @@ export class UserGroupDao {
       .execute()
   }
 
-  async insertUserGroup(userGroup: UserGroupEntityInsert) {
-    return this.db.insert(userGroups).values(userGroup).returning().execute()
+  async getStepIdsByUserGroups<T extends Array<keyof StepsToUserGroupsEntity>>(
+    userGroupIds: string[],
+    fieldNames: T
+  ) {
+    const computedOptions = convertOptions(stepsToUserGroups, fieldNames)
+
+    const steps = await this.db
+      .select(computedOptions)
+      .from(stepsToUserGroups)
+      .where(inArray(stepsToUserGroups.userGroupId, userGroupIds))
+      .execute()
+
+    return steps
+  }
+
+  async insertUserGroups(userGroupsToInsert: UserGroupEntityInsert) {
+    return this.db.insert(userGroups).values(userGroupsToInsert).returning().execute()
   }
 
   async updateUserGroup(userGroupId: string, userGroup: Partial<UserGroupEntityInsert>) {

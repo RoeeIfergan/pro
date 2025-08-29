@@ -6,13 +6,14 @@ import {
   GetTransitionByIdDTO,
   GetTransitionSchemaDTO
 } from '@pro3/schemas'
+import { TTransition } from '@pro3/types'
 
 @Controller('transitions')
 export class TransitionsController {
   constructor(private readonly screensService: TransitionsService) {}
 
   @Get()
-  async getAllTransitions(): Promise<GetTransitionSchemaDTO[]> {
+  async getAllTransitions(): Promise<TTransition[]> {
     return this.screensService.getAllTransitions()
   }
 
@@ -23,15 +24,13 @@ export class TransitionsController {
 
   @Get(':id')
   @UseZodGuard('params', GetTransitionByIdDTO)
-  async getById(@Param('id') screenId: string): Promise<GetTransitionSchemaDTO[]> {
+  async getById(@Param('id') screenId: string): Promise<TTransition[]> {
     return this.screensService.getById(screenId)
   }
 
   @Post()
   @UseZodGuard('body', CreateTransitionSchemaDTO)
-  async addTransition(
-    @Body() screen: CreateTransitionSchemaDTO
-  ): Promise<GetTransitionSchemaDTO[]> {
+  async addTransition(@Body() screen: CreateTransitionSchemaDTO): Promise<TTransition[]> {
     return this.screensService.addTransition(screen)
   }
 

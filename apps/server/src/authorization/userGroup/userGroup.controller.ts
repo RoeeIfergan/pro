@@ -2,13 +2,14 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { UserGroupsService } from './userGroup.service'
 import { GetUserGroupByIdDTO, ModifyUserGroupSchemaDTO, UserGroupSchemaDTO } from '@pro3/schemas'
 import { UseZodGuard } from 'nestjs-zod'
+import { TUserGroup } from '@pro3/types'
 
 @Controller('userGroups')
 export class UserGroupsController {
   constructor(private readonly userGroupsService: UserGroupsService) {}
 
   @Get()
-  async getAllUserGroups(): Promise<UserGroupSchemaDTO[]> {
+  async getAllUserGroups(): Promise<TUserGroup[]> {
     return this.userGroupsService.getAllUserGroups()
   }
 

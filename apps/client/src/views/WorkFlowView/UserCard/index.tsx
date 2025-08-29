@@ -17,11 +17,12 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 import BlockIcon from '@mui/icons-material/Block'
 import { useUsers, useUser, useUpdateUserGroups, useUserOrders } from '../../../hooks/users'
-import { useApproveOrders, useRejectOrders } from '../../../hooks/orders'
 import { useUserGroups } from '../../../hooks/userGroups'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { EditUserGroupsDialog } from './EditUserGroupsDialog'
 import EditIcon from '@mui/icons-material/Edit'
+import { useReactFlow } from '@xyflow/react'
+import { useApproveOrders, useRejectOrders } from '../../../hooks/userOrders'
 
 interface Order {
   id: string
@@ -33,6 +34,7 @@ interface Order {
 }
 
 const UserCard = () => {
+  const { fitView } = useReactFlow()
   const [selectedUserId, setSelectedUserId] = useState<string>('')
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const { data: users, isLoading: isLoadingUsers } = useUsers()
@@ -42,6 +44,16 @@ const UserCard = () => {
   const { mutate: approveOrders, isPending: isApproving } = useApproveOrders()
   const { mutate: rejectOrders, isPending: isRejecting } = useRejectOrders()
   const { mutate: updateUserGroups, isPending: isUpdating } = useUpdateUserGroups()
+
+  console.log({ userGroups, userOrders, selectedUser })
+
+  useEffect(() => {
+    if (!selectedUser) return
+    const nodeIds = selectedUser.stepsIds.map((stepId: string) => ({ id: stepId }))
+
+    console.log({ nodeIds: selectedUser.stepsIds })
+    fitView({ nodes: nodeIds, duration: 500 })
+  }, [fitView, selectedUser])
 
   const handleUserChange = (userId: string) => {
     setSelectedUserId(userId)
@@ -83,7 +95,7 @@ const UserCard = () => {
           <Select
             labelId='user-select-label'
             id='user-select'
-            value={selectedUser?.user.id || ''}
+            value={selectedUser?.id || ''}
             label='Select User'
             onChange={(e) => handleUserChange(e.target.value as string)}
             disabled={loading}
@@ -104,10 +116,10 @@ const UserCard = () => {
             </Typography>
             <Box sx={{ mb: 2 }}>
               <Typography variant='body1'>
-                <strong>Name:</strong> {selectedUser.user.name}
+                <strong>Name:</strong> {selectedUser?.name}
               </Typography>
               <Typography variant='body1'>
-                <strong>Organization ID:</strong> {selectedUser.user.organizationId}
+                <strong>Organization ID:</strong> {selectedUser.organizationId}
               </Typography>
             </Box>
 

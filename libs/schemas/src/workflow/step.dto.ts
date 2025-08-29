@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { Step } from '@pro3/types'
+import { TStep } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
@@ -9,7 +9,7 @@ const screenIdSchema = z.string().nonempty()
 const createStepSchema = z.object({
   name: nameSchema,
   screenId: screenIdSchema
-}) satisfies z.ZodType<Partial<Step>>
+}) satisfies z.ZodType<Partial<TStep>>
 
 const getStepsSchema = z.object({
   id: idSchema,
@@ -17,7 +17,7 @@ const getStepsSchema = z.object({
   screenId: screenIdSchema,
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<Step>
+}) satisfies z.ZodType<TStep>
 
 // type Equal<A, B> =
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false

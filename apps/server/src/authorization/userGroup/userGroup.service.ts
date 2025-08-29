@@ -19,7 +19,7 @@ export class UserGroupsService {
   }
 
   async addUserGroup(userGroup: UserGroupEntityInsert) {
-    return await this.userGroupDao.insertUserGroup(userGroup)
+    return await this.userGroupDao.insertUserGroups(userGroup)
   }
 
   async updateUserGroup(id: string, userGroup: Partial<UserGroupEntity>) {

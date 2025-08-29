@@ -72,7 +72,7 @@
           "cwd": "libs/server/database"
         }
       },
-      "drop": {
+      "drop-migration": {
         "executor": "nx:run-commands",
         "options": {
           "cwd": "libs/server/database",
@@ -94,6 +94,16 @@
         "options": {
           "cwd": "libs/server/database",
           "command": "npx tsx ./src/seed.ts"
+        }
+      },
+      "clear": {
+        "dependsOn": [
+          "docker-compose-up"
+        ],
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/server/database",
+          "command": "npx tsx ./src/clearDB.ts"
         }
       },
       "init": {

@@ -5,7 +5,7 @@ import { PG_CONNECTION } from '../../database/drizzle/pg-connection.ts'
 
 import * as ordersSchema from '../../schemas/workflow/order.schema.ts'
 import { orders, OrderEntity, OrderEntityInsert } from '../../schemas/workflow/order.schema.ts'
-import { eq } from 'drizzle-orm'
+import { eq, inArray } from 'drizzle-orm'
 
 @Injectable()
 export class OrderDao {
@@ -20,6 +20,38 @@ export class OrderDao {
 
   async getById(id: string) {
     return this.db.select().from(orders).where(eq(orders.id, id)).execute()
+  }
+
+  async getByIds(orderIds: string[]) {
+    return this.db.select().from(orders).where(inArray(orders.id, orderIds)).execute()
+  }
+
+  // async getByIds(ids: string[], fieldNames?: (keyof OrderEntity)[]) {
+  //   if (!fieldNames?.length) {
+  //     return await this.db.select().from(orders).where(inArray(orders.id, ids)).execute()
+  //   }
+
+  //   const computedOptions = fieldNames?.reduce(
+  //     (acc, fieldName) => {
+  //       acc[fieldName] = orders[fieldName]
+  //       return acc
+  //     },
+  //     {} as Record<keyof OrderEntity, (typeof orders)[keyof OrderEntity]>
+  //   )
+
+  //   return await this.db
+  //     .select(computedOptions)
+  //     .from(orders)
+  //     .where(inArray(orders.id, ids))
+  //     .execute()
+  // }
+
+  async getByIdsAndReturnIds(ids: string[]) {
+    return await this.db
+      .select({ id: orders.id })
+      .from(orders)
+      .where(inArray(orders.id, ids))
+      .execute()
   }
 
   async getPartOfById(id: string) {
@@ -80,5 +112,14 @@ export class OrderDao {
 
   async deleteAllOrders() {
     return this.db.delete(orders).returning().execute()
+  }
+
+  async approveOrders(orderIds: string[], targetStepId: string) {
+    return this.db
+      .update(orders)
+      .set({ stepId: targetStepId })
+      .where(inArray(orders.id, orderIds))
+      .returning()
+      .execute()
   }
 }

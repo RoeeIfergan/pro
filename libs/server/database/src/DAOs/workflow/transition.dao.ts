@@ -5,7 +5,7 @@ import { PG_CONNECTION } from '../../database/drizzle/pg-connection.ts'
 
 import * as transitionsSchema from '../../schemas/workflow/transition.schema.ts'
 import { transitions, TransitionEntityInsert } from '../../schemas/workflow/transition.schema.ts'
-import { eq } from 'drizzle-orm'
+import { eq, inArray } from 'drizzle-orm'
 
 @Injectable()
 export class TransitionDao {
@@ -20,6 +20,17 @@ export class TransitionDao {
 
   async getById(id: string) {
     return this.db.select().from(transitions).where(eq(transitions.id, id)).execute()
+  }
+  async getByFromStepIds(stepIds: string[]) {
+    return this.db
+      .select()
+      .from(transitions)
+      .where(inArray(transitions.fromStepId, stepIds))
+      .execute()
+  }
+
+  async getToFromStepId(orderId: string) {
+    return this.db.select().from(transitions).where(eq(transitions.toStepId, orderId)).execute()
   }
 
   async getPartOfById(id: string) {

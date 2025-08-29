@@ -1,4 +1,4 @@
-import { Screen, ScreenRelations } from '@pro3/types'
+import { TScreen, TScreenRelations } from '@pro3/types'
 import { CreateScreenDTO, UpdateScreenDTO } from '@pro3/schemas'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
@@ -9,14 +9,14 @@ export const useScreens = () =>
   useQuery({
     queryKey: ['screens'],
     queryFn: async () => {
-      const { data } = await axios.get<Screen[]>('/api/screens')
+      const { data } = await axios.get<TScreen[]>('/api/screens')
 
       return data
     }
   })
 
 export const useScreenById = (id?: string | null) =>
-  useQuery<ScreenRelations>({
+  useQuery<TScreenRelations>({
     queryKey: ['screens', id],
     queryFn: async () => {
       const { data } = await axios.get(`/api/screens/AllRelations/${id}`)

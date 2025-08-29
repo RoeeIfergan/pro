@@ -1,20 +1,20 @@
 import { z } from 'zod'
 import { createZodDto } from 'nestjs-zod'
-import { Organization } from '@pro3/types'
+import { TOrganization } from '@pro3/types'
 
 const idSchema = z.string().nonempty()
 const nameSchema = z.string()
 
 const createOrganizationSchema = z.object({
   name: nameSchema
-}) satisfies z.ZodType<Partial<Organization>>
+}) satisfies z.ZodType<Partial<TOrganization>>
 
 const getOrganizationsSchema = z.object({
   id: idSchema,
   name: nameSchema,
   createdAt: z.date(),
   updatedAt: z.date()
-}) satisfies z.ZodType<Organization>
+}) satisfies z.ZodType<TOrganization>
 
 // type Equal<A, B> =
 //   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false

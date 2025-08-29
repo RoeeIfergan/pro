@@ -14,7 +14,8 @@ import {
   NodeChange,
   EdgeChange,
   Connection,
-  Position
+  Position,
+  ReactFlowProvider
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { useScreenById } from '../../hooks/screens'
@@ -105,7 +106,12 @@ const Workflow = ({ selectedScreenId }: { selectedScreenId: string | null }) => 
       initialNodes,
       initialEdges
     )
+    console.log(
+      'layoutedNodes',
+      layoutedNodes.map((node) => node.data.id)
+    )
 
+    console.log({ layoutedNodes })
     setNodes(layoutedNodes)
     setEdges(layoutedEdges)
   }, [screen])
@@ -137,20 +143,22 @@ const Workflow = ({ selectedScreenId }: { selectedScreenId: string | null }) => 
         borderRadius: '5px'
       }}
     >
-      <UserCard />
-      <ReactFlow
-        fitView
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-      >
-        <Background />
-        <Controls />
-        <MiniMap />
-      </ReactFlow>
+      <ReactFlowProvider>
+        <UserCard />
+        <ReactFlow
+          fitView
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+        >
+          <Background />
+          <Controls />
+          <MiniMap />
+        </ReactFlow>
+      </ReactFlowProvider>
     </Box>
   )
 }

@@ -1,6 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { OrdersService } from './orders.service'
-import { GetOrderByIdDTO, CreateOrderSchemaDTO, GetOrderSchemaDTO } from '@pro3/schemas'
+import {
+  GetOrderByIdDTO,
+  CreateOrderSchemaDTO,
+  GetOrderSchemaDTO,
+  ApprovalsOrderSchemaDTO,
+  Approvals
+} from '@pro3/schemas'
 import { UseZodGuard } from 'nestjs-zod'
 
 @Controller('orders')
@@ -43,5 +49,14 @@ export class OrdersController {
   @Delete()
   async deleteAllOrders(): Promise<Partial<GetOrderSchemaDTO>[]> {
     return this.ordersService.deleteOrders()
+  }
+
+  @Post('/approvals')
+  @UseZodGuard('body', ApprovalsOrderSchemaDTO)
+  async approvals(
+    @Body('ids') ids: Approvals['ids'],
+    @Body('directStep') directStep: Approvals['directStep']
+  ): Promise<GetOrderSchemaDTO[]> {
+    return this.ordersService.approveOrders(ids, directStep)
   }
 }
